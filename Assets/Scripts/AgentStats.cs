@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
@@ -8,13 +10,14 @@ using UnityEngine;
 public class AgentStats
 {
     // Stats 
-    private Dictionary<Attribute, float> atts = new Dictionary<Attribute, float>();
-    private Dictionary<Need, float> needs = new Dictionary<Need, float>();
+    private SortedDictionary<Attribute, double> atts = new SortedDictionary<Attribute, double>();
+    private SortedDictionary<Need, double> needs = new SortedDictionary<Need, double>();
     
     // Factory class para matrices. 
     // Las matrices se crean a partir de métodos de la clase Matrix<T>.Build 
     // Ejemplo:  Matrix<T> foo( a1, a2, ..., an); 
-    MatrixBuilder<double> M = Matrix<double>.Build;
+    private MatrixBuilder<double> m = Matrix<double>.Build;
+    private VectorBuilder<double> v = Vector<double>.Build; 
     private Matrix<double> weights;
 
 
@@ -33,7 +36,9 @@ public class AgentStats
     // TODO: implement neural network 
     State nextState()
     {
-        return State.LookForWater;
+        v.DenseOfEnumerable(atts.Values.Concat(needs.Values));
+        return State.Stealth; 
     }
 
+    
 }
