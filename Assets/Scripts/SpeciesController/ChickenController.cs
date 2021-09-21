@@ -1,35 +1,43 @@
 using System;
+using System.Numerics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
 public class ChickenController : Agent
 {
-    // Time to next rotation. Recontra Dummy, es para ir jugando 
-    public float wanderTime = 5f; 
-    
+    private Vector3 destination = new Vector3();
+
     new void Update()
     {
-        // Equivalente to Java's super() call 
+        // base if equivalent to Java's super() call 
         // Need to do a generic Agent Update() before making a Chicken Update()
         base.Update();
-        
-        
-        if (isGrounded && wanderTime > 0)
+        moveTo(destination);
+        if (destination == Vector3.zero)
         {
-            characterController.Move(speed * Time.deltaTime *  transform.TransformDirection(Vector3.forward));
-            wanderTime -= Time.deltaTime; 
-        }
-        else
-        {
-            wanderTime = Random.Range(2.0f, 5.0f);
-            transform.LookAt(new Vector3(Random.Range(-3f, 3f), transform.position.y, Random.Range(-5f, 5f)));
+            destination.x = Random.Range(-5.0f, 5.0f); 
+            destination.z = Random.Range(-5.0f, 5.0f);
         }
     }
 
     public override void moveTo(Vector3 to)
     {
-        throw new NotImplementedException();
+        // You are a terrestrial animal. You cannot move while on air
+        if (!isGrounded) return; 
+        
+        const float offsetRadius = 0.5f; 
+        transform.LookAt(to);
+        
+        // Ask for the distance to a point Vector3 'to'. However, project 'to' height's into the chicken's height
+        if ( Vector3.Distance( transform.position, new Vector3(to.x, transform.position.y, to.z)) > offsetRadius)
+        {
+            characterController.Move(speed * Time.deltaTime *  transform.TransformDirection(Vector3.forward));
+        }
+        else
+        {
+            destination = Vector3.zero; 
+        }
     }
 
     public override void runTo(Vector3 to)
