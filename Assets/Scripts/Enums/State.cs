@@ -7,6 +7,7 @@ public enum State
     LookForFood, 
     LookForWater, 
     Stealth,
+    Idle
 }
 
 // Jamas vi algo mas feo en mi vida (salvo quizas NOOOOO NO PODES DECIR ESO) 
@@ -22,6 +23,8 @@ public static class StateExtensions
             case State.LookForWater:
                 break; 
             case State.Stealth:
+                break; 
+            case State.Idle:
                 break; 
         }
     }

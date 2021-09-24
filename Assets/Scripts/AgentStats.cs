@@ -7,11 +7,12 @@ using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
 //https://numerics.mathdotnet.com/Matrix.html
-public class AgentStats
-{
+public class AgentStats {
+
     // Stats 
-    private SortedDictionary<Attribute, double> atts = new SortedDictionary<Attribute, double>();
-    private SortedDictionary<Need, double> needs = new SortedDictionary<Need, double>();
+    private SortedDictionary<Attribute, double> atts;
+    private SortedDictionary<Need, double> needs;
+    private SortedSet<State> states;
     
     // Factory class para matrices. 
     // Las matrices se crean a partir de métodos de la clase Matrix<T>.Build 
@@ -21,24 +22,28 @@ public class AgentStats
     private Matrix<double> weights;
 
 
-    // TODO: devuelve valores aleatorios 
-    public AgentStats()
-    {
-        
+    // TODO: devuelve valores aleatorios
+    public AgentStats(SortedDictionary<Attribute, double> atts, SortedDictionary<Need, double> needs, SortedSet<State> states, Matrix<double> weights) {
+        this.atts = atts;
+        this.needs = needs;
+        this.states = states;
+        this.weights = weights;
+    }
+
+/*
+    public AgentStats() {
+
     }
     
     // TODO: devuelve valores de padre y madre, con mutaciones
-    public AgentStats(AgentStats p1, AgentStats p2)
-    {
+    public AgentStats(AgentStats p1, AgentStats p2) {
         
     } 
+*/
 
     // TODO: implement neural network 
-    State nextState()
-    {
+    public State nextState() {
         v.DenseOfEnumerable(atts.Values.Concat(needs.Values));
         return State.Stealth; 
     }
-
-    
 }
