@@ -5,7 +5,6 @@ using UnityEngine;
 public abstract class Agent : MonoBehaviour, IAgentController
 {
     public AgentStats stats;
-    private List<State> states; 
     
     // Start is called before the first frame update
     protected void Start()
@@ -19,6 +18,10 @@ public abstract class Agent : MonoBehaviour, IAgentController
     {
         
     }
+
+
+    // State nowState = stats.nextState();
+    // nowState.SolveState(this);
 
     public abstract void moveTo(Vector3 to);
     public abstract void runTo(Vector3 to);

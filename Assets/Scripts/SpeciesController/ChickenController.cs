@@ -6,7 +6,8 @@ using Vector3 = UnityEngine.Vector3;
 
 public class ChickenController : MovableAgent
 {
-
+    // private static maxSpeed;
+    
     new void Update()
     {
         // base is equivalent to Java's super() call 
@@ -43,5 +44,4 @@ public class ChickenController : MovableAgent
     {
         throw new NotImplementedException();
     }
-
 }
