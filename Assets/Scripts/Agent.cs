@@ -28,5 +28,7 @@ public abstract class Agent : MonoBehaviour, IAgentController
     public abstract void drink();
     public abstract void eat();
     public abstract void sleep();
+    public abstract void reproduce(); 
+    
     public abstract void seeAround();
 }

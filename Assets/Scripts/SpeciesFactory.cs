@@ -3,6 +3,8 @@ using MathNet.Numerics.LinearAlgebra;
 
 public static class SpeciesFactory {
 
+    // Todo: embeber la idea de default_attributes en spec_att. spec_att deberia ser un Dictionary<Species, SortedDictionary<Attribute, double>> 
+    // default_attributes no deberia existir. Como dijo Eze, pongamos los defaults directamente en spec_att y matamos dos pajaros de un tiro 
     private static readonly Dictionary<Species, SortedSet<Attribute>> spec_att = new Dictionary<Species, SortedSet<Attribute>>() {    
         { Species.Chicken, new SortedSet<Attribute>() { Attribute.Speed, Attribute.Size } },
         { Species.Grass, new SortedSet<Attribute>() { Attribute.Size } },
@@ -25,26 +27,20 @@ public static class SpeciesFactory {
     private static readonly Dictionary<Species, SortedDictionary<Attribute, double>> default_attributes;
 
     public static AgentStats NewAgentStats(Species species) {
-        Matrix<double> aux_mat = null;
-        SortedDictionary<Attribute, double> aux_att = null;
-        SortedSet<Need> aux_needs = null; 
-        SortedSet<State> aux_state = null;
-
-        spec_needs.TryGetValue(species, out aux_needs);
-        default_attributes.TryGetValue(species, out aux_att);
-        spec_states.TryGetValue(species, out aux_state);
-        default_weights.TryGetValue(species, out aux_mat);
+        
+        // OUT variables can be declared inline. There's no need to declare them from beforehand
+        spec_needs.TryGetValue(species, out var aux_needs);
+        default_attributes.TryGetValue(species, out var aux_att);
+        spec_states.TryGetValue(species, out var aux_state);
+        default_weights.TryGetValue(species, out var aux_mat);
 
         SortedDictionary<Need, double> needs_aux = new SortedDictionary<Need, double>();
-        foreach (Need need in aux_needs) {
+        foreach (Need need in aux_needs) 
             needs_aux.Add(need, 0);
-        }
-
+        
         SortedDictionary<Attribute, double> atts_aux = new SortedDictionary<Attribute, double>(); 
         foreach (KeyValuePair<Attribute, double> kvp in aux_att)
-        {
             atts_aux.Add(kvp.Key, kvp.Value);
-        }
 
         return new AgentStats(atts_aux, needs_aux, aux_state, aux_mat);
     }

@@ -20,28 +20,27 @@ public class ChickenController : MovableAgent
     //     // base.moveTo(to); 
     // }
 
-    public override void runTo(Vector3 to)
-    {
+    public override void runTo(Vector3 to) {
         throw new NotImplementedException();
     }
 
-    public override void drink()
-    {
+    public override void drink() {
         throw new NotImplementedException();
     }
 
-    public override void eat()
-    {
+    public override void eat() {
         throw new NotImplementedException();
     }
 
-    public override void sleep()
-    {
+    public override void sleep() {
         throw new NotImplementedException();
     }
 
-    public override void seeAround()
-    {
+    public override void seeAround() {
+        throw new NotImplementedException();
+    }
+    
+    public override void reproduce() {
         throw new NotImplementedException();
     }
 }

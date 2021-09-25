@@ -9,6 +9,8 @@ public interface IAgentController
    void drink();
    void eat();
    void sleep();
+
+   void reproduce(); 
    // No seria void
    void seeAround();
 
