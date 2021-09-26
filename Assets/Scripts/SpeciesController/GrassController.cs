@@ -33,6 +33,7 @@ public class GrassController : NotMovableAgent
     private double getLambdaRate() {
         return 1; 
     }
+
     public override void reproduce()
     {
         float distSon = (float)(new Exponential(getLambdaRate()).Sample());

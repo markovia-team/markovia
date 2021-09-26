@@ -22,9 +22,21 @@ public static class SpeciesFactory {
         { Species.Grass, new SortedSet<State>() { State.Idle } },
         { Species.Fox, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Stealth, State.Idle } }
     };
-
+    
     private static readonly Dictionary<Species, Matrix<double>> default_weights;
-    private static readonly Dictionary<Species, SortedDictionary<Attribute, double>> default_attributes;
+    private static readonly Dictionary<Species, SortedDictionary<Attribute, double>> default_attributes = new Dictionary<Species, SortedDictionary<Attribute, double>>() {
+        { Species.Chicken, new SortedDictionary<Attribute, double>() {
+            {Attribute.Speed, 0.5f},
+            {Attribute.Size, 0.5f}
+        } },
+        { Species.Grass, new SortedDictionary<Attribute, double>() {
+            {Attribute.Size, 0.5f}
+        } },
+        { Species.Fox, new SortedDictionary<Attribute, double>() {
+            {Attribute.Speed, 0.5f},
+            {Attribute.Size, 0.5f}
+        } }
+    };
 
     public static AgentStats NewAgentStats(Species species) {
         

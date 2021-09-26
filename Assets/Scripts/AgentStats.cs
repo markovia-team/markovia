@@ -13,20 +13,20 @@ public class AgentStats {
     private SortedDictionary<Attribute, double> atts;
     private SortedDictionary<Need, double> needs;
     private SortedSet<State> states;
+    private Matrix<double> weights;
     
     // Neural network stuff 
     private int qAtts;
     private int qNeeds;
-    private int qStates; 
+    private int qStates;
     private Vector<double> neuralInput;
-    private Vector<double> neuralOutput; 
+    private Vector<double> neuralOutput;
     
     // Factory class para matrices. 
     // Las matrices se crean a partir de métodos de la clase Matrix<T>.Build 
     // Ejemplo:  Matrix<T> foo( a1, a2, ..., an); 
     private MatrixBuilder<double> m = Matrix<double>.Build;
-    private VectorBuilder<double> v = Vector<double>.Build; 
-    private Matrix<double> weights;
+    private VectorBuilder<double> v = Vector<double>.Build;
     
     public AgentStats(SortedDictionary<Attribute, double> atts, SortedDictionary<Need, double> needs, SortedSet<State> states, Matrix<double> weights) {
         this.atts = atts;
@@ -35,10 +35,10 @@ public class AgentStats {
         this.weights = weights;
         this.qAtts = atts.Count;
         this.qNeeds = needs.Count;
-        this.qStates = states.Count; 
+        this.qStates = states.Count;
         
         neuralInput = v.Dense(qAtts + qNeeds);
-        neuralOutput = v.Dense(qStates); 
+        neuralOutput = v.Dense(qStates);
         
         // Fill values that will never change in the input vector
         var i = 0;
@@ -50,8 +50,10 @@ public class AgentStats {
         
     } 
 */
-    public State nextState() {
-        
+    public State NextState() {
+
+        return State.Idle;
+        /*
         // Fill values that change in the input vector
         var i = qAtts;
         foreach (var pair in needs) neuralInput[i++] = pair.Value;
@@ -73,5 +75,6 @@ public class AgentStats {
         // Recover state from Set
         // TODO: not efficient, it may be better to use an ArrayList and sort it. Getting the 'nth' element is O(n) in SortedSet 
         return states.ElementAt(maxj);
+        */
     }
 }
