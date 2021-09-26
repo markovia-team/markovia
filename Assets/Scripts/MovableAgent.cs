@@ -11,8 +11,7 @@ public abstract class MovableAgent : Agent
     // }
 
     public void Update() {
-        if (agent.remainingDistance < agent.stoppingDistance)
-            moveTo(new Vector3(Random.Range(-5, 5), transform.position.y, Random.Range(-5, 5))); 
+        if (agent.remainingDistance < agent.stoppingDistance); 
     }
 
     public override void moveTo(Vector3 to) {
