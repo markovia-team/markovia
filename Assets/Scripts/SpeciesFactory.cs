@@ -2,12 +2,19 @@ using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 
 public static class SpeciesFactory {
-
-    // default_attributes no deberia existir. Como dijo Eze, pongamos los defaults directamente en spec_att y matamos dos pajaros de un tiro 
-    private static readonly Dictionary<Species, SortedSet<Attribute>> spec_att = new Dictionary<Species, SortedSet<Attribute>>() {    
-        { Species.Chicken, new SortedSet<Attribute>() { Attribute.Speed, Attribute.Size } },
-        { Species.Grass, new SortedSet<Attribute>() { Attribute.Size } },
-        { Species.Fox, new SortedSet<Attribute>() { Attribute.Speed, Attribute.Size } }
+    
+    private static readonly Dictionary<Species, SortedDictionary<Attribute, double>> spec_atts = new Dictionary<Species, SortedDictionary<Attribute, double>>() {
+        { Species.Chicken, new SortedDictionary<Attribute, double>() {
+            {Attribute.Speed, 0.5f},
+            {Attribute.Size, 0.5f}
+        } },
+        { Species.Grass, new SortedDictionary<Attribute, double>() {
+            {Attribute.Size, 0.5f}
+        } },
+        { Species.Fox, new SortedDictionary<Attribute, double>() {
+            {Attribute.Speed, 0.5f},
+            {Attribute.Size, 0.5f}
+        } }
     };
     
     private static readonly Dictionary<Species, SortedSet<Need>> spec_needs = new Dictionary<Species, SortedSet<Need>>() {
@@ -24,26 +31,10 @@ public static class SpeciesFactory {
     
     private static readonly Dictionary<Species, Matrix<double>> default_weights;
     
-    // TODO: hagamos que esto directamente sea spec_att
-    private static readonly Dictionary<Species, SortedDictionary<Attribute, double>> default_attributes = new Dictionary<Species, SortedDictionary<Attribute, double>>() {
-        { Species.Chicken, new SortedDictionary<Attribute, double>() {
-            {Attribute.Speed, 0.5f},
-            {Attribute.Size, 0.5f}
-        } },
-        { Species.Grass, new SortedDictionary<Attribute, double>() {
-            {Attribute.Size, 0.5f}
-        } },
-        { Species.Fox, new SortedDictionary<Attribute, double>() {
-            {Attribute.Speed, 0.5f},
-            {Attribute.Size, 0.5f}
-        } }
-    };
-
     public static AgentStats NewAgentStats(Species species) {
         
-        // OUT variables can be declared inline. There's no need to declare them from beforehand
         spec_needs.TryGetValue(species, out var aux_needs);
-        default_attributes.TryGetValue(species, out var aux_att);
+        spec_atts.TryGetValue(species, out var aux_att);
         spec_states.TryGetValue(species, out var aux_state);
         default_weights.TryGetValue(species, out var aux_mat);
 
