@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Agent : MonoBehaviour, IAgentController
 {
-    private AgentStats stats;
+    public AgentStats stats;
     private State currentState = State.Wander;
     private State nextState = State.Wander;
     private bool finished = true;
