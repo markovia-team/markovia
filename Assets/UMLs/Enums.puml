@@ -17,17 +17,19 @@ Grass
 }
 
 enum State {
-    LookForFood, 
-    LookForWater, 
-    Stealth,
-    Idle,
-    Wander
+LookForFood
+LookForWater
+Stealth
+Idle
+Wander
 }
 
 class StateExtensions {
 +{static} void SolveState(State state, IAgentController controller)
 }
-'note "es static" as N1
-'N1 .. StateExtensions
+
+note right of StateExtensions
+Es static
+end note
 
 @enduml

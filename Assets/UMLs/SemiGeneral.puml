@@ -1,5 +1,7 @@
 @startuml
-IAgentController <|- Agent
+IAgentController <|.. Agent
+Agent -> AgentStats
+MonoBehaviour <|-- Agent
 
 interface IAgentController {
 +void moveTo(Vector3 to)
@@ -40,10 +42,10 @@ class AgentStats {
 -int qStates
 -Vector<double> neuralInput
 -Vector<double> neuralOutput
--MatrixBuilder<double> m
--VectorBuilder<double> v
+-{static}MatrixBuilder<double> m
+-{static}VectorBuilder<double> v
 '+AgentStats(SortedDictionary<Attribute, double> atts, SortedDictionary<Need, double> needs, SortedSet<State> states, Matrix<double> weights) {
-+AgentStats()
++AgentStats(...)
 +State NextState()
 }
 
@@ -62,7 +64,9 @@ class SpeciesFactory {
 +{static} AgentStats NewAgentStats(Species species)
 +{static} AgentStats NewAgentStats(AgentStats p1, AgentStats p2)
 }
-'note "es static" as N1
-'N1 .. SpeciesFactory
+
+note right of SpeciesFactory
+Es static
+end note
 
 @enduml

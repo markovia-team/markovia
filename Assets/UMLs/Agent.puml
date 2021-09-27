@@ -3,9 +3,10 @@ Agent <|-- MovableAgent
 Agent <|-- NotMovableAgent
 MovableAgent <|-- ChickenController
 NotMovableAgent <|-- GrassController
-IAgentController <|- Agent
+IAgentController <|.. Agent
+Agent -> AgentStats
 
-'MonoBehaviour <|-- Agent
+MonoBehaviour <|-- Agent
 
 interface IAgentController {
 +void moveTo(Vector3 to)
@@ -34,6 +35,23 @@ abstract class Agent {
 #void BeginSolvingState()
 #IEnumerator GetNextState()
 #IEnumerator SolveState()
+}
+
+class AgentStats {
+-SortedDictionary<Attribute, double> atts
+-SortedDictionary<Need, double> needs
+-SortedSet<State> states
+-Matrix<double> weights
+-int qAtts
+-int qNeeds
+-int qStates
+-Vector<double> neuralInput
+-Vector<double> neuralOutput
+-{static}MatrixBuilder<double> m
+-{static}VectorBuilder<double> v
+'+AgentStats(SortedDictionary<Attribute, double> atts, SortedDictionary<Need, double> needs, SortedSet<State> states, Matrix<double> weights) {
++AgentStats(...)
++State NextState()
 }
 
 abstract class MovableAgent {
