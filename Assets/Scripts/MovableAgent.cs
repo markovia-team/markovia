@@ -10,9 +10,9 @@ public abstract class MovableAgent : Agent
     //     agent = GetComponent<NavMeshAgent>();
     // }
 
-    public void Update() {
-        if (agent.remainingDistance < agent.stoppingDistance); 
-    }
+    // public void Update() {
+    //     if (agent.remainingDistance < agent.stoppingDistance); 
+    // }
 
     public override void moveTo(Vector3 to) {
         agent.SetDestination(to); 

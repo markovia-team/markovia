@@ -24,6 +24,7 @@ public static class StateExtensions {
             case State.Idle:
                 break;
             case State.Wander:
+                Debug.Log("Wander");
                 controller.moveTo(new Vector3(Random.Range(-5, 5), agentGO.transform.position.y, Random.Range(-5, 5)));
                 break;
             default:
