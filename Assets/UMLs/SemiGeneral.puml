@@ -1,0 +1,68 @@
+@startuml
+IAgentController <|- Agent
+
+interface IAgentController {
++void moveTo(Vector3 to)
++void runTo(Vector3 to)
++void drink()
++void eat()
++void sleep()
++void reproduce() 
++void seeAround() 
+}
+
+abstract class Agent {
++AgentStats stats
+-State currentState
+-State nextState
+-bool finished
++void Start()
++{abstract} void moveTo(Vector3 to)
++{abstract} void runTo(Vector3 to)
++{abstract} void drink()
++{abstract} void eat()
++{abstract} void sleep()
++{abstract} void reproduce() 
++{abstract} void seeAround() 
+#void FinishedSolvingState()
+#void BeginSolvingState()
+#IEnumerator GetNextState()
+#IEnumerator SolveState()
+}
+
+class AgentStats {
+-SortedDictionary<Attribute, double> atts
+-SortedDictionary<Need, double> needs
+-SortedSet<State> states
+-Matrix<double> weights
+-int qAtts
+-int qNeeds
+-int qStates
+-Vector<double> neuralInput
+-Vector<double> neuralOutput
+-MatrixBuilder<double> m
+-VectorBuilder<double> v
+'+AgentStats(SortedDictionary<Attribute, double> atts, SortedDictionary<Need, double> needs, SortedSet<State> states, Matrix<double> weights) {
++AgentStats()
++State NextState()
+}
+
+class AgentSpawner {
++SerializableDictionary<Species, GameObject> speciesPrefabs
+-Dictionary<Species, List<Vector3>> NonMovableAgentsPositions 
+~void Start()
+~IEnumerator Populate()
+}
+
+class SpeciesFactory {
+-{static} Dictionary<Species, SortedDictionary<Attribute, double>> spec_atts
+-{static} Dictionary<Species, SortedSet<Need>> spec_needs
+-{static} Dictionary<Species, SortedSet<State>> spec_states
+-{static} Dictionary<Species, Matrix<double>> default_weights
++{static} AgentStats NewAgentStats(Species species)
++{static} AgentStats NewAgentStats(AgentStats p1, AgentStats p2)
+}
+'note "es static" as N1
+'N1 .. SpeciesFactory
+
+@enduml
