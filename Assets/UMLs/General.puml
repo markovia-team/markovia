@@ -4,7 +4,9 @@ Agent <|-- MovableAgent
 MovableAgent <|-- ChickenController
 NotMovableAgent <|-- GrassController
 Agent <|-- NotMovableAgent
-IAgentController <|- Agent
+IAgentController <|.. Agent
+Agent -> AgentStats
+MonoBehaviour <|-- Agent
 
 'MonoBehaviour <|-- AgentSpawner
 'MonoBehaviour <|-- Agent
@@ -83,10 +85,10 @@ class AgentStats {
 -int qStates
 -Vector<double> neuralInput
 -Vector<double> neuralOutput
--MatrixBuilder<double> m
--VectorBuilder<double> v
+-{static}MatrixBuilder<double> m
+-{static}VectorBuilder<double> v
 '+AgentStats(SortedDictionary<Attribute, double> atts, SortedDictionary<Need, double> needs, SortedSet<State> states, Matrix<double> weights) {
-+AgentStats()
++AgentStats(...)
 +State NextState()
 }
 
@@ -105,8 +107,10 @@ class SpeciesFactory {
 +{static} AgentStats NewAgentStats(Species species)
 +{static} AgentStats NewAgentStats(AgentStats p1, AgentStats p2)
 }
-'note "es static" as N1
-'N1 .. SpeciesFactory
+
+'note right of SpeciesFactory
+'Es static
+'end note
 
 enum Attribute {
 Speed
@@ -136,7 +140,9 @@ enum State {
 class StateExtensions {
 +{static} void SolveState(State state, IAgentController controller)
 }
-'note "es static" as N1
-'N1 .. StateExtensions
+
+'note right of StateExtensions
+'Es static
+'end note
 
 @enduml
