@@ -7,7 +7,7 @@ public abstract class Agent : MonoBehaviour, IAgentController
     private AgentStats stats;
     private State currentState = State.Wander;
     private State nextState = State.Wander;
-    public bool finished = true;
+    private bool finished = true;
     
     // Start is called before the first frame update
     public void Start()
@@ -16,23 +16,10 @@ public abstract class Agent : MonoBehaviour, IAgentController
         StartCoroutine(SolveState());
     }
     
-    // Las acciones son llamadas desde afuera
-    // En Update() van las cosas que deben ocurrir independientemente del control externo
-    public void Update()
-    {
-        /*
-        if (!nextState.Equals(currentState) || finished) {
-            if (!finished)
-                StopCoroutine(SolveState());
-            currentState = nextState;
-            StartCoroutine(SolveState());
-        }
-        */
+    // No borrar, no compila. Odio Unity
+    public void Update() {
     }
-
-    // State nowState = stats.nextState();
-    // nowState.SolveState(this);
-
+    
     public abstract void moveTo(Vector3 to);
     public abstract void runTo(Vector3 to);
     public abstract void drink();
@@ -42,33 +29,26 @@ public abstract class Agent : MonoBehaviour, IAgentController
     
     public abstract void seeAround();
 
+    protected void FinishedSolvingState() {
+        finished = true; 
+    }
+    protected void BeginSolvingState() {
+        finished = false; 
+    }
+
     public IEnumerator GetNextState() {
         do {
-            nextState = /*stats.NextState();*/ State.Wander;
+            nextState = State.Wander;/*stats.NextState();*/ 
             yield return new WaitForSecondsRealtime(1f);
             // yield return null;
         } while(true);
     }
-
-    /*
-    public IEnumerator SolveState() {
-        finished = false;
-        currentState.SolveState(this, this.gameObject);
-        finished = true;
-        Debug.Log("finished");
-        yield return null;
-    }
-    */
     
-    public IEnumerator SolveState()
-    {
-        while(true)
-        {
-            if (!nextState.Equals(currentState) || finished)
-            {
-                finished = false;
-                currentState.SolveState(this, this);
-                Debug.Log(finished);
+    public IEnumerator SolveState() {
+        while(true) {
+            if (!nextState.Equals(currentState) || finished) {
+                BeginSolvingState();
+                currentState.SolveState(this);
             }
             yield return null;
         }

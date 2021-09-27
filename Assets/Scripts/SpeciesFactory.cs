@@ -3,7 +3,6 @@ using MathNet.Numerics.LinearAlgebra;
 
 public static class SpeciesFactory {
 
-    // Todo: embeber la idea de default_attributes en spec_att. spec_att deberia ser un Dictionary<Species, SortedDictionary<Attribute, double>> 
     // default_attributes no deberia existir. Como dijo Eze, pongamos los defaults directamente en spec_att y matamos dos pajaros de un tiro 
     private static readonly Dictionary<Species, SortedSet<Attribute>> spec_att = new Dictionary<Species, SortedSet<Attribute>>() {    
         { Species.Chicken, new SortedSet<Attribute>() { Attribute.Speed, Attribute.Size } },
@@ -24,6 +23,8 @@ public static class SpeciesFactory {
     };
     
     private static readonly Dictionary<Species, Matrix<double>> default_weights;
+    
+    // TODO: hagamos que esto directamente sea spec_att
     private static readonly Dictionary<Species, SortedDictionary<Attribute, double>> default_attributes = new Dictionary<Species, SortedDictionary<Attribute, double>>() {
         { Species.Chicken, new SortedDictionary<Attribute, double>() {
             {Attribute.Speed, 0.5f},
