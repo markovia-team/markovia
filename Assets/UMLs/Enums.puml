@@ -1,0 +1,33 @@
+@startuml
+enum Attribute {
+Speed
+Size
+}
+
+enum Need {
+Sleep
+Hunger
+ReproductiveUrge
+}
+
+enum Species {
+Chicken
+Fox
+Grass
+}
+
+enum State {
+    LookForFood, 
+    LookForWater, 
+    Stealth,
+    Idle,
+    Wander
+}
+
+class StateExtensions {
++{static} void SolveState(State state, IAgentController controller)
+}
+'note "es static" as N1
+'N1 .. StateExtensions
+
+@enduml

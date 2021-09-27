@@ -1,0 +1,74 @@
+@startuml
+Agent <|-- MovableAgent
+Agent <|-- NotMovableAgent
+MovableAgent <|-- ChickenController
+NotMovableAgent <|-- GrassController
+IAgentController <|- Agent
+
+'MonoBehaviour <|-- Agent
+
+interface IAgentController {
++void moveTo(Vector3 to)
++void runTo(Vector3 to)
++void drink()
++void eat()
++void sleep()
++void reproduce() 
++void seeAround() 
+}
+
+abstract class Agent {
++AgentStats stats
+-State currentState
+-State nextState
+-bool finished
++void Start()
++{abstract} void moveTo(Vector3 to)
++{abstract} void runTo(Vector3 to)
++{abstract} void drink()
++{abstract} void eat()
++{abstract} void sleep()
++{abstract} void reproduce() 
++{abstract} void seeAround() 
+#void FinishedSolvingState()
+#void BeginSolvingState()
+#IEnumerator GetNextState()
+#IEnumerator SolveState()
+}
+
+abstract class MovableAgent {
++NavMeshAgent agent
++{abstract} void moveTo(Vector3 to)
++{abstract} void runTo(Vector3 to)
++IEnumerator WaitTilThereCoroutine(Vector3 to)
+}
+
+abstract class NotMovableAgent {
++{abstract} void moveTo(Vector3 to)
++{abstract} void runTo(Vector3 to)
+}
+
+class ChickenController {
+~void Update()
++void moveTo(Vector3 to)
++void runTo(Vector3 to)
++void drink()
++void eat()
++void sleep()
++void reproduce() 
++void seeAround() 
+}
+
+class GrassController {
+-double timeToReproduce
++void moveTo(Vector3 to)
++void runTo(Vector3 to)
++void drink()
++void eat()
++void sleep()
++void reproduce() 
++void seeAround() 
+-double getLambdaRate()
+}
+
+@enduml
