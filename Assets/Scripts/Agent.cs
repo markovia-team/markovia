@@ -40,7 +40,7 @@ public abstract class Agent : MonoBehaviour, IAgentController
     public IEnumerator GetNextState() {
         do {
             nextState = State.Wander;/*stats.NextState();*/ 
-            yield return new WaitForSecondsRealtime(1f);
+            yield return new WaitForSecondsRealtime(1f / WorldController.TickSpeed);
             // yield return null;
         } while(true);
     }

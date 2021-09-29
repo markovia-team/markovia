@@ -21,9 +21,9 @@ public abstract class MovableAgent : Agent
     }
 
     public override void runTo(Vector3 to) {
-        agent.speed *= 2; 
+        agent.speed *= 1.5f; 
         moveTo(to); 
-        agent.speed /= 2;
+        agent.speed /= 1.5f;
     }
 
     public IEnumerator WaitTilThereCoroutine(Vector3 to)
