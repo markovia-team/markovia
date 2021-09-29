@@ -63,7 +63,7 @@ public class AgentSpawner : MonoBehaviour
             reference.GetComponent<Agent>().stats = ags; 
             InGameAgents.TryGetValue(Species.Chicken, out var x);
             x.Add(reference);
-            yield return new WaitForSeconds(5f); 
+            yield return new WaitForSeconds(5f/WorldController.TickSpeed); 
         }
         
         

@@ -10,7 +10,7 @@ public class GrassController : NotMovableAgent
     private double timeToReproduce;
     // Update is called once per frame
     void Start() {
-        InvokeRepeating("reproduce", 10, 10);
+        InvokeRepeating("reproduce", 10/WorldController.TickSpeed, 10/WorldController.TickSpeed);
     }
     
     public override void drink() {
