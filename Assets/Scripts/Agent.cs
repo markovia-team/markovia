@@ -12,6 +12,7 @@ public abstract class Agent : MonoBehaviour, IAgentController
     // Start is called before the first frame update
     public void Start()
     {
+        
         StartCoroutine(GetNextState());
         StartCoroutine(SolveState());
     }
