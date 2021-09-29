@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
+using MathNet.Numerics.Distributions;
+using Random = UnityEngine.Random;
+
 
 public static class SpeciesFactory {
     
@@ -29,6 +33,12 @@ public static class SpeciesFactory {
         { Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Stealth, State.Idle } },
         { Species.Grass, new SortedSet<State>() { State.Idle } },
         { Species.Fox, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Stealth, State.Idle } }
+    };
+
+    private static readonly Dictionary<Species, float> spec_mutability = new Dictionary<Species, float>() {
+        { Species.Chicken, 0.4f}, 
+        { Species.Grass, 0.4f}, 
+        { Species.Fox, 0.4f}
     };
     
     private static readonly Dictionary<Species, Matrix<double>> default_weights;
@@ -66,15 +76,20 @@ public static class SpeciesFactory {
         
         // Fill attributes from parents. TODO: ameliorate random distribution. Species should contain a MUTABILITY constant value in a separate dictionary 
         SortedDictionary<Attribute, double> attsAux = new SortedDictionary<Attribute, double>();
-        foreach (KeyValuePair<Attribute, double> kvp in p1.Atts)
-            if ( Random.Range(0f, 1f) < 0.4f ) // Reemplazar por mutabilidad
-                attsAux.Add(kvp.Key, Random.Range(0f, 1f));
-            else if (Random.Range(0f, 1f) < 0.5)
-                attsAux.Add(kvp.Key, kvp.Value);
-            else { 
-                p2.Atts.TryGetValue(kvp.Key, out var p2att);
-                attsAux.Add(kvp.Key, p2att);
+        foreach (KeyValuePair<Attribute, double> kvp in p1.Atts) {
+            spec_mutability.TryGetValue(species, out var mutability);
+            if (Random.Range(0f, 1f) < mutability) {
+                var t = Random.Range(0f, 1f); 
+                attsAux.Add(kvp.Key, t);
+                Debug.Log("MUTA: "+kvp.Key+"->"+t);
+            } else {
+                var p = Random.Range(0f, 1f);
+                var mean = p * p1.GetAttribute(kvp.Key) + (1 - p) * p2.GetAttribute(kvp.Key);
+                var finalAtt = Math.Min(Math.Max(Normal.Sample(mean, 0.01f), 0f), 1f) ; 
+                Debug.Log("MENDEL ("+p+"): "+kvp.Key+" ("+p1.GetAttribute(kvp.Key)+", "+p2.GetAttribute(kvp.Key)+")->"+ mean+ "->"+finalAtt);
+                attsAux.Add(kvp.Key, finalAtt);
             }
+        }
 
         // Mix-and-match reactance matrix
         return new AgentStats(attsAux, needsAux, baseStates, null);//aux_mat);

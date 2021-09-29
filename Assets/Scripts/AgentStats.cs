@@ -59,12 +59,8 @@ public class AgentStats {
         var i = 0;
         foreach (var pair in atts) neuralInput[i++] = pair.Value;
     }
-/*   
-    // TODO: devuelve valores de padre y madre, con mutaciones
-    public AgentStats(AgentStats p1, AgentStats p2) {
-        
-    } 
-*/
+
+    
     public State NextState() {
 
         return State.Idle;

@@ -6,11 +6,17 @@ using Vector3 = UnityEngine.Vector3;
 
 public class ChickenController : MovableAgent
 {
+    private static float chickenMaxSize = 1.75f;
+    private static float chickenMinSize = 0.5f;
+
+    private float getEffectiveSize(double normalized) {
+        return (float) ((chickenMaxSize - chickenMinSize) * normalized + chickenMinSize); 
+    }
 
     new void Start()
     {
         base.Start();
-        transform.localScale = (float)stats.GetAttribute(Attribute.Size)*transform.localScale ; 
+        transform.localScale = getEffectiveSize(stats.GetAttribute(Attribute.Size))*transform.localScale; 
     }
     // private static maxSpeed;
     new void Update()
