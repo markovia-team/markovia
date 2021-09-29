@@ -14,7 +14,11 @@ public class AgentStats {
     private SortedDictionary<Need, double> needs;
     private SortedSet<State> states;
     private Matrix<double> weights;
-    
+
+    // C#: te odio. Te destesto. Me pareces un lenguaje detestable. Sos una chota. Como me vas a hacer hacer esto para un puto getter
+    public SortedDictionary<Attribute, double> Atts => atts;
+    public SortedDictionary<Need, double> Needs => needs;
+
     // Neural network stuff 
     private int qAtts;
     private int qNeeds;
@@ -27,7 +31,18 @@ public class AgentStats {
     // Ejemplo:  Matrix<T> foo( a1, a2, ..., an); 
     private MatrixBuilder<double> m = Matrix<double>.Build;
     private VectorBuilder<double> v = Vector<double>.Build;
-    
+
+    public override string ToString()
+    {
+        return "ATTS:\n" + string.Join(Environment.NewLine, atts) + "\n\nNEEDS:\n" + string.Join(Environment.NewLine, needs) + "\n\nSTATES:\n" + string.Join(Environment.NewLine, states); 
+    }
+
+    public double GetAttribute(Attribute att)
+    {
+        if (atts.TryGetValue(att, out var d)) return d; 
+        return 0.5f;
+    }
+
     public AgentStats(SortedDictionary<Attribute, double> atts, SortedDictionary<Need, double> needs, SortedSet<State> states, Matrix<double> weights) {
         this.atts = atts;
         this.needs = needs;

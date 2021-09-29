@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
+using UnityEngine;
 
 public static class SpeciesFactory {
     
     private static readonly Dictionary<Species, SortedDictionary<Attribute, double>> spec_atts = new Dictionary<Species, SortedDictionary<Attribute, double>>() {
         { Species.Chicken, new SortedDictionary<Attribute, double>() {
             {Attribute.Speed, 0.5f},
-            {Attribute.Size, 0.5f}
+            {Attribute.Size, 0.5f},
+            {Attribute.Color, 0.5f},
         } },
         { Species.Grass, new SortedDictionary<Attribute, double>() {
             {Attribute.Size, 0.5f}
@@ -32,24 +34,50 @@ public static class SpeciesFactory {
     private static readonly Dictionary<Species, Matrix<double>> default_weights;
     
     public static AgentStats NewAgentStats(Species species) {
+        spec_needs.TryGetValue(species, out var baseNeeds);
+        spec_atts.TryGetValue(species, out var baseAtts);
+        spec_states.TryGetValue(species, out var baseStates);
+        //`default_weights.TryGetValue(species, out var aux_mat);
         
-        spec_needs.TryGetValue(species, out var aux_needs);
-        spec_atts.TryGetValue(species, out var aux_att);
-        spec_states.TryGetValue(species, out var aux_state);
-        default_weights.TryGetValue(species, out var aux_mat);
+        SortedDictionary<Need, double> needsAux = new SortedDictionary<Need, double>();
+        if (baseNeeds != null)
+            foreach (Need need in baseNeeds)
+                needsAux.Add(need, 0);
 
-        SortedDictionary<Need, double> needs_aux = new SortedDictionary<Need, double>();
-        foreach (Need need in aux_needs) 
-            needs_aux.Add(need, 0);
+        SortedDictionary<Attribute, double> attsAux = new SortedDictionary<Attribute, double>();
+        if (baseAtts != null)
+            foreach (KeyValuePair<Attribute, double> kvp in baseAtts)
+                attsAux.Add(kvp.Key, kvp.Value);
         
-        SortedDictionary<Attribute, double> atts_aux = new SortedDictionary<Attribute, double>(); 
-        foreach (KeyValuePair<Attribute, double> kvp in aux_att)
-            atts_aux.Add(kvp.Key, kvp.Value);
-
-        return new AgentStats(atts_aux, needs_aux, aux_state, aux_mat);
+        return new AgentStats(attsAux, needsAux, baseStates, null);//aux_mat);
     }
 
-    public static AgentStats NewAgentStats(AgentStats p1, AgentStats p2) {
-        return null;
+    public static AgentStats NewAgentStats(AgentStats p1, AgentStats p2, Species species) {
+        
+        // Get a reference to species' States
+        spec_states.TryGetValue(species, out var baseStates);
+
+        // Fill up needs in zero 
+        spec_needs.TryGetValue(species, out var baseNeeds);
+        SortedDictionary<Need, double> needsAux = new SortedDictionary<Need, double>();
+        if (baseNeeds != null)
+            foreach (Need need in baseNeeds)
+                needsAux.Add(need, 0);
+        
+        // Fill attributes from parents. TODO: ameliorate random distribution. Species should contain a MUTABILITY constant value in a separate dictionary 
+        SortedDictionary<Attribute, double> attsAux = new SortedDictionary<Attribute, double>();
+        foreach (KeyValuePair<Attribute, double> kvp in p1.Atts)
+            if ( Random.Range(0f, 1f) < 0.4f ) // Reemplazar por mutabilidad
+                attsAux.Add(kvp.Key, Random.Range(0f, 1f));
+            else if (Random.Range(0f, 1f) < 0.5)
+                attsAux.Add(kvp.Key, kvp.Value);
+            else { 
+                p2.Atts.TryGetValue(kvp.Key, out var p2att);
+                attsAux.Add(kvp.Key, p2att);
+            }
+
+        // Mix-and-match reactance matrix
+        return new AgentStats(attsAux, needsAux, baseStates, null);//aux_mat);
+        
     }
 }

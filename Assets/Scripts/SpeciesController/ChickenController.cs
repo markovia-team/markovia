@@ -6,8 +6,13 @@ using Vector3 = UnityEngine.Vector3;
 
 public class ChickenController : MovableAgent
 {
+
+    new void Start()
+    {
+        base.Start();
+        transform.localScale = (float)stats.GetAttribute(Attribute.Size)*transform.localScale ; 
+    }
     // private static maxSpeed;
-    
     new void Update()
     {
         // base is equivalent to Java's super() call 

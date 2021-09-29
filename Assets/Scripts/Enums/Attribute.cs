@@ -5,5 +5,6 @@ using UnityEngine;
 public enum Attribute
 {
     Speed, 
-    Size
+    Size, 
+    Color
 }
