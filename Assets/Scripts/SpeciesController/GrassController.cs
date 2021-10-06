@@ -29,6 +29,11 @@ public class GrassController : NotMovableAgent
         throw new System.NotImplementedException();
     }
 
+    public override Vector3 getBestWaterPosition()
+    {
+        throw new NotImplementedException();
+    }
+
 
     private double getLambdaRate() {
         return 1; 

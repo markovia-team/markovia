@@ -19,6 +19,9 @@ public static class StateExtensions {
             case State.LookForFood:
                 break; 
             case State.LookForWater:
+                Vector3 waterPostion = controller.getBestWaterPosition();
+                controller.moveTo(waterPostion);
+                controller.drink();
                 break; 
             case State.Stealth:
                 break; 

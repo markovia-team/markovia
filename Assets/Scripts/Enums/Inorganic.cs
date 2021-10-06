@@ -2,10 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Need
+public enum Inorganic 
 {
-    Sleep,
-    Hunger, 
-    ReproductiveUrge,
-    Water
+   Water
 }

@@ -29,16 +29,17 @@ public class AgentSpawner : MonoBehaviour
             InGameAgents.Add(s, new HashSet<GameObject>());
 
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 1; i++) {
             speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab); 
             GameObject reference = Instantiate(selectedPrefab, this.transform);
             reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Chicken);
+            reference.GetComponent<Agent>().worldController = GetComponent<WorldController>(); 
             InGameAgents.TryGetValue(Species.Chicken, out var x);
             x.Add(reference);
         }
 
 
-        StartCoroutine(Populate()); 
+        //StartCoroutine(Populate()); 
     }
 
     // Update is called once per frame
