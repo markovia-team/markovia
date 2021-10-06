@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -11,7 +12,7 @@ public class ChickenController : MovableAgent
 
     private static float chickenMaxSpeed = 1.75f;
     private static float chickenMinSpeed = 0.5f;
-
+    
     private float getEffectiveSize(double normalized) {
         return (float) ((chickenMaxSize - chickenMinSize) * normalized + chickenMinSize); 
     }
@@ -44,8 +45,9 @@ public class ChickenController : MovableAgent
         throw new NotImplementedException();
     }
 
-    public override void drink() {
-        throw new NotImplementedException();
+    public override void drink()
+    {
+        thirst = 0; 
     }
 
     public override void eat() {
@@ -59,7 +61,24 @@ public class ChickenController : MovableAgent
     public override void seeAround() {
         throw new NotImplementedException();
     }
-    
+
+    public override Vector3 getBestWaterPosition()
+    {
+        List<GameObject> waters = worldController.GetWaterReferences();
+        Vector3 bestWater = new Vector3(Single.PositiveInfinity, Single.PositiveInfinity, Single.PositiveInfinity);
+        float bestDistance = float.MaxValue;
+        foreach (var w in waters)
+        {
+            var dist = Vector3.Distance(this.transform.position, w.transform.position); 
+            if ( dist < bestDistance)
+            {
+                bestDistance = dist;
+                bestWater = w.transform.position; 
+            }
+        }
+        return bestWater;
+    }
+
     public override void reproduce() {
         throw new NotImplementedException();
     }

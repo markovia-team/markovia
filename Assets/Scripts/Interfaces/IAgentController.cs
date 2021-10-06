@@ -14,6 +14,8 @@ public interface IAgentController
    // No seria void
    void seeAround();
 
+   Vector3 getBestWaterPosition(); 
+
 
    // void Foo1();
    // void Foo2(); 

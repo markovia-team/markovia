@@ -24,7 +24,7 @@ public static class SpeciesFactory {
     };
     
     private static readonly Dictionary<Species, SortedSet<Need>> spec_needs = new Dictionary<Species, SortedSet<Need>>() {
-        { Species.Chicken, new SortedSet<Need>() { Need.Sleep, Need.Hunger, Need.ReproductiveUrge } },
+        { Species.Chicken, new SortedSet<Need>() { Need.Sleep, Need.Hunger, Need.ReproductiveUrge, Need.Water } },
         { Species.Grass, new SortedSet<Need>() { Need.ReproductiveUrge } },
         { Species.Fox, new SortedSet<Need>() { Need.Sleep, Need.Hunger, Need.ReproductiveUrge } }
     };
@@ -81,12 +81,12 @@ public static class SpeciesFactory {
             if (Random.Range(0f, 1f) < mutability) {
                 var t = Random.Range(0f, 1f); 
                 attsAux.Add(kvp.Key, t);
-                Debug.Log("MUTA: "+kvp.Key+"->"+t);
+                // Debug.Log("MUTA: "+kvp.Key+"->"+t);
             } else {
                 var p = Random.Range(0f, 1f);
                 var mean = p * p1.GetAttribute(kvp.Key) + (1 - p) * p2.GetAttribute(kvp.Key);
                 var finalAtt = Math.Min(Math.Max(Normal.Sample(mean, 0.01f), 0f), 1f) ; 
-                Debug.Log("MENDEL ("+p+"): "+kvp.Key+" ("+p1.GetAttribute(kvp.Key)+", "+p2.GetAttribute(kvp.Key)+")->"+ mean+ "->"+finalAtt);
+                // Debug.Log("MENDEL ("+p+"): "+kvp.Key+" ("+p1.GetAttribute(kvp.Key)+", "+p2.GetAttribute(kvp.Key)+")->"+ mean+ "->"+finalAtt);
                 attsAux.Add(kvp.Key, finalAtt);
             }
         }
