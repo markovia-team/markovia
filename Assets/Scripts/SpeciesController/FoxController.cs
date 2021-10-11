@@ -5,29 +5,30 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
-public class ChickenController : MovableAgent
-{
-    private static float chickenMaxSize = 1.75f;
-    private static float chickenMinSize = 0.5f;
-
-    private static float chickenMaxSpeed = 2.75f;
-    private static float chickenMinSpeed = 1.5f;
+public class FoxController : MovableAgent {
+    private static float foxMaxSize = 1.5f;
+    private static float foxMinSize = 0.5f;
+    private static float foxMaxSpeed = 5;
+    private static float foxMinSpeed = 2.75f;
     
     private float getEffectiveSize(double normalized) {
-        return (float) ((chickenMaxSize - chickenMinSize) * normalized + chickenMinSize); 
+        return (float) ((foxMaxSize - foxMinSize) * normalized + foxMinSize); 
     }
 
     private float getEffectiveSpeed(double normalized) {
-        return (float) ((chickenMaxSpeed - chickenMinSpeed) * normalized + chickenMinSpeed); 
+        return (float) ((foxMaxSpeed - foxMinSpeed) * normalized + foxMinSpeed); 
     }
 
-    new void Start() {
+    new void Start()
+    {
         base.Start();
         transform.localScale = getEffectiveSize(stats.GetAttribute(Attribute.Size)) * transform.localScale;
         agent.speed = getEffectiveSpeed(stats.GetAttribute(Attribute.Speed)) * WorldController.TickSpeed;
     }
 
-    new void Update() {
+    new void Update()
+    {
+        // Need to do a generic Agent Update() before making a fox Update()
         base.Update();
         agent.speed = getEffectiveSpeed(stats.GetAttribute(Attribute.Speed))*WorldController.TickSpeed;
     }
@@ -38,12 +39,12 @@ public class ChickenController : MovableAgent
     }
 
     public override void drink() {
-        Debug.Log("CHICKEN DRINK");
+        Debug.Log("FOX DRINK");
         thirst = 0; 
     }
 
     public override void eat() {
-        Debug.Log("CHICKEN EAT");
+        Debug.Log("FOX EAT");
         hunger = 0;
     }
 
@@ -55,17 +56,13 @@ public class ChickenController : MovableAgent
         throw new NotImplementedException();
     }
 
-    public override GameObject getBestWaterPosition()
-    {
+    public override GameObject getBestWaterPosition() {
         List<GameObject> waters = worldController.GetWaterReferences();
-        // Vector3 bestWater = new Vector3(Single.PositiveInfinity, Single.PositiveInfinity, Single.PositiveInfinity);
         float bestDistance = float.MaxValue;
         GameObject result = null;
-        foreach (var w in waters)
-        {
+        foreach (var w in waters) {
             var dist = Vector3.Distance(this.transform.position, w.transform.position); 
-            if (dist < bestDistance)
-            {
+            if (dist < bestDistance) {
                 bestDistance = dist;
                 result = w; 
             }
@@ -74,17 +71,14 @@ public class ChickenController : MovableAgent
     }
 
     public override GameObject getBestFoodPosition() {
+        // HashSet<GameObject> waters = worldController.agentSpawner.GetChickens();
         List<GameObject> waters = worldController.GetFoodReferences();
-        Vector3 bestFood = new Vector3(Single.PositiveInfinity, Single.PositiveInfinity, Single.PositiveInfinity);
         float bestDistance = float.MaxValue;
         GameObject result = null;
-        foreach (var w in waters)
-        {
+        foreach (var w in waters) {
             var dist = Vector3.Distance(this.transform.position, w.transform.position); 
-            if (dist < bestDistance)
-            {
+            if (dist < bestDistance) {
                 bestDistance = dist;
-                bestFood = w.transform.position;
                 result = w;
             }
         }

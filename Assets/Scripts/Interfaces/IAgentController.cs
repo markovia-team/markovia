@@ -5,6 +5,7 @@ using UnityEngine;
 public interface IAgentController
 {
    void moveTo(Vector3 to);
+   void moveTo(GameObject to);
    void runTo(Vector3 to);
    void drink();
    void eat();
@@ -22,6 +23,6 @@ public interface IAgentController
    void IsThere();
    bool IsHere(Vector3 to);
 
-   Vector3 getBestWaterPosition(); 
-   Vector3 getBestFoodPosition(); 
+   GameObject getBestWaterPosition(); 
+   GameObject getBestFoodPosition(); 
 }

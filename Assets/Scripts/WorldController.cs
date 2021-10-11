@@ -6,9 +6,10 @@ using Random = UnityEngine.Random;
 
 public class WorldController : MonoBehaviour
 {
-    // Lo meti en una region para organizar un poco el codigo 
     #region TickSpeed
     public static float tickSpeed = 1.0f;
+
+    // public AgentSpawner agentSpawner;
 
     public static float TickSpeed
     {
@@ -25,7 +26,6 @@ public class WorldController : MonoBehaviour
 
     private void Start()
     {
-        // Initialized list based on inorganicPrefabs
         foreach ( var s in inorganicPrefabs )
             inorganicReferences.Add(s.Key, new List<GameObject>());
         
