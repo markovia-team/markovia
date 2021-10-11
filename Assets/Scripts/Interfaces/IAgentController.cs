@@ -14,9 +14,14 @@ public interface IAgentController
    // No seria void
    void seeAround();
 
+   void FinishedSolvingState();
+   void BeginSolvingState();
+   bool IsSolving();
+   bool IsGoing();
+   void Going();
+   void IsThere();
+   bool IsHere(Vector3 to);
+
    Vector3 getBestWaterPosition(); 
-
-
-   // void Foo1();
-   // void Foo2(); 
+   Vector3 getBestFoodPosition(); 
 }
