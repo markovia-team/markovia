@@ -13,18 +13,19 @@ public enum State {
 }
 
 public static class StateExtensions {
-    // public static void SolveState(this State state, IAgentController controller, GameObject agentGO) {
     public static IEnumerator SolveState(this State state, IAgentController controller) {
         switch (state) {
             case State.LookForFood:
                 
                 controller.BeginSolvingState();
-                Vector3 foodPostion = controller.getBestFoodPosition();
-                controller.moveTo(foodPostion);
+                GameObject food = controller.getBestFoodPosition();
+                controller.moveTo(food);
                 
                 while (controller.IsSolving()) {
-                    if (controller.IsHere(foodPostion)) { 
+                    if (controller.IsHere(food.transform.position)) {
+                        // UnityEngine.Object.Destroy(foodPosition);
                         controller.eat();
+
                         controller.FinishedSolvingState();
                     }
                     yield return null;
@@ -32,15 +33,12 @@ public static class StateExtensions {
 
                 break; 
             case State.LookForWater:
-                // Debug.Log("MBOENAS");
                 controller.BeginSolvingState();
-                Vector3 waterPostion = controller.getBestWaterPosition();
-                //Debug.Log(waterPostion);
-                controller.moveTo(waterPostion);
+                GameObject water = controller.getBestWaterPosition();
+                controller.moveTo(water);
                 
                 while (controller.IsSolving()) {
-                    // Debug.Log("SUSANo: " + controller.IsHere(waterPostion));
-                    if (controller.IsHere(waterPostion)) { 
+                    if (controller.IsHere(water.transform.position)) { 
                         controller.drink();
                         controller.FinishedSolvingState();
                     }
@@ -59,12 +57,10 @@ public static class StateExtensions {
                 int z = Random.Range(-5, 5);
                 Vector3 to = new Vector3(x, 0, z);
                 controller.moveTo(to);
-                // while (controller.IsGoing());
 
                 while (controller.IsSolving()) {
                     if (controller.IsHere(to)) { 
                         controller.FinishedSolvingState();
-                        // Debug.Log("hola? hola bb");
                     }
                     yield return null;
                 }

@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 public class GrassController : NotMovableAgent
 {
     private double timeToReproduce;
-    // Update is called once per frame
     void Start() {
         InvokeRepeating("reproduce", 10/WorldController.TickSpeed, 10/WorldController.TickSpeed);
     }
@@ -29,12 +28,12 @@ public class GrassController : NotMovableAgent
         throw new System.NotImplementedException();
     }
 
-    public override Vector3 getBestWaterPosition()
+    public override GameObject getBestWaterPosition()
     {
         throw new NotImplementedException();
     }
 
-    public override Vector3 getBestFoodPosition()
+    public override GameObject getBestFoodPosition()
     {
         throw new NotImplementedException();
     }

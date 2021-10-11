@@ -5,9 +5,7 @@ using UnityEngine;
 using MathNet.Numerics.Distributions;
 using Random = UnityEngine.Random;
 
-
 public static class SpeciesFactory {
-    
     private static readonly Dictionary<Species, SortedDictionary<Attribute, double>> spec_atts = new Dictionary<Species, SortedDictionary<Attribute, double>>() {
         { Species.Chicken, new SortedDictionary<Attribute, double>() {
             {Attribute.Speed, 0.5f},

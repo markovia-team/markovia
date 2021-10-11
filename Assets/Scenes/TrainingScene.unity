@@ -428,6 +428,8 @@ MonoBehaviour:
       Value: {fileID: 5097315404668106417, guid: 4635d2148b6e5e8479547735c7f09080, type: 3}
     - Key: 2
       Value: {fileID: 768580019626220130, guid: cbb5d90efd455724cbdee75c780de8e6, type: 3}
+    - Key: 1
+      Value: {fileID: 4020983980232809014, guid: 9fedecbd1aa68924b816f15cb97e611a, type: 3}
 --- !u!4 &1379952788
 Transform:
   m_ObjectHideFlags: 0
@@ -458,6 +460,10 @@ MonoBehaviour:
     list:
     - Key: 0
       Value: {fileID: 7977809594815001110, guid: 430137c47ecc2bb40a4a5da505994bee, type: 3}
+  organicPrefabs:
+    list:
+    - Key: 0
+      Value: {fileID: 7977809594815001110, guid: 306a04fbfcf6cd447910b1cc5252f26a, type: 3}
 --- !u!1 &1453721365
 GameObject:
   m_ObjectHideFlags: 0

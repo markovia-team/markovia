@@ -21,38 +21,29 @@ public class ChickenController : MovableAgent
         return (float) ((chickenMaxSpeed - chickenMinSpeed) * normalized + chickenMinSpeed); 
     }
 
-    new void Start()
-    {
+    new void Start() {
         base.Start();
         transform.localScale = getEffectiveSize(stats.GetAttribute(Attribute.Size)) * transform.localScale;
         agent.speed = getEffectiveSpeed(stats.GetAttribute(Attribute.Speed)) * WorldController.TickSpeed;
     }
-    // private static maxSpeed;
-    new void Update()
-    {
-        // base is equivalent to Java's super() call 
-        // Need to do a generic Agent Update() before making a Chicken Update()
+
+    new void Update() {
         base.Update();
         agent.speed = getEffectiveSpeed(stats.GetAttribute(Attribute.Speed))*WorldController.TickSpeed;
     }
 
-    // public override void moveTo(Vector3 to)
-    // {
-    //     // base.moveTo(to); 
-    // }
-
     public override void runTo(Vector3 to) {
+        // base.moveTo(to); 
         throw new NotImplementedException();
     }
 
-    public override void drink()
-    {
-        Debug.Log("me la tome todita papi");
+    public override void drink() {
+        Debug.Log("CHICKEN DRINK");
         thirst = 0; 
     }
 
     public override void eat() {
-        Debug.Log("me la comi todita papi");
+        Debug.Log("CHICKEN EAT");
         hunger = 0;
     }
 
@@ -64,38 +55,40 @@ public class ChickenController : MovableAgent
         throw new NotImplementedException();
     }
 
-    public override Vector3 getBestWaterPosition()
+    public override GameObject getBestWaterPosition()
     {
         List<GameObject> waters = worldController.GetWaterReferences();
-        Vector3 bestWater = new Vector3(Single.PositiveInfinity, Single.PositiveInfinity, Single.PositiveInfinity);
+        // Vector3 bestWater = new Vector3(Single.PositiveInfinity, Single.PositiveInfinity, Single.PositiveInfinity);
         float bestDistance = float.MaxValue;
+        GameObject result = null;
         foreach (var w in waters)
         {
             var dist = Vector3.Distance(this.transform.position, w.transform.position); 
             if (dist < bestDistance)
             {
                 bestDistance = dist;
-                bestWater = w.transform.position; 
+                result = w; 
             }
         }
-        return bestWater;
+        return result;
     }
 
-        public override Vector3 getBestFoodPosition()
-    {
+    public override GameObject getBestFoodPosition() {
         List<GameObject> waters = worldController.GetFoodReferences();
         Vector3 bestFood = new Vector3(Single.PositiveInfinity, Single.PositiveInfinity, Single.PositiveInfinity);
         float bestDistance = float.MaxValue;
+        GameObject result = null;
         foreach (var w in waters)
         {
             var dist = Vector3.Distance(this.transform.position, w.transform.position); 
             if (dist < bestDistance)
             {
                 bestDistance = dist;
-                bestFood = w.transform.position; 
+                bestFood = w.transform.position;
+                result = w;
             }
         }
-        return bestFood;
+        return result;
     }
 
     public override void reproduce() {
