@@ -5,22 +5,41 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    private Dictionary<Species, GameObject> speciesPrefabs = new Dictionary<Species, GameObject>();
+    
     public void PlayGame() {
+        foreach (var pair in speciesPrefabs)
+            AgentSpawner.AddSpecies(pair.Key, pair.Value);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void AddFox() {
-        GameObject prefab = (GameObject) Resources.Load("Fox", typeof(GameObject));
-        AgentSpawner.AddSpecies(Species.Fox, prefab);
+        if (speciesPrefabs.ContainsKey(Species.Fox)) {
+            speciesPrefabs.Remove(Species.Fox);
+        } else {
+            GameObject prefab = (GameObject) Resources.Load("Fox", typeof(GameObject));
+            speciesPrefabs.Add(Species.Fox, prefab);
+            // AgentSpawner.AddSpecies(Species.Fox, prefab);
+        }
     }
     
     public void AddChicken() {
-        GameObject prefab = (GameObject) Resources.Load("Chicken", typeof(GameObject));
-        AgentSpawner.AddSpecies(Species.Chicken, prefab);
+        if (speciesPrefabs.ContainsKey(Species.Chicken)) {
+            speciesPrefabs.Remove(Species.Chicken);
+        } else {
+            GameObject prefab = (GameObject) Resources.Load("Chicken", typeof(GameObject));
+            speciesPrefabs.Add(Species.Chicken, prefab);
+            // AgentSpawner.AddSpecies(Species.Chicken, prefab);
+        }
     }
     
     public void AddGrass() {
-        GameObject prefab = (GameObject) Resources.Load("Grass", typeof(GameObject));
-        AgentSpawner.AddSpecies(Species.Grass, prefab);
+        if (speciesPrefabs.ContainsKey(Species.Grass)) {
+            speciesPrefabs.Remove(Species.Grass);
+        } else {
+            GameObject prefab = (GameObject) Resources.Load("Grass", typeof(GameObject));
+            speciesPrefabs.Add(Species.Grass, prefab);
+            // AgentSpawner.AddSpecies(Species.Grass, prefab);
+        }
     }
 }

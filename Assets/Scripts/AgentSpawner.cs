@@ -28,16 +28,16 @@ public class AgentSpawner : MonoBehaviour
         foreach (var s in speciesPrefabs.Keys)
             InGameAgents.Add(s, new HashSet<GameObject>());
         
-        // for (int i = 0; i < 1; i++) {
-        //     speciesPrefabs.TryGetValue(Species.Grass, out var selectedPrefab);
-        //     if (selectedPrefab != null) {
-        //         GameObject reference = Instantiate(selectedPrefab, this.transform);
-        //         reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Grass);
-        //         reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
-        //         InGameAgents.TryGetValue(Species.Chicken, out var x);
-        //         x.Add(reference);
-        //     }
-        // }
+        for (int i = 0; i < 1; i++) {
+            speciesPrefabs.TryGetValue(Species.Grass, out var selectedPrefab);
+            if (selectedPrefab != null) {
+                GameObject reference = Instantiate(selectedPrefab, this.transform);
+                reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Grass);
+                reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
+                InGameAgents.TryGetValue(Species.Grass, out var x);
+                x.Add(reference);
+            }
+        }
 
         for (int i = 0; i < 1; i++) {
             speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab);
