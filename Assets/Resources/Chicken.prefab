@@ -229,7 +229,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5097315404668106417}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: e305663a1d36e9c469b164b3b8094239, type: 3}
   m_Controller: {fileID: 9100000, guid: 81ec749815f013748b3a5fb04da16ce0, type: 2}
   m_CullingMode: 1
@@ -252,6 +252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a929c9dcdeb8b24d8a4d0dd8562bb3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldController: {fileID: 0}
   agent: {fileID: 5096679450017682894}
 --- !u!195 &5096679450017682894
 NavMeshAgent:
