@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: f2a56f4293a90f894ab91dee295403c6, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -423,13 +423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speciesPrefabs:
-    list:
-    - Key: 0
-      Value: {fileID: 5097315404668106417, guid: 4635d2148b6e5e8479547735c7f09080, type: 3}
-    - Key: 2
-      Value: {fileID: 768580019626220130, guid: cbb5d90efd455724cbdee75c780de8e6, type: 3}
-    - Key: 1
-      Value: {fileID: 4020983980232809014, guid: 9fedecbd1aa68924b816f15cb97e611a, type: 3}
+    list: []
 --- !u!4 &1379952788
 Transform:
   m_ObjectHideFlags: 0
