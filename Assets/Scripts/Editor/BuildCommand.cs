@@ -72,7 +72,7 @@ static class BuildCommand
 
     static string GetFixedBuildPath(BuildTarget buildTarget, string buildPath, string buildName)
     {
-        if (buildTarget.ToString().ToLower().Contains("windows")) {
+        if (buildTarget.ToString().ToLower().Contains("windows"))
             buildName += ".exe";
         return buildPath + buildName;
     }

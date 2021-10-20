@@ -3,7 +3,7 @@ stages:
   - deploy
 
 variables:
-  BUILD_NAME: ExampleProjectName
+  BUILD_NAME: Markovia
   UNITY_ACTIVATION_FILE: ./unity3d.alf
   UNITY_VERSION: "2020.3.18f1"
   IMAGE: unityci/editor # https://hub.docker.com/r/unityci/editor
