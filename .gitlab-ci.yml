@@ -90,11 +90,37 @@ build-StandaloneLinux64-il2cpp:
     BUILD_TARGET: StandaloneLinux64
     SCRIPTING_BACKEND: IL2CPP
 
+build-StandaloneOSX:
+  <<: *build
+  image: $IMAGE:$UNITY_VERSION-mac-mono-$IMAGE_VERSION
+  variables:
+    BUILD_TARGET: StandaloneOSX
+
 build-StandaloneWindows64:
   <<: *build
   image: $IMAGE:$UNITY_VERSION-windows-mono-$IMAGE_VERSION
   variables:
     BUILD_TARGET: StandaloneWindows64
+
+build-WebGL:
+  <<: *build
+  image: $IMAGE:$UNITY_VERSION-webgl-$IMAGE_VERSION
+  before_script:
+    - chmod +x ./ci/before_script.sh && ./ci/before_script.sh
+    - apt-get update && apt-get install ffmpeg -y
+  variables:
+    BUILD_TARGET: WebGL
+
+pages:
+  image: alpine:latest
+  stage: deploy
+  script:
+    - mv "$UNITY_DIR/Builds/WebGL/${BUILD_NAME}" public
+  artifacts:
+    paths:
+      - public
+  only:
+   - master
 
 workflow:
   rules:
