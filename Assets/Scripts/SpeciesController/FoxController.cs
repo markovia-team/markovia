@@ -55,6 +55,7 @@ public class FoxController : MovableAgent {
     }
 
     public override GameObject getBestWaterPosition() {
+        
         List<GameObject> waters = worldController.GetWaterReferences();
         float bestDistance = float.MaxValue;
         GameObject result = null;
@@ -66,10 +67,13 @@ public class FoxController : MovableAgent {
             }
         }
         return result;
+        
+        //return this.gameObject;
     }
 
     public override GameObject getBestFoodPosition() {
         // HashSet<GameObject> waters = worldController.agentSpawner.GetChickens();
+        
         List<GameObject> waters = worldController.GetFoodReferences();
         float bestDistance = float.MaxValue;
         GameObject result = null;
@@ -81,6 +85,8 @@ public class FoxController : MovableAgent {
             }
         }
         return result;
+        
+        //return this.gameObject;
     }
 
     public override void reproduce() {
