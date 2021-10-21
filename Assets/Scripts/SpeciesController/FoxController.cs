@@ -39,12 +39,10 @@ public class FoxController : MovableAgent {
     }
 
     public override void drink() {
-        Debug.Log("FOX DRINK");
         thirst = 0; 
     }
 
     public override void eat() {
-        Debug.Log("FOX EAT");
         hunger = 0;
     }
 

@@ -13,21 +13,16 @@ public abstract class MovableAgent : Agent
     // }
 
     public void Update() {
-        thirst += Time.deltaTime * 0.001f * WorldController.TickSpeed;
-        hunger += Time.deltaTime * 0.001f * WorldController.TickSpeed;
-        if (thirst > 1 || hunger > 1) {
-            Destroy(this.gameObject);
-        }
+        base.Update();
     }
 
     public override void moveTo(Vector3 to) {
         Going();
         agent.SetDestination(to);
-        StartCoroutine(WaitTilThereCoroutine(to)); 
+        StartCoroutine(WaitTillThereCoroutine(to)); 
     }
 
     public override void moveTo(GameObject to) {
-        Debug.Log(this);
         Going();
         StartCoroutine(FollowObject(to));
     }
@@ -50,7 +45,7 @@ public abstract class MovableAgent : Agent
         yield return null;
     }
 
-    public IEnumerator WaitTilThereCoroutine(Vector3 to)
+    public IEnumerator WaitTillThereCoroutine(Vector3 to)
     {
         while (Vector3.Distance(transform.position, to) > 0.5f && IsSolving()) {
             yield return null; // new WaitForSeconds(0.5f); //TODO: no seria mejor cada intervalos chicos de tiempo? 
