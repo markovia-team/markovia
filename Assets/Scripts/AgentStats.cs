@@ -69,7 +69,6 @@ public class AgentStats {
             if (value > 1f)
                 value = 1f;
             needs[need] = value;
-            Debug.Log("Need: " + need + " value " + value);
         }
 
         
@@ -86,7 +85,6 @@ public class AgentStats {
         needs.TryGetValue(need, out var a);
         if (a != null) {
             needs[need] = value;
-            Debug.Log("Need: " + need + " value " + value);
         }
     }
     
@@ -106,16 +104,24 @@ public class AgentStats {
         double maxValue = 0;
         var maxj = -1;
         foreach (var value in neuralOutput) {
-            if (maxValue < value) {
+            if (maxValue < value)
+            {
                 maxValue = value;
-                maxj = j; 
+                maxj = j;
             }
-            j++; 
+            j++;
         }
-             
+
         // Recover state from Set
-        // TODO: not efficient, it may be better to use an ArrayList and sort it. Getting the 'nth' element is O(n) in SortedSet 
-        return states.ElementAt(maxj);
+        // TODO: not efficient, it may be better to use an ArrayList and sort it. Getting the 'nth' element is O(n) in SortedSet
         
+        return states.ElementAt(maxj);
+         
+    }
+
+    public double GetNeed(Need need)
+    {
+        needs.TryGetValue(need, out var ans);
+        return ans;
     }
 }
