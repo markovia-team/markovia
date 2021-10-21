@@ -21,11 +21,12 @@ public abstract class Agent : MonoBehaviour, IAgentController
         ResetCoroutines();
     }
     
-    // No borrar, no compila. Odio Unity (odiamos*)
+    // No borrar, no compila. Odio Unity (odiamos*) :D
     public void Update() {
         foreach (double value in stats.Needs.Values) {
+            Debug.Log(value);
             if (value == 1f)
-                die();
+                Die();
         }
     }
     
@@ -86,7 +87,8 @@ public abstract class Agent : MonoBehaviour, IAgentController
         } while(true);
     }
 
-    public void die() {
+    public void Die() {
+        StopAllCoroutines();
         Destroy(this.gameObject);
     }
     
@@ -97,7 +99,6 @@ public abstract class Agent : MonoBehaviour, IAgentController
                     ResetCoroutines();
                 }
                 currentState = nextState;
-                Debug.Log("solves " + currentState);
                 StartCoroutine(currentState.SolveState(this));
             }
             yield return null;

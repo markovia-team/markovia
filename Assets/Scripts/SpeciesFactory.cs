@@ -29,9 +29,10 @@ public static class SpeciesFactory {
     };
 
     private static readonly Dictionary<Species, SortedSet<State>> spec_states = new Dictionary<Species, SortedSet<State>>() {    
-        { Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Idle, State.Wander } },
-        { Species.Grass, new SortedSet<State>() { State.Idle } },
-        { Species.Fox, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Idle, State.Wander } }
+        //{ Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Idle, State.Wander } },
+         { Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Idle } },
+        { Species.Grass, new SortedSet<State>() { State.Sleep } },
+        { Species.Fox, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Idle } }
     };
 
     private static readonly Dictionary<Species, float> spec_mutability = new Dictionary<Species, float>() {
