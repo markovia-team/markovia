@@ -38,12 +38,10 @@ public class ChickenController : MovableAgent
     }
 
     public override void drink() {
-        Debug.Log("CHICKEN DRINK");
         thirst = 0; 
     }
 
     public override void eat() {
-        Debug.Log("CHICKEN EAT");
         hunger = 0;
     }
 

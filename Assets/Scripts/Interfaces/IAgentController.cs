@@ -15,7 +15,7 @@ public interface IAgentController
    // No seria void
    void seeAround();
 
-   void FinishedSolvingState();
+   void ResetCoroutines();
    void BeginSolvingState();
    bool IsSolving();
    bool IsGoing();

@@ -60,11 +60,41 @@ public class AgentStats {
         foreach (var pair in atts) neuralInput[i++] = pair.Value;
     }
 
+    public void UpdateNeed(Need need, float increment) {
+        needs.TryGetValue(need, out var a);
+        if (a != null) {
+            double value = a + increment;
+            if (value < 0f)
+                value = 0f;
+            if (value > 1f)
+                value = 1f;
+            needs[need] = value;
+            Debug.Log("Need: " + need + " value " + value);
+        }
+
+        
+        /*
+        needs.TryGetValue(need, out var a);
+        if (a != null)
+            needs.Add(need, a + increment);
+        */
+    }
+
+    public void SetNeed(Need need, float value) {
+        if (value < 0f || value > 1f)
+            return;
+        needs.TryGetValue(need, out var a);
+        if (a != null) {
+            needs[need] = value;
+            Debug.Log("Need: " + need + " value " + value);
+        }
+    }
     
     public State NextState() {
 
-        return State.Idle;
-        /*
+        // return State.Idle;
+        foreach (KeyValuePair<Need, double> kvp in needs)
+            Debug.Log("Key: " + kvp.Key + " Value: " + kvp.Value);
         // Fill values that change in the input vector
         var i = qAtts;
         foreach (var pair in needs) neuralInput[i++] = pair.Value;
@@ -74,7 +104,7 @@ public class AgentStats {
         
         var j = 0;
         double maxValue = 0;
-        var maxj = -1; 
+        var maxj = -1;
         foreach (var value in neuralOutput) {
             if (maxValue < value) {
                 maxValue = value;
@@ -86,6 +116,6 @@ public class AgentStats {
         // Recover state from Set
         // TODO: not efficient, it may be better to use an ArrayList and sort it. Getting the 'nth' element is O(n) in SortedSet 
         return states.ElementAt(maxj);
-        */
+        
     }
 }
