@@ -6,6 +6,7 @@ using MathNet.Numerics.Distributions;
 using Random = UnityEngine.Random;
 
 public static class SpeciesFactory {
+
     private static readonly Dictionary<Species, SortedDictionary<Attribute, double>> spec_atts = new Dictionary<Species, SortedDictionary<Attribute, double>>() {
         { Species.Chicken, new SortedDictionary<Attribute, double>() {
             {Attribute.Speed, 0.5f},
@@ -22,15 +23,15 @@ public static class SpeciesFactory {
     };
     
     private static readonly Dictionary<Species, SortedSet<Need>> spec_needs = new Dictionary<Species, SortedSet<Need>>() {
-        { Species.Chicken, new SortedSet<Need>() { Need.Sleep, Need.Hunger, Need.ReproductiveUrge, Need.Water } },
+        { Species.Chicken, new SortedSet<Need>() { Need.Sleep, Need.Hunger, Need.ReproductiveUrge, Need.Thirst } },
         { Species.Grass, new SortedSet<Need>() { Need.ReproductiveUrge } },
-        { Species.Fox, new SortedSet<Need>() { Need.Sleep, Need.Hunger, Need.ReproductiveUrge } }
+        { Species.Fox, new SortedSet<Need>() { Need.Sleep, Need.Hunger, Need.ReproductiveUrge, Need.Thirst } }
     };
 
     private static readonly Dictionary<Species, SortedSet<State>> spec_states = new Dictionary<Species, SortedSet<State>>() {    
-        { Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Stealth, State.Idle } },
+        { Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Idle, State.Wander } },
         { Species.Grass, new SortedSet<State>() { State.Idle } },
-        { Species.Fox, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Stealth, State.Idle } }
+        { Species.Fox, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Idle, State.Wander } }
     };
 
     private static readonly Dictionary<Species, float> spec_mutability = new Dictionary<Species, float>() {
@@ -39,12 +40,19 @@ public static class SpeciesFactory {
         { Species.Fox, 0.4f}
     };
     
-    private static readonly Dictionary<Species, Matrix<double>> default_weights;
+    private static readonly Dictionary<Species, Matrix<double>> default_weights = new Dictionary<Species, Matrix<double>>() {
+        /* {
+            Species.Chicken, m.Dense() foo( a1, a2, ..., an)
+        }    */
+    };
     
     public static AgentStats NewAgentStats(Species species) {
         spec_needs.TryGetValue(species, out var baseNeeds);
         spec_atts.TryGetValue(species, out var baseAtts);
         spec_states.TryGetValue(species, out var baseStates);
+
+        // Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count);
+        Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count, new ContinuousUniform(0f,1f));
         //`default_weights.TryGetValue(species, out var aux_mat);
         
         SortedDictionary<Need, double> needsAux = new SortedDictionary<Need, double>();
@@ -57,7 +65,7 @@ public static class SpeciesFactory {
             foreach (KeyValuePair<Attribute, double> kvp in baseAtts)
                 attsAux.Add(kvp.Key, kvp.Value);
         
-        return new AgentStats(attsAux, needsAux, baseStates, null);//aux_mat);
+        return new AgentStats(attsAux, needsAux, baseStates, weights);//aux_mat);
     }
 
     public static AgentStats NewAgentStats(AgentStats p1, AgentStats p2, Species species) {

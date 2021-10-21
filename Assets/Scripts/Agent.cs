@@ -9,7 +9,6 @@ public abstract class Agent : MonoBehaviour, IAgentController
     private State nextState = State.Wander;
     private bool finished = true;
     private bool going = false;
-    int j = 0;
     public WorldController worldController;
     // public AgentSpawner agentSpawner;
 
@@ -19,12 +18,15 @@ public abstract class Agent : MonoBehaviour, IAgentController
     
     public void Start()
     {
-        StartCoroutine(GetNextState());
-        StartCoroutine(SolveState(j++));
+        ResetCoroutines();
     }
     
     // No borrar, no compila. Odio Unity (odiamos*)
     public void Update() {
+        foreach (double value in stats.Needs.Values) {
+            if (value == 1f)
+                die();
+        }
     }
     
     public abstract void moveTo(Vector3 to);
@@ -33,17 +35,17 @@ public abstract class Agent : MonoBehaviour, IAgentController
     public abstract void drink();
     public abstract void eat();
     public abstract void sleep();
-    public abstract void reproduce(); 
+    public abstract void reproduce();
     
     public abstract void seeAround();
     public abstract GameObject getBestWaterPosition();
     public abstract GameObject getBestFoodPosition();
 
-    public void FinishedSolvingState() {
+    public void ResetCoroutines() {
         finished = true; 
         StopAllCoroutines();
         StartCoroutine(GetNextState());
-        StartCoroutine(SolveState(j++));
+        StartCoroutine(SolveState());
     }
     public void BeginSolvingState() {
         finished = false; 
@@ -68,6 +70,8 @@ public abstract class Agent : MonoBehaviour, IAgentController
 
     public IEnumerator GetNextState() {
         do {
+            nextState = stats.NextState();
+            /*
             if (thirst > 0.02f) {
                 nextState = State.LookForWater;
             }
@@ -77,17 +81,23 @@ public abstract class Agent : MonoBehaviour, IAgentController
             else {
                 nextState = State.Wander;
             }
+            */
             yield return new WaitForSecondsRealtime(1f / WorldController.TickSpeed);
         } while(true);
     }
+
+    public void die() {
+        Destroy(this.gameObject);
+    }
     
-    public IEnumerator SolveState(int i) {
+    public IEnumerator SolveState() {
         while (true) {
             if (!nextState.Equals(currentState) || finished) {
                 if (!finished) {
-                    FinishedSolvingState();
+                    ResetCoroutines();
                 }
                 currentState = nextState;
+                Debug.Log("solves " + currentState);
                 StartCoroutine(currentState.SolveState(this));
             }
             yield return null;

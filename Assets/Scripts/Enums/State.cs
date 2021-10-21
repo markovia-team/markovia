@@ -9,38 +9,48 @@ public enum State {
     LookForWater, 
     Stealth,
     Idle,
-    Wander
+    Wander,
+    Sleep
 }
 
 public static class StateExtensions {
-    public static IEnumerator SolveState(this State state, IAgentController controller) {
+    public static IEnumerator SolveState(this State state, Agent agent) {
         switch (state) {
             case State.LookForFood:
                 
-                controller.BeginSolvingState();
-                GameObject food = controller.getBestFoodPosition();
-                controller.moveTo(food);
+                agent.BeginSolvingState();
+                GameObject food = agent.getBestFoodPosition();
+                agent.moveTo(food);
                 
-                while (controller.IsSolving()) {
-                    if (controller.IsHere(food.transform.position)) {
+                while (agent.IsSolving()) {
+                    agent.stats.UpdateNeed(Need.Thirst, 0.2f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Sleep, 0.2f * Time.deltaTime * WorldController.TickSpeed);
+                    if (agent.IsHere(food.transform.position)) {
                         // UnityEngine.Object.Destroy(foodPosition);
-                        controller.eat();
-
-                        controller.FinishedSolvingState();
+                        agent.eat();
+                        agent.stats.UpdateNeed(Need.Hunger, -0.4f * Time.deltaTime * WorldController.TickSpeed);
+                    }
+                    else {
+                        agent.stats.UpdateNeed(Need.Hunger, 0.2f * Time.deltaTime * WorldController.TickSpeed);
                     }
                     yield return null;
                 }
 
                 break; 
             case State.LookForWater:
-                controller.BeginSolvingState();
-                GameObject water = controller.getBestWaterPosition();
-                controller.moveTo(water);
+                agent.BeginSolvingState();
+                GameObject water = agent.getBestWaterPosition();
+                agent.moveTo(water);
                 
-                while (controller.IsSolving()) {
-                    if (controller.IsHere(water.transform.position)) { 
-                        controller.drink();
-                        controller.FinishedSolvingState();
+                while (agent.IsSolving()) {
+                    agent.stats.UpdateNeed(Need.Hunger, 0.2f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Sleep, 0.2f * Time.deltaTime * WorldController.TickSpeed);
+                    if (agent.IsHere(water.transform.position)) {
+                        agent.drink();
+                        agent.stats.UpdateNeed(Need.Thirst, -0.4f * Time.deltaTime * WorldController.TickSpeed);
+                    }
+                    else {
+                        agent.stats.UpdateNeed(Need.Thirst, 0.2f * Time.deltaTime * WorldController.TickSpeed);
                     }
                     yield return null;
                 }
@@ -50,18 +60,37 @@ public static class StateExtensions {
             case State.Stealth:
                 break; 
             case State.Idle:
+                agent.BeginSolvingState();
+                while (agent.IsSolving()) {
+                    agent.stats.UpdateNeed(Need.Hunger, 0.1f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Thirst, 0.1f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Sleep, 0.1f * Time.deltaTime * WorldController.TickSpeed);
+                }
                 break;
             case State.Wander:
-                controller.BeginSolvingState();
+                agent.BeginSolvingState();
                 int x = Random.Range(-5, 5);
                 int z = Random.Range(-5, 5);
                 Vector3 to = new Vector3(x, 0, z);
-                controller.moveTo(to);
+                agent.moveTo(to);
 
-                while (controller.IsSolving()) {
-                    if (controller.IsHere(to)) { 
-                        controller.FinishedSolvingState();
+                while (agent.IsSolving()) {
+                    agent.stats.UpdateNeed(Need.Hunger, 0.2f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Thirst, 0.2f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Sleep, 0.2f * Time.deltaTime * WorldController.TickSpeed);
+
+                    if (agent.IsHere(to)) { 
+                        agent.ResetCoroutines();
                     }
+                    yield return null;
+                }
+                break;
+            case State.Sleep:
+                agent.BeginSolvingState();
+                while(agent.IsSolving()) {
+                    agent.stats.UpdateNeed(Need.Hunger, 0.3f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Thirst, 0.3f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Sleep, -0.2f * Time.deltaTime * WorldController.TickSpeed);
                     yield return null;
                 }
                 break;
