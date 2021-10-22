@@ -1,11 +1,9 @@
-name: CI
+name: CI pipeline 🤖
 
 on:
   push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
-
   workflow_dispatch:
 
 env:
@@ -13,7 +11,7 @@ env:
 
 jobs:
   testRunnerInAllModes:
-    name: Test in ${{ matrix.testMode }} ✨
+    name: Test in ${{ matrix.testMode }} 🔍
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -62,7 +60,7 @@ jobs:
           
   buildAndTestForSomePlatforms:
     needs: testRunnerInAllModes
-    name: Build for ${{ matrix.targetPlatform }}
+    name: Build for ${{ matrix.targetPlatform }} 🔧
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
