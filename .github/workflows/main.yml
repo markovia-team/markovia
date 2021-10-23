@@ -17,6 +17,7 @@ jobs:
       - uses: kolpav/purge-artifacts-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          expire-in: 21 days
           
   testRunnerInAllModes:
     name: Test in ${{ matrix.testMode }} 🔍
