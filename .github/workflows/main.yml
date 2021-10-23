@@ -10,6 +10,14 @@ env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
 jobs:
+  deleteArtifacts:
+    name: Delete old artifacts 🗑️
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kolpav/purge-artifacts-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
   testRunnerInAllModes:
     name: Test in ${{ matrix.testMode }} 🔍
     runs-on: ubuntu-latest
