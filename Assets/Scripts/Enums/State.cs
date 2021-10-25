@@ -15,7 +15,6 @@ public enum State {
 
 public static class StateExtensions {
     public static IEnumerator SolveState(this State state, Agent agent) {
-        Debug.Log("AHHHHHH entré con: " + state);
         switch (state) {
             case State.LookForFood:
                 
@@ -74,9 +73,9 @@ public static class StateExtensions {
             case State.Idle:
                 agent.BeginSolvingState();
                 while (agent.IsSolving()) {
-                    agent.stats.UpdateNeed(Need.Hunger, 0.025f * Time.deltaTime * WorldController.TickSpeed);
-                    agent.stats.UpdateNeed(Need.Thirst, 0.025f * Time.deltaTime * WorldController.TickSpeed);
-                    agent.stats.UpdateNeed(Need.Sleep, 0.025f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Hunger, 0.025f * Time.deltaTime * WorldController.TickSpeed * 3f);
+                    agent.stats.UpdateNeed(Need.Thirst, 0.025f * Time.deltaTime * WorldController.TickSpeed * 3f);
+                    agent.stats.UpdateNeed(Need.Sleep, 0.025f * Time.deltaTime * WorldController.TickSpeed * 3f);
                     yield return null;
                 }
                 break;
@@ -88,9 +87,9 @@ public static class StateExtensions {
                 agent.moveTo(to);
 
                 while (agent.IsSolving()) {
-                    agent.stats.UpdateNeed(Need.Hunger, 0.05f * Time.deltaTime * WorldController.TickSpeed);
-                    agent.stats.UpdateNeed(Need.Thirst, 0.05f * Time.deltaTime * WorldController.TickSpeed);
-                    agent.stats.UpdateNeed(Need.Sleep, 0.05f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Hunger, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
+                    agent.stats.UpdateNeed(Need.Thirst, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
+                    agent.stats.UpdateNeed(Need.Sleep, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
 
                     if (agent.IsHere(to)) { 
                         agent.ResetCoroutines();

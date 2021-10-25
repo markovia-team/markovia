@@ -35,7 +35,6 @@ public abstract class MovableAgent : Agent
     }
 
     public IEnumerator FollowObject(GameObject to) {
-        // Debug.Log(to.transform.position);
         while (Vector3.Distance(transform.position, to.transform.position) > 0.5f && IsSolving()) {
             agent.SetDestination(to.transform.position);
             yield return null; // new WaitForSeconds(0.5f); //TODO: no seria mejor cada intervalos chicos de tiempo? 
