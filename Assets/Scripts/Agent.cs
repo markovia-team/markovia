@@ -24,7 +24,6 @@ public abstract class Agent : MonoBehaviour, IAgentController
     // No borrar, no compila. Odio Unity (odiamos*) :D
     public void Update() {
         foreach (double value in stats.Needs.Values) {
-            Debug.Log(value);
             if (value == 1f)
                 Die();
         }

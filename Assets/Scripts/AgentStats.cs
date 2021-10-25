@@ -13,7 +13,7 @@ public class AgentStats {
     private SortedDictionary<Attribute, double> atts;
     private SortedDictionary<Need, double> needs;
     private SortedSet<State> states;
-    private Matrix<double> weights;
+    public Matrix<double> weights;
 
     // C#: te odio. Te destesto. Me pareces un lenguaje detestable. Sos una chota. Como me vas a hacer hacer esto para un puto getter
     public SortedDictionary<Attribute, double> Atts => atts;
@@ -62,14 +62,12 @@ public class AgentStats {
 
     public void UpdateNeed(Need need, float increment) {
         needs.TryGetValue(need, out var a);
-        if (a != null) {
-            double value = a + increment;
-            if (value < 0f)
-                value = 0f;
-            if (value > 1f)
-                value = 1f;
-            needs[need] = value;
-        }
+        double value = a + increment;
+        if (value < 0f)
+            value = 0f;
+        if (value > 1f)
+            value = 1f;
+        needs[need] = value;
 
         
         /*
@@ -83,16 +81,12 @@ public class AgentStats {
         if (value < 0f || value > 1f)
             return;
         needs.TryGetValue(need, out var a);
-        if (a != null) {
-            needs[need] = value;
-        }
+        needs[need] = value;
     }
     
     public State NextState() {
 
         // return State.Idle;
-        foreach (KeyValuePair<Need, double> kvp in needs)
-            Debug.Log("Key: " + kvp.Key + " Value: " + kvp.Value);
         // Fill values that change in the input vector
         var i = qAtts;
         foreach (var pair in needs) neuralInput[i++] = pair.Value;
