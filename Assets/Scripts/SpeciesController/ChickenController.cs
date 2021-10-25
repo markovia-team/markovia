@@ -9,7 +9,6 @@ public class ChickenController : MovableAgent
 {
     private static float chickenMaxSize = 1.75f;
     private static float chickenMinSize = 0.5f;
-
     private static float chickenMaxSpeed = 2.75f;
     private static float chickenMinSpeed = 1.5f;
     
@@ -53,17 +52,14 @@ public class ChickenController : MovableAgent
         throw new NotImplementedException();
     }
 
-    public override GameObject getBestWaterPosition()
-    {
+    public override GameObject getBestWaterPosition() {
         List<GameObject> waters = worldController.GetWaterReferences();
         // Vector3 bestWater = new Vector3(Single.PositiveInfinity, Single.PositiveInfinity, Single.PositiveInfinity);
         float bestDistance = float.MaxValue;
         GameObject result = null;
-        foreach (var w in waters)
-        {
+        foreach (var w in waters) {
             var dist = Vector3.Distance(this.transform.position, w.transform.position); 
-            if (dist < bestDistance)
-            {
+            if (dist < bestDistance) {
                 bestDistance = dist;
                 result = w; 
             }
@@ -76,11 +72,9 @@ public class ChickenController : MovableAgent
         Vector3 bestFood = new Vector3(Single.PositiveInfinity, Single.PositiveInfinity, Single.PositiveInfinity);
         float bestDistance = float.MaxValue;
         GameObject result = null;
-        foreach (var w in waters)
-        {
+        foreach (var w in waters) {
             var dist = Vector3.Distance(this.transform.position, w.transform.position); 
-            if (dist < bestDistance)
-            {
+            if (dist < bestDistance) {
                 bestDistance = dist;
                 bestFood = w.transform.position;
                 result = w;
