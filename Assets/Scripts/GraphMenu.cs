@@ -18,10 +18,9 @@ public class GraphMenu : MonoBehaviour {
             ShowGraph();
     }
 
-    private void HideGraph() {
+    public void HideGraph() {
         if (graphMenu2.activeSelf)
             graphMenu2.SetActive(false);
-        // UnSetGraph();
         graphMenu.SetActive(false);
         Time.timeScale = 1;
         IsPaused = false;
