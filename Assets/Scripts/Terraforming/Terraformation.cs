@@ -8,6 +8,17 @@ public class Terraformation : MonoBehaviour
 {
     private Vector3[] vertices;
     private int[] triangles;
+    
+    // Colouring of mountains
+    private Color[] colors;
+    public Gradient gradient; 
+    
+    // Max and min 
+    private float maxTerrainHeight = -Mathf.Infinity;
+    private float minTerrainHeight = Mathf.Infinity;
+
+    public float MAXTerrainHeight => maxTerrainHeight;
+    public float MINTerrainHeight => minTerrainHeight;
 
     private Mesh mesh;
 
@@ -24,13 +35,24 @@ public class Terraformation : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh; 
         
         CreateShape();
+        CreateShade(); 
+        UpdateMeshHeights();
         UpdateMesh(); 
     }
 
     // TODO: implementar con alguna funcion piola 
+    private float PerlinValue(float x, float z, float amplitude, float frequency)
+    {
+        return amplitude*(Mathf.PerlinNoise(x * frequency, z  * frequency)); 
+    }
+
     private float GenerateHeight(float x, float z)
     {
-        return 2*(Mathf.PerlinNoise(x * .3f, z  * .3f) + Mathf.PerlinNoise(x * .1f, z  * .1f))-1; 
+        var div = 2; 
+        var oct1 = PerlinValue(x, z, 5, 0.1f/div);
+        var oct2 = PerlinValue(x, z, 3, 0.25f/div); 
+        var oct3 = PerlinValue(x, z, 1, 0.5f/div);
+        return 2*(oct1+oct2+oct3)-1;
     }
     private void CreateShape()
     {
@@ -40,8 +62,10 @@ public class Terraformation : MonoBehaviour
         {
             for (int x = 0; x <= xSize; x++)
             {
-                float y = GenerateHeight(x, z); 
-                vertices[i++] = new Vector3(x*scale, scale*y, z*scale);
+                float y = GenerateHeight(x, z) * scale;
+                maxTerrainHeight = (y > maxTerrainHeight ? y : maxTerrainHeight);
+                minTerrainHeight = (y < minTerrainHeight ? y : minTerrainHeight); 
+                vertices[i++] = new Vector3(x*scale, y, z*scale);
             }
         }
 
@@ -70,8 +94,31 @@ public class Terraformation : MonoBehaviour
     {
         mesh.Clear();
         mesh.vertices = vertices;
-        mesh.triangles = triangles; 
+        mesh.triangles = triangles;
         mesh.RecalculateNormals();
+        mesh.colors = colors; 
+        transform.position = Vector3.zero;
+    }
+
+    private void CreateShade()
+    {
+        colors = new Color[vertices.Length]; 
+        
+        for (int z=0, i=0; z <= zSize; z++)
+        {
+            for (int x = 0; x <= xSize; x++)
+            {
+                var height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, vertices[i].y);  
+                colors[i++] = gradient.Evaluate(height);
+            }
+        }
+    }
+
+    private void UpdateMeshHeights()
+    {
+        GetComponent<Renderer>().material.SetFloat("minHeight", minTerrainHeight);
+        GetComponent<Renderer>().material.SetFloat("maxHeight", maxTerrainHeight);
+
     }
 
     private void OnMouseDown()
