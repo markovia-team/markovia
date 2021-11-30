@@ -1,13 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CodeMonkey.Utils;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GraphMenu : MonoBehaviour {
     public static bool IsPaused = false;
     public GameObject graphMenu;
     public GameObject windowGraph;
     public GameObject settingsMenu;
+    public GameObject button;
 
     private void Update() {
         if (!Input.GetKeyDown(KeyCode.Escape)) 
@@ -20,8 +23,12 @@ public class GraphMenu : MonoBehaviour {
                 IsPaused = true;
             }
         }
-        else
-            ShowSettings();
+        else {
+            if (graphMenu.activeSelf || windowGraph.activeSelf) 
+                HideGraph();
+            else
+                ShowSettings();
+        }
     }
 
     public void HideGraph() {
@@ -70,12 +77,17 @@ public class GraphMenu : MonoBehaviour {
         WorldController.tickSpeed -= 1f;
     }
 
+    public Sprite playAsset;
+    public Sprite pauseAsset;
     public void Pause() {
         if (IsPaused) {
+            // button.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/Skip");
+            button.GetComponent<Image>().sprite = pauseAsset;
             Time.timeScale = 1;
             IsPaused = false;
         }
         else {
+            button.GetComponent<Image>().sprite = playAsset;
             Time.timeScale = 0;
             IsPaused = true;
         }
