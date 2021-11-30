@@ -73,7 +73,7 @@ public class WindowGraph : MonoBehaviour {
         }
     }
     
-    public static void ShowTooltip_Static(string tooltipText, Vector2 anchoredPosition) {
+    private static void ShowTooltip_Static(string tooltipText, Vector2 anchoredPosition) {
         instance.ShowTooltip(tooltipText, anchoredPosition);
     }
 
@@ -95,7 +95,7 @@ public class WindowGraph : MonoBehaviour {
         tooltipGameObject.transform.SetAsLastSibling();
     }
 
-    public static void HideTooltip_Static() {
+    private static void HideTooltip_Static() {
         instance.HideTooltip();
     }
 
@@ -177,6 +177,7 @@ public class WindowGraph : MonoBehaviour {
             
             RectTransform dashX = Instantiate(dashTemplateX, graphContainer, false);
             dashX.gameObject.SetActive(true);
+            dashX.gameObject.transform.SetSiblingIndex(1);
             dashX.anchoredPosition = new Vector2(xPosition, -3f);
             gameObjectList.Add(dashX.gameObject);
 
@@ -194,6 +195,7 @@ public class WindowGraph : MonoBehaviour {
 
             RectTransform dashY = Instantiate(dashTemplateY, graphContainer, false);
             dashY.gameObject.SetActive(true);
+            dashY.gameObject.transform.SetSiblingIndex(1);
             dashY.anchoredPosition = new Vector2(-4f, normalizedValue * graphHeight);
             gameObjectList.Add(dashY.gameObject);
         }
@@ -224,7 +226,7 @@ public class WindowGraph : MonoBehaviour {
             Button_UI barButtonUI = barGameObject.AddComponent<Button_UI>();
 
             barButtonUI.MouseOverOnceFunc += () => {
-                ShowTooltip_Static(tooltipText, graphPosition - new Vector2(415, 180));
+                ShowTooltip_Static(tooltipText, graphPosition - new Vector2(415, 170));
             };
 
             barButtonUI.MouseOutOnceFunc += () => {
