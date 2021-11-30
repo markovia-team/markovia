@@ -28,6 +28,14 @@ public static class TrainingSpeciesFactory
         { Species.Grass, new SortedSet<Need>() { Need.ReproductiveUrge } },
         { Species.Fox, new SortedSet<Need>() { Need.Sleep, Need.Hunger, Need.ReproductiveUrge, Need.Thirst } }
     };
+    
+    private static readonly Dictionary<Species, SortedSet<Distance>> spec_distances =
+        new Dictionary<Species, SortedSet<Distance>>()
+        {
+            {Species.Chicken, new SortedSet<Distance>() {Distance.ToWater, Distance.ToFood}},
+            {Species.Grass, new SortedSet<Distance>() { }},
+            {Species.Fox, new SortedSet<Distance>() {Distance.ToWater, Distance.ToFood}}
+        };
 
     private static readonly Dictionary<Species, SortedSet<State>> spec_states = new Dictionary<Species, SortedSet<State>>() {    
         //{ Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Idle, State.Wander } },
@@ -53,10 +61,11 @@ public static class TrainingSpeciesFactory
     {
         spec_needs.TryGetValue(species, out var baseNeeds);
         spec_atts.TryGetValue(species, out var baseAtts);
+        spec_distances.TryGetValue(species, out var baseDists);
         spec_states.TryGetValue(species, out var baseStates);
 
         // Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count);
-        Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count, new ContinuousUniform(0f, 1f));
+        Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count + baseDists.Count, new ContinuousUniform(0f, 1f));
         //`default_weights.TryGetValue(species, out var aux_mat);
 
         SortedDictionary<Need, double> needsAux = new SortedDictionary<Need, double>();
@@ -68,8 +77,14 @@ public static class TrainingSpeciesFactory
         if (baseAtts != null)
             foreach (KeyValuePair<Attribute, double> kvp in baseAtts)
                 attsAux.Add(kvp.Key, kvp.Value);
+        
+        SortedDictionary<Distance, double> distsAux = new SortedDictionary<Distance, double>();
+        if (baseDists != null)
+            foreach (Distance distance in baseDists)
+                distsAux.Add(distance, 0);
 
-        return new AgentStats(attsAux, needsAux, baseStates, weights);//aux_mat);
+
+        return new AgentStats(attsAux, needsAux, distsAux, baseStates, weights);//aux_mat);
     }
 
     public static AgentStats NewAgentStats(AgentStats p1, AgentStats p2, Species species)
@@ -103,8 +118,10 @@ public static class TrainingSpeciesFactory
                 attsAux.Add(kvp.Key, finalAtt);
             }
         }
+        
+        spec_distances.TryGetValue(species, out var baseDists);
 
-        Matrix<Double> newWeights = Matrix<Double>.Build.Dense(baseStates.Count, attsAux.Count + baseNeeds.Count, 0);
+        Matrix<Double> newWeights = Matrix<Double>.Build.Dense(baseStates.Count, attsAux.Count + baseNeeds.Count + baseDists.Count, 0);
         var q = Random.Range(0f, 1f);
         for (int i = 0; i < baseStates.Count; i++) {
             for (int j = 0; j < attsAux.Count + baseNeeds.Count; j++) {
@@ -112,9 +129,13 @@ public static class TrainingSpeciesFactory
                 newWeights.At(i, j, Math.Min(Math.Max(Normal.Sample(mean, 0.01f), 0f), 1f));
             }
         }
-
+        
+        SortedDictionary<Distance, double> distsAux = new SortedDictionary<Distance, double>();
+        if (baseDists != null)
+            foreach (Distance distance in baseDists)
+                distsAux.Add(distance, 0);
 
         // Mix-and-match reactance matrix
-        return new AgentStats(attsAux, needsAux, baseStates, newWeights);//aux_mat);
+        return new AgentStats(attsAux, needsAux, distsAux, baseStates, newWeights);//aux_mat);
     }
 }

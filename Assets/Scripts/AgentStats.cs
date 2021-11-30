@@ -12,6 +12,7 @@ public class AgentStats {
     // Stats 
     private SortedDictionary<Attribute, double> atts;
     private SortedDictionary<Need, double> needs;
+	private SortedDictionary<Distance, double> distances;
     private SortedSet<State> states;
     public Matrix<double> weights;
 
@@ -22,6 +23,7 @@ public class AgentStats {
     // Neural network stuff 
     private int qAtts;
     private int qNeeds;
+	private int qDistances;
     private int qStates;
     private Vector<double> neuralInput;
     private Vector<double> neuralOutput;
@@ -43,16 +45,18 @@ public class AgentStats {
         return 0.5f;
     }
 
-    public AgentStats(SortedDictionary<Attribute, double> atts, SortedDictionary<Need, double> needs, SortedSet<State> states, Matrix<double> weights) {
+    public AgentStats(SortedDictionary<Attribute, double> atts, SortedDictionary<Need, double> needs, SortedDictionary<Distance, double> distances, SortedSet<State> states, Matrix<double> weights) {
         this.atts = atts;
         this.needs = needs;
         this.states = states;
         this.weights = weights;
+		this.distances = distances;
         this.qAtts = atts.Count;
         this.qNeeds = needs.Count;
         this.qStates = states.Count;
+		this.qDistances = distances.Count;
         
-        neuralInput = v.Dense(qAtts + qNeeds);
+        neuralInput = v.Dense(qAtts + qDistances + qNeeds);
         neuralOutput = v.Dense(qStates);
         
         // Fill values that will never change in the input vector
@@ -83,13 +87,21 @@ public class AgentStats {
         needs.TryGetValue(need, out var a);
         needs[need] = value;
     }
+
+    public void SetDistance(Distance distance, float value) {
+        if (value < 0f)
+            return;
+        distances.TryGetValue(distance, out var a);
+        distances[distance] = value;
+    }
     
     public State NextState() {
 
         // return State.Idle;
         // Fill values that change in the input vector
         var i = qAtts;
-        foreach (var pair in needs) neuralInput[i++] = pair.Value;
+		foreach (var pair in distances) neuralInput[i++] = pair.Value;
+		foreach (var pair in needs) neuralInput[i++] = pair.Value;
         
         // Multiply matrix weights by input vector. "Neural" step.
         weights.Multiply(neuralInput, neuralOutput);
