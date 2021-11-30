@@ -133,7 +133,8 @@ public class WindowGraph : MonoBehaviour {
             pageIndex++;
             initialValue = 0;
         }
-        if (initialValue + 15 >= valueList.Count) {
+        if (initialValue + 15 > valueList.Count) {
+            initialValue--;
             pageIndex--;
         }
 
