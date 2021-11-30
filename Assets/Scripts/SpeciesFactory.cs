@@ -21,6 +21,14 @@ public static class SpeciesFactory {
             {Attribute.Size, 0.5f}
         } }
     };
+
+    private static readonly Dictionary<Species, SortedSet<Distance>> spec_distances =
+        new Dictionary<Species, SortedSet<Distance>>()
+        {
+            {Species.Chicken, new SortedSet<Distance>() {Distance.ToWater, Distance.ToFood}},
+            {Species.Grass, new SortedSet<Distance>() { }},
+            {Species.Fox, new SortedSet<Distance>() {Distance.ToWater, Distance.ToFood}}
+        };
     
     private static readonly Dictionary<Species, SortedSet<Need>> spec_needs = new Dictionary<Species, SortedSet<Need>>() {
         { Species.Chicken, new SortedSet<Need>() { Need.Sleep, Need.Hunger, Need.ReproductiveUrge, Need.Thirst } },
@@ -30,7 +38,7 @@ public static class SpeciesFactory {
 
     private static readonly Dictionary<Species, SortedSet<State>> spec_states = new Dictionary<Species, SortedSet<State>>() {    
         //{ Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Idle, State.Wander } },
-         { Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Idle } },
+        { Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Idle, State.Reproduce } },
         { Species.Grass, new SortedSet<State>() { State.Sleep } },
         { Species.Fox, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Idle } }
     };
@@ -50,23 +58,29 @@ public static class SpeciesFactory {
     public static AgentStats NewAgentStats(Species species) {
         spec_needs.TryGetValue(species, out var baseNeeds);
         spec_atts.TryGetValue(species, out var baseAtts);
+        spec_distances.TryGetValue(species, out var baseDists);
         spec_states.TryGetValue(species, out var baseStates);
 
         // Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count);
-        Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count, new ContinuousUniform(0f,1f));
+        Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count + baseDists.Count, new ContinuousUniform(0f,1f));
         //`default_weights.TryGetValue(species, out var aux_mat);
         
         SortedDictionary<Need, double> needsAux = new SortedDictionary<Need, double>();
         if (baseNeeds != null)
             foreach (Need need in baseNeeds)
                 needsAux.Add(need, 0);
+        
+        SortedDictionary<Distance, double> distsAux = new SortedDictionary<Distance, double>();
+        if (baseDists != null)
+            foreach (Distance distance in baseDists)
+                distsAux.Add(distance, 0);
 
         SortedDictionary<Attribute, double> attsAux = new SortedDictionary<Attribute, double>();
         if (baseAtts != null)
             foreach (KeyValuePair<Attribute, double> kvp in baseAtts)
                 attsAux.Add(kvp.Key, kvp.Value);
         
-        return new AgentStats(attsAux, needsAux, baseStates, weights);//aux_mat);
+        return new AgentStats(attsAux, needsAux, distsAux, baseStates, weights);//aux_mat);
     }
 
     public static AgentStats NewAgentStats(AgentStats p1, AgentStats p2, Species species) {
@@ -95,9 +109,16 @@ public static class SpeciesFactory {
                 attsAux.Add(kvp.Key, finalAtt);
             }
         }
+        
+        spec_distances.TryGetValue(species, out var baseDists);
+        
+        SortedDictionary<Distance, double> distsAux = new SortedDictionary<Distance, double>();
+        if (baseDists != null)
+            foreach (Distance distance in baseDists)
+                distsAux.Add(distance, 0);
 
         // Mix-and-match reactance matrix
-        return new AgentStats(attsAux, needsAux, baseStates, null);//aux_mat);
+        return new AgentStats(attsAux, needsAux, distsAux, baseStates, null);//aux_mat);
         
     }
 }

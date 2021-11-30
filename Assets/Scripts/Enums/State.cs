@@ -10,7 +10,8 @@ public enum State {
     Stealth,
     Idle,
     Wander,
-    Sleep
+    Sleep,
+    Reproduce
 }
 
 public static class StateExtensions {
