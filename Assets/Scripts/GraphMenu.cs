@@ -6,29 +6,35 @@ using UnityEngine;
 public class GraphMenu : MonoBehaviour {
     public static bool IsPaused = false;
     public GameObject graphMenu;
-    public GameObject graphMenu2;
+    public GameObject windowGraph;
+    public GameObject settingsMenu;
 
     private void Update() {
         if (!Input.GetKeyDown(KeyCode.Escape)) 
             return;
-        
-        if (IsPaused)
-            HideGraph();
+
+        if (IsPaused && settingsMenu.activeSelf) {
+            HideSettings();
+            if (graphMenu.activeSelf || windowGraph.activeSelf) {
+                Time.timeScale = 0;
+                IsPaused = true;
+            }
+        }
         else
-            ShowGraph();
+            ShowSettings();
     }
 
     public void HideGraph() {
-        if (graphMenu2.activeSelf)
-            graphMenu2.SetActive(false);
+        if (windowGraph.activeSelf)
+            windowGraph.SetActive(false);
         graphMenu.SetActive(false);
         Time.timeScale = 1;
         IsPaused = false;
     }
 
     public void ShowGraph() {
-        if (graphMenu2.activeSelf)
-            graphMenu2.SetActive(false);
+        if (windowGraph.activeSelf)
+            windowGraph.SetActive(false);
         graphMenu.SetActive(true);
         Time.timeScale = 0;
         IsPaused = true;
@@ -36,12 +42,24 @@ public class GraphMenu : MonoBehaviour {
 
     public void SetGraph() {
         graphMenu.SetActive(false);
-        graphMenu2.SetActive(true);
+        windowGraph.SetActive(true);
     }
 
     public void UnSetGraph() {
-        graphMenu2.SetActive(false);
+        windowGraph.SetActive(false);
         graphMenu.SetActive(true);
+    }
+
+    public void ShowSettings() {
+        Time.timeScale = 0;
+        IsPaused = true;
+        settingsMenu.SetActive(true);
+    }
+
+    public void HideSettings() {
+        Time.timeScale = 1;
+        IsPaused = false;
+        settingsMenu.SetActive(false);
     }
 
     public void Forward() {
