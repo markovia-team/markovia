@@ -19,8 +19,9 @@ public class GraphMenu : MonoBehaviour {
         if (IsPaused && settingsMenu.activeSelf) {
             HideSettings();
             if (graphMenu.activeSelf || windowGraph.activeSelf) {
-                Time.timeScale = 0;
-                IsPaused = true;
+                // Time.timeScale = 0;
+                // IsPaused = true;
+                Pause();
             }
         }
         else {
@@ -35,16 +36,18 @@ public class GraphMenu : MonoBehaviour {
         if (windowGraph.activeSelf)
             windowGraph.SetActive(false);
         graphMenu.SetActive(false);
-        Time.timeScale = 1;
-        IsPaused = false;
+        // Time.timeScale = 1;
+        // IsPaused = false;
+        Pause();
     }
 
     public void ShowGraph() {
         if (windowGraph.activeSelf)
             windowGraph.SetActive(false);
         graphMenu.SetActive(true);
-        Time.timeScale = 0;
-        IsPaused = true;
+        // Time.timeScale = 0;
+        // IsPaused = true;
+        Pause();
     }
 
     public void SetGraph() {
@@ -58,14 +61,16 @@ public class GraphMenu : MonoBehaviour {
     }
 
     public void ShowSettings() {
-        Time.timeScale = 0;
-        IsPaused = true;
+        // Time.timeScale = 0;
+        // IsPaused = true;
+        Pause();
         settingsMenu.SetActive(true);
     }
 
     public void HideSettings() {
-        Time.timeScale = 1;
-        IsPaused = false;
+        // Time.timeScale = 1;
+        // IsPaused = false;
+        Pause();
         settingsMenu.SetActive(false);
     }
 
