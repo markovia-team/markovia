@@ -43,4 +43,23 @@ public class GraphMenu : MonoBehaviour {
         graphMenu2.SetActive(false);
         graphMenu.SetActive(true);
     }
+
+    public void Forward() {
+        WorldController.tickSpeed += 1f;
+    }
+    
+    public void Rewind() {
+        WorldController.tickSpeed -= 1f;
+    }
+
+    public void Pause() {
+        if (IsPaused) {
+            Time.timeScale = 1;
+            IsPaused = false;
+        }
+        else {
+            Time.timeScale = 0;
+            IsPaused = true;
+        }
+    }
 }
