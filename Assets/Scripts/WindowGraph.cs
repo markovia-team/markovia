@@ -27,11 +27,11 @@ public class WindowGraph : MonoBehaviour {
 
     private void Awake() {
         instance = this;
-        graphContainer = transform.Find("graphContainer").GetComponent<RectTransform>();
-        labelTemplateX = graphContainer.Find("labelX").GetComponent<RectTransform>();
-        labelTemplateY = graphContainer.Find("labelY").GetComponent<RectTransform>();
-        dashTemplateX = graphContainer.Find("dashTemplateX").GetComponent<RectTransform>();
-        dashTemplateY = graphContainer.Find("dashTemplateY").GetComponent<RectTransform>();
+        graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
+        labelTemplateX = graphContainer.Find("LabelX").GetComponent<RectTransform>();
+        labelTemplateY = graphContainer.Find("LabelY").GetComponent<RectTransform>();
+        dashTemplateX = graphContainer.Find("DashX").GetComponent<RectTransform>();
+        dashTemplateY = graphContainer.Find("DashY").GetComponent<RectTransform>();
         tooltipGameObject = graphContainer.Find("Tooltip").gameObject;
 
         gameObjectList = new List<GameObject>();
@@ -39,19 +39,19 @@ public class WindowGraph : MonoBehaviour {
         lineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.green, new Color(1, 1, 1, .5f));
         IGraphVisual barChartVisual = new BarChartVisual(graphContainer, Color.white, .8f);
         
-        transform.Find("barChartBtn").GetComponent<Button_UI>().ClickFunc = () => {
+        transform.Find("BarChartBtn").GetComponent<Button_UI>().ClickFunc = () => {
             SetGraphVisual(barChartVisual);
         };
-        transform.Find("lineGraphBtn").GetComponent<Button_UI>().ClickFunc = () => {
+        transform.Find("LineGraphBtn").GetComponent<Button_UI>().ClickFunc = () => {
             ((LineGraphVisual) lineGraphVisual).ClearLastDot(); 
             SetGraphVisual(lineGraphVisual);
         };
 
-        transform.Find("decreaseVisibleAmountBtn").GetComponent<Button_UI>().ClickFunc = () => {
+        transform.Find("PreviousValuesBtn").GetComponent<Button_UI>().ClickFunc = () => {
             ((LineGraphVisual) lineGraphVisual).ClearLastDot();
             LoadPreviousValues();;
         };
-        transform.Find("increaseVisibleAmountBtn").GetComponent<Button_UI>().ClickFunc = () => {
+        transform.Find("NextValuesBtn").GetComponent<Button_UI>().ClickFunc = () => {
             ((LineGraphVisual) lineGraphVisual).ClearLastDot();
             LoadNextValues();
         };
@@ -165,7 +165,6 @@ public class WindowGraph : MonoBehaviour {
             float xPosition = xSize + xIndex * xSize;
             float yPosition = (valueList[i] / yMaximum) * graphHeight;
 
-            // gameObjectList.AddRange(graphVisual.AddGraphVisual(new Vector2(xPosition, yPosition), xSize));
             string tooltipText = getAxisLabelY(valueList[i]);
             gameObjectList.AddRange(graphVisual.AddGraphVisual(new Vector2(xPosition, yPosition), xSize, tooltipText));
 
@@ -202,7 +201,6 @@ public class WindowGraph : MonoBehaviour {
     }
 
     private interface IGraphVisual {
-        // List<GameObject> AddGraphVisual(Vector2 graphPosition, float graphPositionWidth);
         List<GameObject> AddGraphVisual(Vector2 graphPosition, float graphPositionWidth, string tooltipText);
     }
 
@@ -217,10 +215,6 @@ public class WindowGraph : MonoBehaviour {
             this.barWidthMultiplier = barWidthMultiplier;
         }
 
-        // public List<GameObject> AddGraphVisual(Vector2 graphPosition, float graphPositionWidth) {
-        //     GameObject barGameObject = CreateBar(graphPosition, graphPositionWidth);
-        //     return new List<GameObject> { barGameObject };
-        // }
         public List<GameObject> AddGraphVisual(Vector2 graphPosition, float graphPositionWidth, string tooltipText) {
             GameObject barGameObject = CreateBar(graphPosition, graphPositionWidth);
             Button_UI barButtonUI = barGameObject.AddComponent<Button_UI>();
@@ -264,17 +258,6 @@ public class WindowGraph : MonoBehaviour {
             lastDotGameObject = null;
         }
 
-        // public List<GameObject> AddGraphVisual(Vector2 graphPosition, float graphPositionWidth) {
-        //     List<GameObject> gameObjectList = new List<GameObject>();
-        //     GameObject dotGameObject = CreateDot(graphPosition);
-        //     gameObjectList.Add(dotGameObject);
-        //     if (lastDotGameObject != null) {
-        //         GameObject dotConnectionGameObject = CreateDotConnection(lastDotGameObject.GetComponent<RectTransform>().anchoredPosition, dotGameObject.GetComponent<RectTransform>().anchoredPosition);
-        //         gameObjectList.Add(dotConnectionGameObject);
-        //     }
-        //     lastDotGameObject = dotGameObject;
-        //     return gameObjectList;
-        // }
         public List<GameObject> AddGraphVisual(Vector2 graphPosition, float graphPositionWidth, string tooltipText) {
             List<GameObject> gameObjectList = new List<GameObject>();
             GameObject dotGameObject = CreateDot(graphPosition);
