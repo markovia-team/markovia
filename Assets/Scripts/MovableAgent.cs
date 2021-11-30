@@ -16,7 +16,8 @@ public abstract class MovableAgent : Agent
         base.Update();
     }
 
-    public override void moveTo(Vector3 to) {
+    public override void moveTo(Vector3 to)
+    {
         Going();
         agent.SetDestination(to);
         StartCoroutine(WaitTillThereCoroutine(to)); 
@@ -47,9 +48,13 @@ public abstract class MovableAgent : Agent
     public IEnumerator WaitTillThereCoroutine(Vector3 to)
     {
         while (Vector3.Distance(transform.position, to) > 0.5f && IsSolving()) {
+            stats.SetDistance(Distance.ToFood, Vector3.Distance(transform.position, getBestFoodPosition().transform.position));
+            stats.SetDistance(Distance.ToWater, Vector3.Distance(transform.position, getBestWaterPosition().transform.position));
             yield return null; // new WaitForSeconds(0.5f); //TODO: no seria mejor cada intervalos chicos de tiempo? 
         }
 
+        stats.SetDistance(Distance.ToFood, Vector3.Distance(transform.position, getBestFoodPosition().transform.position));
+        stats.SetDistance(Distance.ToWater, Vector3.Distance(transform.position, getBestWaterPosition().transform.position));
         IsThere();
         yield return null;
     }
