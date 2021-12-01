@@ -10,8 +10,7 @@ public class Terraformation : MonoBehaviour
     private int[] triangles;
     
     // Colouring of mountains
-    private Color[] colors;
-    public Gradient gradient; 
+    private Color[] colors = new [] {new Color(121/255f, 181/255f, 103/255f), new Color(92/255f, 73/255f, 39/255f)};
     
     // Max and min 
     private float maxTerrainHeight = -Mathf.Infinity;
@@ -35,9 +34,12 @@ public class Terraformation : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh; 
         
         CreateShape();
-        CreateShade(); 
         UpdateMeshHeights();
         UpdateMesh(); 
+        DestroyImmediate(GetComponent<MeshCollider>());
+        var newCollider = gameObject.AddComponent<MeshCollider>();
+        newCollider.sharedMesh = mesh;
+        
     }
 
     // TODO: implementar con alguna funcion piola 
@@ -96,29 +98,15 @@ public class Terraformation : MonoBehaviour
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
-        mesh.colors = colors; 
+        // mesh.colors = colors; 
         transform.position = Vector3.zero;
-    }
-
-    private void CreateShade()
-    {
-        colors = new Color[vertices.Length]; 
-        
-        for (int z=0, i=0; z <= zSize; z++)
-        {
-            for (int x = 0; x <= xSize; x++)
-            {
-                var height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, vertices[i].y);  
-                colors[i++] = gradient.Evaluate(height);
-            }
-        }
     }
 
     private void UpdateMeshHeights()
     {
         GetComponent<Renderer>().material.SetFloat("minHeight", minTerrainHeight);
         GetComponent<Renderer>().material.SetFloat("maxHeight", maxTerrainHeight);
-
+        GetComponent<Renderer>().material.SetColorArray("ascendingColors", colors);
     }
 
     private void OnMouseDown()
