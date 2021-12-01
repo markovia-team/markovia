@@ -1,12 +1,8 @@
-﻿//#define SOUND_MANAGER // Has Sound_Manager in project
-//#define CURSOR_MANAGER // Has Cursor_Manager in project
-
-using System;
+﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
-namespace CodeMonkey.Utils {
     public class Button_Sprite : MonoBehaviour {
 
         private static Func<Camera> GetWorldCamera;
@@ -166,12 +162,6 @@ namespace CodeMonkey.Utils {
             }
         }
 
-
-
-
-
-
-
         private static Vector3 GetWorldPositionFromUI() {
             Vector3 worldPosition = GetWorldCamera().ScreenToWorldPoint(Input.mousePosition);
             return worldPosition;
@@ -188,5 +178,3 @@ namespace CodeMonkey.Utils {
             }
         }
     }
-
-}
