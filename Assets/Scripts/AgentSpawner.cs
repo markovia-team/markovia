@@ -5,8 +5,12 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
+using System.Runtime.Serialization;
+using System.IO;
+using System.Text;
 
-public class AgentSpawner : MonoBehaviour
+
+public class AgentSpawner : MonoBehaviour, ISerializable
 {
     // Source for the serializable dictionary: 
     // https://wiki.unity3d.com/index.php/File:SerializableDictionary.zip
@@ -61,6 +65,7 @@ public class AgentSpawner : MonoBehaviour
             }
         }
 
+
         //StartCoroutine(Populate()); 
     }
 
@@ -74,6 +79,40 @@ public class AgentSpawner : MonoBehaviour
         InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
         return chickenSet;
     }
+
+    public void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        int id = 0;
+        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents)
+        {
+            foreach (GameObject obj in entry.Value)
+            {
+                string idStr = id.ToString();
+                info.AddValue("Species" + idStr, entry.Key);
+                id++;
+            }
+        }
+    }
+
+	public void WriteData(string path){
+		int id = 0, count = 0;
+		List<string> lines = new List<string>();
+        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents)
+        {
+            count += entry.Value.Count;
+        }
+        lines.Add(count.ToString());
+        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents)
+        {
+            foreach (GameObject obj in entry.Value)
+            {
+                string idStr = id.ToString();
+                lines.Add("Species" + idStr);
+                id++;
+            }
+        }
+        File.WriteAllLines(path, lines);
+	}
 
     IEnumerator Populate()
     {
@@ -94,4 +133,5 @@ public class AgentSpawner : MonoBehaviour
             yield return new WaitForSeconds(5f/WorldController.TickSpeed); 
         }
     }
+    
 }
