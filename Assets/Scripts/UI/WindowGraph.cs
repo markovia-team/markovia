@@ -305,12 +305,19 @@ public class WindowGraph : MonoBehaviour {
             rectTransform.anchorMax = new Vector2(0, 0);
             rectTransform.sizeDelta = new Vector2(distance, 3f);
             rectTransform.anchoredPosition = dotPositionA + dir * distance * .5f;
-            rectTransform.localEulerAngles = new Vector3(0, 0, UtilsClass.GetAngleFromVectorFloat(dir));
+            rectTransform.localEulerAngles = new Vector3(0, 0, GetAngleFromVectorFloat(dir));
             return gameObject;
         }
 
         public void ClearLastDot() {
             lastDotGameObject = null;
+        }
+        
+        private float GetAngleFromVectorFloat(Vector3 dir) {
+            dir = dir.normalized;
+            float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            if (n < 0) n += 360;
+            return n;
         }
     }
 
