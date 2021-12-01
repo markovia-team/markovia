@@ -15,7 +15,7 @@ public class AgentSpawner : MonoBehaviour
 
     // TODO: en realidad estas posiciones pueden calcularse a partir de OnGameAgents pero mepa que es mejor tenerlas aparte
     private Dictionary<Species, List<Vector3>> NonMovableAgentsPositions = new Dictionary<Species, List<Vector3>>();
-    private Dictionary<Species, HashSet<GameObject>> InGameAgents = new Dictionary<Species, HashSet<GameObject>>(); 
+    private Dictionary<Species, HashSet<Agent>> InGameAgents = new Dictionary<Species, HashSet<Agent>>(); 
     
     void Start() {
         foreach (var keyValuePair in speciesPrefabsStatic)
@@ -26,7 +26,7 @@ public class AgentSpawner : MonoBehaviour
                 NonMovableAgentsPositions.Add(s.Key, new List<Vector3>());
         
         foreach (var s in speciesPrefabs.Keys)
-            InGameAgents.Add(s, new HashSet<GameObject>());
+            InGameAgents.Add(s, new HashSet<Agent>());
         
         for (int i = 0; i < 1; i++) {
             speciesPrefabs.TryGetValue(Species.Grass, out var selectedPrefab);
@@ -35,29 +35,29 @@ public class AgentSpawner : MonoBehaviour
                 reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Grass);
                 reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
                 InGameAgents.TryGetValue(Species.Grass, out var x);
-                x.Add(reference);
+                x.Add(reference.GetComponent<Agent>());
             }
         }
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 3; i++) {
             speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab);
             if (selectedPrefab != null) {
                 GameObject reference = Instantiate(selectedPrefab, this.transform);
                 reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Chicken);
                 reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
                 InGameAgents.TryGetValue(Species.Chicken, out var x);
-                x.Add(reference);
+                x.Add(reference.GetComponent<Agent>());
             }
         }
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 4; i++) {
             speciesPrefabs.TryGetValue(Species.Fox, out var selectedPrefab);
             if (selectedPrefab != null) {
                 GameObject reference = Instantiate(selectedPrefab, this.transform);
                 reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Fox);
                 reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
                 InGameAgents.TryGetValue(Species.Fox, out var x);
-                x.Add(reference);
+                x.Add(reference.GetComponent<Agent>());
             }
         }
 
@@ -70,7 +70,7 @@ public class AgentSpawner : MonoBehaviour
         speciesPrefabsStatic.Add(species, gameObject);
     }
 
-    public HashSet<GameObject> GetChickens() {
+    public HashSet<Agent> GetChickens() {
         InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
         return chickenSet;
     }
@@ -80,18 +80,29 @@ public class AgentSpawner : MonoBehaviour
         while (true)
         {
             InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
-            GameObject chicken1 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
-            GameObject chicken2 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
+            Agent chicken1 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
+            Agent chicken2 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
             
-            AgentStats ags = SpeciesFactory.NewAgentStats(chicken1.GetComponent<Agent>().stats, chicken2.GetComponent<Agent>().stats, Species.Chicken);
+            AgentStats ags = SpeciesFactory.NewAgentStats(chicken1.stats, chicken2.stats, Species.Chicken);
 
             
             speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab); 
             GameObject reference = Instantiate(selectedPrefab, this.transform);
             reference.GetComponent<Agent>().stats = ags; 
             InGameAgents.TryGetValue(Species.Chicken, out var x);
-            x.Add(reference);
+            x.Add(reference.GetComponent<Agent>());
             yield return new WaitForSeconds(5f/WorldController.TickSpeed); 
         }
+    }
+
+    public void Reproduce(Agent ag1, Agent ag2)
+    {
+        AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag2.stats, Species.Chicken);   
+
+        speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab); 
+        GameObject reference = Instantiate(selectedPrefab, ag1.transform);
+        reference.GetComponent<Agent>().stats = ags; 
+        InGameAgents.TryGetValue(Species.Chicken, out var x);
+        x.Add(reference.GetComponent<Agent>());
     }
 }
