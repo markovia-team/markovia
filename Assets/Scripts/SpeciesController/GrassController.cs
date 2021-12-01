@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MathNet.Numerics.Distributions;
 using Random = UnityEngine.Random;
+using System.Runtime.Serialization;
 
 public class GrassController : NotMovableAgent
 {
@@ -49,5 +50,10 @@ public class GrassController : NotMovableAgent
 
         Vector3 sonPos = new Vector3(transform.position.x+distSon*((float)Math.Cos(angSon)), transform.position.y, transform.position.z+distSon*((float)Math.Sin(angSon)));
         Instantiate(this.gameObject, sonPos, this.transform.rotation); 
+    }
+
+    public override void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        throw new NotImplementedException();
     }
 }
