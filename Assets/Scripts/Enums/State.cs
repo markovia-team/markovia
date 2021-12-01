@@ -110,6 +110,26 @@ public static class StateExtensions {
                 } while (agent.IsSolving() && agent.stats.GetNeed(Need.Sleep) > 0f);
                 agent.ResetCoroutines();
                 break;
+            case State.Reproduce:
+                agent.BeginSolvingState();
+
+                Agent mate = agent.findMate();
+                agent.moveTo(mate.gameObject);
+
+                while (agent.IsSolving()) {
+                    agent.stats.UpdateNeed(Need.Hunger, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
+                    agent.stats.UpdateNeed(Need.Thirst, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
+                    agent.stats.UpdateNeed(Need.Sleep, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
+
+                    if (agent.IsHere(mate.transform.position)) {
+                        agent.worldController.GetComponent<AgentSpawner>().Reproduce(agent, mate);
+                        agent.stats.SetNeed(Need.ReproductiveUrge, 0f);
+                        agent.ResetCoroutines();
+                        break;
+                    }
+                    yield return null;
+                }
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);
         }

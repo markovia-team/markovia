@@ -74,19 +74,24 @@ public class FoxController : MovableAgent {
     public override GameObject getBestFoodPosition() {
         // HashSet<GameObject> waters = worldController.agentSpawner.GetChickens();
         
-        List<GameObject> waters = worldController.GetFoodReferences();
+        List<GameObject> chicken = worldController.GetFoodReferences();
         float bestDistance = float.MaxValue;
         GameObject result = null;
-        foreach (var w in waters) {
-            var dist = Vector3.Distance(this.transform.position, w.transform.position); 
+        foreach (var c in chicken) {
+            var dist = Vector3.Distance(this.transform.position, c.transform.position); 
             if (dist < bestDistance) {
                 bestDistance = dist;
-                result = w;
+                result = c;
             }
         }
         return result;
         
         //return this.gameObject;
+    }
+
+    public override Agent findMate()
+    {
+        throw new NotImplementedException();
     }
 
     public override void reproduce() {

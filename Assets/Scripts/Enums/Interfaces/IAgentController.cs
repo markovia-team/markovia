@@ -24,5 +24,6 @@ public interface IAgentController
    bool IsHere(Vector3 to);
 
    GameObject getBestWaterPosition(); 
-   GameObject getBestFoodPosition(); 
+   GameObject getBestFoodPosition();
+   Agent findMate();
 }

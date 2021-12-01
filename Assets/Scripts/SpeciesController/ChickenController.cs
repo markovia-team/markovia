@@ -83,6 +83,23 @@ public class ChickenController : MovableAgent
         return result;
     }
 
+    public override Agent findMate()
+    {
+        HashSet<Agent> chickenSet = worldController.GetComponent<AgentSpawner>().GetChickens();
+        float bestDistance = float.MaxValue;
+        Agent result = null;
+        foreach (Agent c in chickenSet) {
+            if (c.Equals(this))
+                continue;
+            float dist = Vector3.Distance(this.transform.position, c.transform.position); 
+            if (dist < bestDistance) {
+                bestDistance = dist;
+                result = c;
+            }
+        }
+        return result;
+    }
+
     public override void reproduce() {
         throw new NotImplementedException();
     }
