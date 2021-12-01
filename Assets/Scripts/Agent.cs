@@ -10,6 +10,7 @@ public abstract class Agent : MonoBehaviour, IAgentController
     private bool finished = true;
     private bool going = false;
     public WorldController worldController;
+    private bool dead = false;
     // public AgentSpawner agentSpawner;
 
     // TODO: reemplazarlo con un acceso al diccionario 
@@ -23,9 +24,11 @@ public abstract class Agent : MonoBehaviour, IAgentController
     
     // No borrar, no compila. Odio Unity (odiamos*) :D
     public void Update() {
-        foreach (double value in stats.Needs.Values) {
-            if (value == 1f)
-                Die();
+        if (!dead) {
+            foreach (double value in stats.Needs.Values) {
+                if (value == 1f)
+                    Die();
+            }
         }
     }
     
@@ -40,6 +43,7 @@ public abstract class Agent : MonoBehaviour, IAgentController
     public abstract void seeAround();
     public abstract GameObject getBestWaterPosition();
     public abstract GameObject getBestFoodPosition();
+    public abstract Agent findMate();
 
     public void ResetCoroutines() {
         finished = true; 
@@ -87,8 +91,11 @@ public abstract class Agent : MonoBehaviour, IAgentController
     }
 
     public void Die() {
-        StopAllCoroutines();
+        // this.transform.Rotate(0f, 0f, 90f);
         Destroy(this.gameObject);
+        dead = true;
+        StopAllCoroutines();
+        // Destroy(this.gameObject);
     }
     
     public IEnumerator SolveState() {

@@ -8,16 +8,17 @@ using Random = UnityEngine.Random;
 
 public class TrainingSpawner : MonoBehaviour
 {
-    public SerializableDictionary<Species, Agent> speciesPrefabs = new SerializableDictionary<Species, Agent>();
-    private static Dictionary<Species, Agent> speciesPrefabsStatic = new Dictionary<Species, Agent>();
+    public SerializableDictionary<Species, GameObject> speciesPrefabs = new SerializableDictionary<Species, GameObject>();
+    private static Dictionary<Species, GameObject> speciesPrefabsStatic = new Dictionary<Species, GameObject>();
 
     private Dictionary<Species, List<Vector3>> NonMovableAgentsPositions = new Dictionary<Species, List<Vector3>>();
     private Dictionary<Species, HashSet<Agent>> InGameAgents = new Dictionary<Species, HashSet<Agent>>();
 
     void Start()
     {
-        foreach (var keyValuePair in speciesPrefabsStatic)
+        foreach (var keyValuePair in speciesPrefabsStatic) {
             speciesPrefabs.Add(keyValuePair.Key, keyValuePair.Value);
+        }
 
         foreach (var s in speciesPrefabs)
             if (s.Value.GetComponent<NotMovableAgent>() != null)
@@ -71,7 +72,7 @@ public class TrainingSpawner : MonoBehaviour
     void Update() {}
 
     public static void AddSpecies(Species species, Agent agent) {
-        speciesPrefabsStatic.Add(species, agent);
+        speciesPrefabsStatic.Add(species, agent.gameObject);
     }
 
     IEnumerator Populate()
@@ -86,10 +87,10 @@ public class TrainingSpawner : MonoBehaviour
 
 
             speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab);
-            Agent reference = Instantiate(selectedPrefab, this.transform);
+            GameObject reference = Instantiate(selectedPrefab, this.transform);
             reference.GetComponent<Agent>().stats = ags;
             InGameAgents.TryGetValue(Species.Chicken, out var x);
-            x.Add(reference);
+            x.Add(reference.GetComponent<Agent>());
             yield return new WaitForSeconds(5f / WorldController.TickSpeed);
         }
     }
@@ -159,11 +160,11 @@ public class TrainingSpawner : MonoBehaviour
                 int x = Random.Range(-5, 5);
                 int z = Random.Range(-5, 5);
                 Vector3 where = new Vector3(x, 0, z);
-                Agent reference = Instantiate(selectedPrefab, where, new Quaternion(), this.transform);
+                GameObject reference = Instantiate(selectedPrefab, where, new Quaternion(), this.transform);
                 reference.GetComponent<Agent>().stats = spawn.ElementAt(i);
                 reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
                 InGameAgents.TryGetValue(species, out var inGame);
-                inGame.Add(reference);
+                inGame.Add(reference.GetComponent<Agent>());
             }
             iter++;
             yield return new WaitForSecondsRealtime((30f + 0.1f * iter)/ WorldController.TickSpeed);
@@ -172,5 +173,16 @@ public class TrainingSpawner : MonoBehaviour
 //                    speciesSet.ElementAt(i).die();
 //            InGameAgents[species] = new HashSet<Agent>();
         }
+    }
+
+    public void Reproduce(Agent ag1, Agent ag2)
+    {
+        AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag2.stats, Species.Chicken);   
+
+        speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab); 
+        GameObject reference = Instantiate(selectedPrefab, ag1.transform);
+        reference.GetComponent<Agent>().stats = ags; 
+        InGameAgents.TryGetValue(Species.Chicken, out var x);
+        x.Add(reference.GetComponent<Agent>());
     }
 }
