@@ -64,8 +64,9 @@ public class AgentSpawner : MonoBehaviour, ISerializable
                 x.Add(reference);
             }
         }
-
-
+        string filePath = "/home/sal/Documents/ITBA/ITBAGit/inge/markovia/Assets/Scripts/AgentSpawnerFile";
+        //File.Create(filePath);
+        WriteData(filePath);
         //StartCoroutine(Populate()); 
     }
 
@@ -106,8 +107,7 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         {
             foreach (GameObject obj in entry.Value)
             {
-                string idStr = id.ToString();
-                lines.Add("Species" + idStr);
+                lines.Add(((int) entry.Key).ToString());
                 id++;
             }
         }
