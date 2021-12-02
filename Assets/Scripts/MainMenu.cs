@@ -49,80 +49,31 @@ public class MainMenu : MonoBehaviour
 
     public void StartFile() {
         speciesPrefabs = new Dictionary<Species, GameObject>();
+        GameObject prefab;
         if (!File.Exists(Application.dataPath + "/Scripts/AgentSpawnerFile.json")) 
             return;
         
         GameData savedData;
-        if(!JsonManager.ReadFromJson(Application.dataPath + "/Scripts/AgentSpawnerFile.json", out savedData))
+        if(!JsonManager.ReadFromJson("AgentSpawnerFile.json", out savedData))
             return; //TODO Mirar de hacer algo
         string[] agents = savedData.getAgentList().Split('\n');
-        int agentNum;
-        
+
         foreach(string agent in agents) {
-            if (!Int32.TryParse(agent, out agentNum)) {
-                speciesPrefabs = new Dictionary<Species, GameObject>();
-                return;
+            if(agent.CompareTo("Grass") == 0){
+                prefab = (GameObject) Resources.Load(agent, typeof(GameObject));
+                speciesPrefabs.Add(Species.Grass, prefab);
             }
-            GameObject prefab;
-            switch (agentNum) {
-                case (int) Species.Grass:
-                    prefab = (GameObject) Resources.Load("Grass", typeof(GameObject));
-                    speciesPrefabs.Add(Species.Grass, prefab);
-                    break;
-                case (int) Species.Chicken:
-                    prefab = (GameObject) Resources.Load("Chicken", typeof(GameObject));
-                    speciesPrefabs.Add(Species.Chicken, prefab);
-                    break;
-                case (int) Species.Fox:
-                    prefab = (GameObject) Resources.Load("Fox", typeof(GameObject));
-                    speciesPrefabs.Add(Species.Fox, prefab);
-                    break;
+            else if(agent.CompareTo("Fox") == 0){
+                prefab = (GameObject) Resources.Load(agent, typeof(GameObject));
+                speciesPrefabs.Add(Species.Fox, prefab);
+            }
+            else if(agent.CompareTo("Chicken") == 0){
+                prefab = (GameObject) Resources.Load(agent, typeof(GameObject));
+                speciesPrefabs.Add(Species.Chicken, prefab);
             }
         }
         PlayGame();
     }
         
 
-
-/*
-    public void StartFile() {
-        speciesPrefabs = new Dictionary<Species, GameObject>();
-        if (!File.Exists(Application.dataPath + "/Scripts/AgentSpawnerFile.txt")) 
-            return;
-        
-        List<string> lines = new List<string>();
-        lines = File.ReadAllLines(Application.dataPath + "/Scripts/AgentSpawnerFile.txt").ToList();
-        int count = 0, agents, species;
-        foreach (string line in lines) {
-           if (count == 0) {
-               if (!Int32.TryParse(line, out agents))
-                    return;
-           }
-           else {
-               if (!Int32.TryParse(line, out species)) {
-                    speciesPrefabs = new Dictionary<Species, GameObject>();
-                    return;
-               }
-               GameObject prefab;
-               switch (species) {
-                   case (int) Species.Grass:
-                        prefab = (GameObject) Resources.Load("Grass", typeof(GameObject));
-                        speciesPrefabs.Add(Species.Grass, prefab);
-                        break;
-                   case (int) Species.Chicken:
-                        prefab = (GameObject) Resources.Load("Chicken", typeof(GameObject));
-                        speciesPrefabs.Add(Species.Chicken, prefab);
-                        break;
-                   case (int) Species.Fox:
-                        prefab = (GameObject) Resources.Load("Fox", typeof(GameObject));
-                        speciesPrefabs.Add(Species.Fox, prefab);
-                        break;
-               }
-           }
-           count++;
-        }
-        
-        PlayGame();
-    }
-    */
 }

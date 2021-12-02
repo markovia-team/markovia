@@ -96,6 +96,6 @@ public class FoxController : MovableAgent {
     }
 
     public override string ToString(){
-        return ((int) Species.Fox).ToString();
+        return "Fox";
     }
 }
