@@ -69,9 +69,6 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         // WriteData(filePath);
         WriteData();
         
-        SaveToJson();
-        ReadFromJson();
-        
         //StartCoroutine(Populate()); 
     }
 
@@ -97,6 +94,22 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         }
     }
 
+    public void WriteData() {
+		int id = 0, count = 0;
+        GameData currentData = new GameData();
+        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
+            count += entry.Value.Count;
+        }
+
+        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
+            foreach (GameObject obj in entry.Value) {
+                currentData.addAgent(obj);
+            }
+        }
+        JsonManager.SaveToJson(Application.dataPath + "/Scripts/AgentSpawnerFile.txt", currentData);
+	}
+
+/*
 	public void WriteData() {
 		int id = 0, count = 0;
 		List<string> lines = new List<string>();
@@ -112,32 +125,8 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         }
         File.WriteAllLines(Application.dataPath + "/Scripts/AgentSpawnerFile.txt", lines);
 	}
+    */
 
-    // ---------- Ejemplo ----------
-    
-    private void SaveToJson() {
-        // Example
-        Holder holder = new Holder();
-        holder.count = 2;
-        holder.text = "Hola Chalva";
-
-        string textJson = JsonUtility.ToJson(holder);
-        File.WriteAllText(Application.dataPath + "/Scripts/AgentSpawnerFile.json", textJson);
-    }
-
-    private void ReadFromJson() {
-        string textJson = File.ReadAllText(Application.dataPath + "/Scripts/AgentSpawnerFile.json");
-        Holder holder = JsonUtility.FromJson<Holder>(textJson);
-        
-        Debug.Log(holder.count + " " + holder.text);
-    }
-
-    private class Holder {
-        public int count;
-        public String text;
-    }
-    
-    // ------------------------
 
     IEnumerator Populate()
     {
