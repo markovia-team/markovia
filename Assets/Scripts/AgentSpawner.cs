@@ -64,9 +64,14 @@ public class AgentSpawner : MonoBehaviour, ISerializable
                 x.Add(reference);
             }
         }
-        string filePath = "/home/sal/Documents/ITBA/ITBAGit/inge/markovia/Assets/Scripts/AgentSpawnerFile";
+        // string filePath = "/home/sal/Documents/ITBA/ITBAGit/inge/markovia/Assets/Scripts/AgentSpawnerFile";
         //File.Create(filePath);
-        WriteData(filePath);
+        // WriteData(filePath);
+        WriteData();
+        
+        SaveToJson();
+        ReadFromJson();
+        
         //StartCoroutine(Populate()); 
     }
 
@@ -81,13 +86,10 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         return chickenSet;
     }
 
-    public void GetObjectData(SerializationInfo info, StreamingContext context)
-    {
+    public void GetObjectData(SerializationInfo info, StreamingContext context) {
         int id = 0;
-        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents)
-        {
-            foreach (GameObject obj in entry.Value)
-            {
+        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
+            foreach (GameObject obj in entry.Value) {
                 string idStr = id.ToString();
                 info.AddValue("Species" + idStr, entry.Key);
                 id++;
@@ -95,24 +97,47 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         }
     }
 
-	public void WriteData(string path){
+	public void WriteData() {
 		int id = 0, count = 0;
 		List<string> lines = new List<string>();
-        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents)
-        {
+        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
             count += entry.Value.Count;
         }
         lines.Add(count.ToString());
-        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents)
-        {
-            foreach (GameObject obj in entry.Value)
-            {
+        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
+            foreach (GameObject obj in entry.Value) {
                 lines.Add(((int) entry.Key).ToString());
                 id++;
             }
         }
-        File.WriteAllLines(path, lines);
+        File.WriteAllLines(Application.dataPath + "/Scripts/AgentSpawnerFile.txt", lines);
 	}
+
+    // ---------- Ejemplo ----------
+    
+    private void SaveToJson() {
+        // Example
+        Holder holder = new Holder();
+        holder.count = 2;
+        holder.text = "Hola Chalva";
+
+        string textJson = JsonUtility.ToJson(holder);
+        File.WriteAllText(Application.dataPath + "/Scripts/AgentSpawnerFile.json", textJson);
+    }
+
+    private void ReadFromJson() {
+        string textJson = File.ReadAllText(Application.dataPath + "/Scripts/AgentSpawnerFile.json");
+        Holder holder = JsonUtility.FromJson<Holder>(textJson);
+        
+        Debug.Log(holder.count + " " + holder.text);
+    }
+
+    private class Holder {
+        public int count;
+        public String text;
+    }
+    
+    // ------------------------
 
     IEnumerator Populate()
     {
