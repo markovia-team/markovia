@@ -49,6 +49,44 @@ public class MainMenu : MonoBehaviour
 
     public void StartFile() {
         speciesPrefabs = new Dictionary<Species, GameObject>();
+        if (!File.Exists(Application.dataPath + "/Scripts/AgentSpawnerFile.json")) 
+            return;
+        
+        GameData savedData;
+        if(!JsonManager.ReadFromJson(Application.dataPath + "/Scripts/AgentSpawnerFile.json", out savedData))
+            return; //TODO Mirar de hacer algo
+        string[] agents = savedData.getAgentList().Split('\n');
+        int agentNum;
+        
+        foreach(string agent in agents) {
+            if (!Int32.TryParse(agent, out agentNum)) {
+                speciesPrefabs = new Dictionary<Species, GameObject>();
+                return;
+            }
+            GameObject prefab;
+            switch (agentNum) {
+                case (int) Species.Grass:
+                    prefab = (GameObject) Resources.Load("Grass", typeof(GameObject));
+                    speciesPrefabs.Add(Species.Grass, prefab);
+                    break;
+                case (int) Species.Chicken:
+                    prefab = (GameObject) Resources.Load("Chicken", typeof(GameObject));
+                    speciesPrefabs.Add(Species.Chicken, prefab);
+                    break;
+                case (int) Species.Fox:
+                    prefab = (GameObject) Resources.Load("Fox", typeof(GameObject));
+                    speciesPrefabs.Add(Species.Fox, prefab);
+                    break;
+            }
+        }
+        PlayGame();
+    }
+        
+
+
+/*
+    public void StartFile() {
+        speciesPrefabs = new Dictionary<Species, GameObject>();
         if (!File.Exists(Application.dataPath + "/Scripts/AgentSpawnerFile.txt")) 
             return;
         
@@ -86,4 +124,5 @@ public class MainMenu : MonoBehaviour
         
         PlayGame();
     }
+    */
 }
