@@ -47,24 +47,26 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    public void StartFile(){
+    public void StartFile() {
         speciesPrefabs = new Dictionary<Species, GameObject>();
+        if (!File.Exists(Application.dataPath + "/Scripts/AgentSpawnerFile.txt")) 
+            return;
+        
         List<string> lines = new List<string>();
-        lines = File.ReadAllLines("/home/sal/Documents/ITBA/ITBAGit/inge/markovia/Assets/Scripts/AgentSpawnerFile").ToList();
+        lines = File.ReadAllLines(Application.dataPath + "/Scripts/AgentSpawnerFile.txt").ToList();
         int count = 0, agents, species;
-        foreach(string line in lines){
-           if(count == 0){
-               if(!Int32.TryParse(line, out agents))
+        foreach (string line in lines) {
+           if (count == 0) {
+               if (!Int32.TryParse(line, out agents))
                     return;
            }
-           else{
-               if(!Int32.TryParse(line, out species)){
+           else {
+               if (!Int32.TryParse(line, out species)) {
                     speciesPrefabs = new Dictionary<Species, GameObject>();
                     return;
                }
                GameObject prefab;
-               switch(species)
-               {
+               switch (species) {
                    case (int) Species.Grass:
                         prefab = (GameObject) Resources.Load("Grass", typeof(GameObject));
                         speciesPrefabs.Add(Species.Grass, prefab);
@@ -81,6 +83,7 @@ public class MainMenu : MonoBehaviour
            }
            count++;
         }
-    PlayGame();
+        
+        PlayGame();
     }
 }
