@@ -38,9 +38,9 @@ public static class SpeciesFactory {
 
     private static readonly Dictionary<Species, SortedSet<State>> spec_states = new Dictionary<Species, SortedSet<State>>() {    
         //{ Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Idle, State.Wander } },
-        { Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Idle, State.Reproduce } },
+        { Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Reproduce } },
         { Species.Grass, new SortedSet<State>() { State.Sleep } },
-        { Species.Fox, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Idle } }
+        { Species.Fox, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Reproduce } }
     };
 
     private static readonly Dictionary<Species, float> spec_mutability = new Dictionary<Species, float>() {
@@ -50,9 +50,16 @@ public static class SpeciesFactory {
     };
     
     private static readonly Dictionary<Species, Matrix<double>> default_weights = new Dictionary<Species, Matrix<double>>() {
-        /* {
-            Species.Chicken, m.Dense() foo( a1, a2, ..., an)
-        }    */
+        {
+            Species.Chicken, Matrix<double>.Build.DenseOfArray(new double[,]{
+                {-0.1, 0, 0, 0, 0.03, 0, 0.75, 0, 0},
+                {-0.1, 0, 0, 0.03, 0, 0, 0, 0, 0.75},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0.1},
+                {0, 0, 0, 0, 0, 0, 0, 1, 0}
+                
+            })
+        }
     };
     
     public static AgentStats NewAgentStats(Species species) {
@@ -62,15 +69,15 @@ public static class SpeciesFactory {
         spec_states.TryGetValue(species, out var baseStates);
 
         // Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count);
-        Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count + baseDists.Count, new ContinuousUniform(0f,1f));
-        //`default_weights.TryGetValue(species, out var aux_mat);
+        // Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count + baseDists.Count, new ContinuousUniform(0f,1f));
+        default_weights.TryGetValue(species, out var weights);
         
         SortedDictionary<Need, double> needsAux = new SortedDictionary<Need, double>();
         if (baseNeeds != null)
             foreach (Need need in baseNeeds)
                 needsAux.Add(need, 0);
-        
-        SortedDictionary<Distance, double> distsAux = new SortedDictionary<Distance, double>();
+
+                SortedDictionary<Distance, double> distsAux = new SortedDictionary<Distance, double>();
         if (baseDists != null)
             foreach (Distance distance in baseDists)
                 distsAux.Add(distance, 0);

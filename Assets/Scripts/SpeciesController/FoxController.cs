@@ -39,11 +39,11 @@ public class FoxController : MovableAgent {
     }
 
     public override void drink() {
-        thirst = 0; 
+        
     }
 
     public override void eat() {
-        hunger = 0;
+        
     }
 
     public override void sleep() {
