@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Text;
+using System.IO;
+using System.Linq;
 
 public class MainMenu : MonoBehaviour
 {
@@ -41,5 +45,42 @@ public class MainMenu : MonoBehaviour
             speciesPrefabs.Add(Species.Grass, prefab);
             // AgentSpawner.AddSpecies(Species.Grass, prefab);
         }
+    }
+
+    public void StartFile(){
+        speciesPrefabs = new Dictionary<Species, GameObject>();
+        List<string> lines = new List<string>();
+        lines = File.ReadAllLines("/home/sal/Documents/ITBA/ITBAGit/inge/markovia/Assets/Scripts/AgentSpawnerFile").ToList();
+        int count = 0, agents, species;
+        foreach(string line in lines){
+           if(count == 0){
+               if(!Int32.TryParse(line, out agents))
+                    return;
+           }
+           else{
+               if(!Int32.TryParse(line, out species)){
+                    speciesPrefabs = new Dictionary<Species, GameObject>();
+                    return;
+               }
+               GameObject prefab;
+               switch(species)
+               {
+                   case (int) Species.Grass:
+                        prefab = (GameObject) Resources.Load("Grass", typeof(GameObject));
+                        speciesPrefabs.Add(Species.Grass, prefab);
+                        break;
+                   case (int) Species.Chicken:
+                        prefab = (GameObject) Resources.Load("Chicken", typeof(GameObject));
+                        speciesPrefabs.Add(Species.Chicken, prefab);
+                        break;
+                   case (int) Species.Fox:
+                        prefab = (GameObject) Resources.Load("Fox", typeof(GameObject));
+                        speciesPrefabs.Add(Species.Fox, prefab);
+                        break;
+               }
+           }
+           count++;
+        }
+    PlayGame();
     }
 }
