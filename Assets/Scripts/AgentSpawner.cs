@@ -64,12 +64,8 @@ public class AgentSpawner : MonoBehaviour, ISerializable
                 x.Add(reference);
             }
         }
-        // string filePath = "/home/sal/Documents/ITBA/ITBAGit/inge/markovia/Assets/Scripts/AgentSpawnerFile";
-        //File.Create(filePath);
-        // WriteData(filePath);
+
         WriteData();
-        
-        //StartCoroutine(Populate()); 
     }
 
     void Update() {}
@@ -106,26 +102,9 @@ public class AgentSpawner : MonoBehaviour, ISerializable
                 currentData.addAgent(obj);
             }
         }
-        JsonManager.SaveToJson(Application.dataPath + "/Scripts/AgentSpawnerFile.txt", currentData);
-	}
 
-/*
-	public void WriteData() {
-		int id = 0, count = 0;
-		List<string> lines = new List<string>();
-        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
-            count += entry.Value.Count;
-        }
-        lines.Add(count.ToString());
-        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
-            foreach (GameObject obj in entry.Value) {
-                lines.Add(((int) entry.Key).ToString());
-                id++;
-            }
-        }
-        File.WriteAllLines(Application.dataPath + "/Scripts/AgentSpawnerFile.txt", lines);
+        JsonManager.SaveToJson("AgentSpawnerFile.json", currentData);
 	}
-    */
 
 
     IEnumerator Populate()
