@@ -55,7 +55,7 @@ public class AgentStats {
         this.qNeeds = needs.Count;
         this.qStates = states.Count;
 		this.qDistances = distances.Count;
-        
+
         neuralInput = v.Dense(qAtts + qDistances + qNeeds);
         neuralOutput = v.Dense(qStates);
         
@@ -102,7 +102,7 @@ public class AgentStats {
         var i = qAtts;
 		foreach (var pair in distances) neuralInput[i++] = pair.Value;
 		foreach (var pair in needs) neuralInput[i++] = pair.Value;
-        
+
         // Multiply matrix weights by input vector. "Neural" step.
         weights.Multiply(neuralInput, neuralOutput);
         
@@ -117,11 +117,10 @@ public class AgentStats {
             }
             j++;
         }
-
+        
         // Recover state from Set
         // TODO: not efficient, it may be better to use an ArrayList and sort it. Getting the 'nth' element is O(n) in SortedSet
-        
-        return states.ElementAt(maxj);
+        return maxj >= 0 ? states.ElementAt(maxj) : State.Wander;
          
     }
 

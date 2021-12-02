@@ -12,10 +12,6 @@ public abstract class Agent : MonoBehaviour, IAgentController
     public WorldController worldController;
     private bool dead = false;
     // public AgentSpawner agentSpawner;
-
-    // TODO: reemplazarlo con un acceso al diccionario 
-    protected double thirst = 0;
-    protected double hunger = 0;
     
     public void Start()
     {
@@ -23,12 +19,16 @@ public abstract class Agent : MonoBehaviour, IAgentController
     }
     
     // No borrar, no compila. Odio Unity (odiamos*) :D
-    public void Update() {
+    public void Update()
+    {
+        int i = 0;
+        // Debug.Log("Sleep: " + stats.GetNeed(Need.Sleep));
         if (!dead) {
-            foreach (double value in stats.Needs.Values) {
-                if (value == 1f)
+            foreach (double value in stats.Needs.Values)
+                if (value == 1f) {
+                    // Debug.Log(i++);
                     Die();
-            }
+                }
         }
     }
     
@@ -68,7 +68,7 @@ public abstract class Agent : MonoBehaviour, IAgentController
     }
     public bool IsHere(Vector3 to) {
         var distance = transform.position - to;
-        return Mathf.Abs(distance.x) < 0.5f && Mathf.Abs(distance.z) < 0.5f;
+        return Mathf.Abs(distance.x) < 0.8f && Mathf.Abs(distance.z) < 0.8f;
         // return Vector3.Distance(transform.position, to) < 1.5f;
     }
 
@@ -105,6 +105,7 @@ public abstract class Agent : MonoBehaviour, IAgentController
                     ResetCoroutines();
                 }
                 currentState = nextState;
+                Debug.Log(currentState);
                 StartCoroutine(currentState.SolveState(this));
             }
             yield return null;
