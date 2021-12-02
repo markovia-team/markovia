@@ -100,4 +100,9 @@ public class ChickenController : MovableAgent
     {
         throw new NotImplementedException();
     }
+
+    public override string ToString(){
+        return ((int) Species.Chicken).ToString();
+    }
+
 }

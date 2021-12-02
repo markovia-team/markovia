@@ -94,4 +94,8 @@ public class FoxController : MovableAgent {
     {
         throw new NotImplementedException();
     }
+
+    public override string ToString(){
+        return ((int) Species.Fox).ToString();
+    }
 }

@@ -56,4 +56,8 @@ public class GrassController : NotMovableAgent
     {
         throw new NotImplementedException();
     }
+
+    public override string ToString(){
+        return ((int) Species.Grass).ToString();
+    }
 }
