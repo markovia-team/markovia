@@ -13,7 +13,7 @@ public class AgentDataPrinter : MonoBehaviour {
             if(Physics.Raycast(ray, out hit)){
                 var selection = hit.transform;
                 if(selection.gameObject.CompareTag("Printable") && selection!= null){
-                    Debug.Log(selection.gameObject.name.ToString());
+                    Debug.Log(selection.gameObject.GetComponent<Agent>().ToString());
                 }
             }
         }
