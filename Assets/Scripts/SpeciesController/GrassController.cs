@@ -58,6 +58,6 @@ public class GrassController : NotMovableAgent
     }
 
     public override string ToString(){
-        return ((int) Species.Chicken).ToString();
+        return "Grass".ToString();
     }
 }
