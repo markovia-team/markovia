@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Text;
+using SFB;
 
 
 public class AgentSpawner : MonoBehaviour, ISerializable
@@ -64,8 +65,6 @@ public class AgentSpawner : MonoBehaviour, ISerializable
                 x.Add(reference);
             }
         }
-
-        WriteData();
     }
 
     void Update() {}
@@ -103,7 +102,8 @@ public class AgentSpawner : MonoBehaviour, ISerializable
             }
         }
 
-        JsonManager.SaveToJson("AgentSpawnerFile.json", currentData);
+        var path = StandaloneFileBrowser.SaveFilePanel("Save File", "", "", "");
+        JsonManager.SaveToJson(path, currentData);
 	}
 
 
