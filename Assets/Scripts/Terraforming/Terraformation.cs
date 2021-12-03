@@ -34,6 +34,7 @@ public class Terraformation : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh; 
         
         CreateShape();
+        transform.position = Vector3.zero;
         UpdateMeshHeights();
         UpdateMesh(); 
         DestroyImmediate(GetComponent<MeshCollider>());
@@ -43,26 +44,27 @@ public class Terraformation : MonoBehaviour
     }
 
     // TODO: implementar con alguna funcion piola 
-    private float PerlinValue(float x, float z, float amplitude, float frequency)
+    public static float PerlinValue(float x, float z, float amplitude, float frequency)
     {
         return amplitude*(Mathf.PerlinNoise(x * frequency, z  * frequency)); 
     }
 
-    private float GenerateHeight(float x, float z)
+    public static float GenerateHeight(float x, float z)
     {
+        var flattener = 0.035f; 
         var div = 2; 
         var oct1 = PerlinValue(x, z, 5, 0.1f/div);
         var oct2 = PerlinValue(x, z, 3, 0.25f/div); 
         var oct3 = PerlinValue(x, z, 1, 0.5f/div);
-        return 2*(oct1+oct2+oct3)-1;
+        return (2*(oct1+oct2+oct3)-1)*Mathf.Exp(flattener*(-Mathf.Pow(x, 2) - Mathf.Pow(z, 2)));
     }
     private void CreateShape()
     {
         vertices = new Vector3[(xSize+1)*(zSize+1)];
 
-        for (int z=0, i=0; z <= zSize; z++)
+        for (int z=-zSize/2, i=0; z <= zSize/2; z++)
         {
-            for (int x = 0; x <= xSize; x++)
+            for (int x = -xSize/2; x <= xSize/2; x++)
             {
                 float y = GenerateHeight(x, z) * scale;
                 maxTerrainHeight = (y > maxTerrainHeight ? y : maxTerrainHeight);
@@ -99,7 +101,6 @@ public class Terraformation : MonoBehaviour
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
         // mesh.colors = colors; 
-        transform.position = Vector3.zero;
     }
 
     private void UpdateMeshHeights()
