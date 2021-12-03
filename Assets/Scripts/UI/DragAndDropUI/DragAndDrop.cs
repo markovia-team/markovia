@@ -5,11 +5,21 @@ using UnityEngine.EventSystems;
 
 public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
-    [SerializeField] private Canvas canvas; 
+    [SerializeField] private Canvas canvas;
+
+    public Canvas Canvas
+    {
+        get => canvas;
+        set => canvas = value;
+    }
+
     private RectTransform rectTransform;
     private Vector2 originPos;
 
+    // TODO: esto no deberia existir, deberia pasar por AgentSpawner
     [SerializeField] private GameObject prefab;
+
+    public Species species; 
     
     private void Awake()
     {
@@ -29,16 +39,10 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
         rectTransform.anchoredPosition = originPos; 
         
         Ray ray = Camera.main.ScreenPointToRay(eventData.position);
-        RaycastHit hit;
-        Debug.Log("RAY"+ray);
-        if (Physics.Raycast (ray, out hit))
+        if (Physics.Raycast (ray, out var hit))
         {
+            // TODO:  Reemplazar esto por un llamado a un metodo de AgentSpawner!!!!!!
             Instantiate(prefab, hit.point, prefab.transform.rotation);
-            // Debug.Log("HIT!!!");
-            // //draw invisible ray cast/vector
-            // Debug.DrawLine (ray.origin, hit.point);
-            // //log hit area to the console
-            // Debug.Log(hit.point);
         }    
     }
 
@@ -47,9 +51,4 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor; 
     } 
     
-    // private static Rect RectTransformToScreenSpace(RectTransform transform)
-    // {
-    //     Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
-    //     return new Rect((Vector2)transform.position - (size * 0.5f), size);
-    // }
 }
