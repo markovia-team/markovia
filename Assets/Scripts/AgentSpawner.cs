@@ -21,6 +21,7 @@ public class AgentSpawner : MonoBehaviour, ISerializable
     // TODO: en realidad estas posiciones pueden calcularse a partir de OnGameAgents pero mepa que es mejor tenerlas aparte
     private Dictionary<Species, List<Vector3>> NonMovableAgentsPositions = new Dictionary<Species, List<Vector3>>();
     private Dictionary<Species, HashSet<GameObject>> InGameAgents = new Dictionary<Species, HashSet<GameObject>>(); 
+    public GameObject popup;
     
     void Start() {
         foreach (var keyValuePair in speciesPrefabsStatic)
@@ -103,9 +104,13 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         }
 
         var path = StandaloneFileBrowser.SaveFilePanel("Save File", "", "", "");
+        if (string.Compare(path, string.Empty, StringComparison.Ordinal) == 0) {
+            popup.GetComponentInChildren<TMPro.TMP_Text>().text = "You must enter a name";
+            popup.SetActive(true);
+            return;
+        }
         JsonManager.SaveToJson(path, currentData);
 	}
-
 
     IEnumerator Populate()
     {
@@ -126,5 +131,4 @@ public class AgentSpawner : MonoBehaviour, ISerializable
             yield return new WaitForSeconds(5f/WorldController.TickSpeed); 
         }
     }
-    
 }
