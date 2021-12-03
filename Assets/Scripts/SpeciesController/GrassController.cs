@@ -7,11 +7,6 @@ using Random = UnityEngine.Random;
 
 public class GrassController : NotMovableAgent
 {
-    private double timeToReproduce;
-    void Start() {
-        InvokeRepeating("reproduce", 10/WorldController.TickSpeed, 10/WorldController.TickSpeed);
-    }
-    
     public override void drink() {
         throw new System.NotImplementedException();
     }
@@ -41,10 +36,15 @@ public class GrassController : NotMovableAgent
     private double getLambdaRate() {
         return 1; 
     }
+    
+    public override Species GetSpecies()
+    {
+        return Species.Grass;
+    }
 
     public override Agent findMate()
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public override void reproduce()

@@ -53,6 +53,11 @@ public class FoxController : MovableAgent {
     public override void seeAround() {
         throw new NotImplementedException();
     }
+    
+    public override Species GetSpecies()
+    {
+        return Species.Fox;
+    }
 
     public override GameObject getBestWaterPosition() {
         
@@ -74,24 +79,38 @@ public class FoxController : MovableAgent {
     public override GameObject getBestFoodPosition() {
         // HashSet<GameObject> waters = worldController.agentSpawner.GetChickens();
         
-        List<GameObject> chicken = worldController.GetFoodReferences();
+        HashSet<Agent> chickenSet = worldController.GetComponent<AgentSpawner>().GetChickens();
         float bestDistance = float.MaxValue;
-        GameObject result = null;
-        foreach (var c in chicken) {
-            var dist = Vector3.Distance(this.transform.position, c.transform.position); 
+        Agent result = null;
+        foreach (Agent c in chickenSet) {
+            if (c.Equals(this))
+                continue;
+            float dist = Vector3.Distance(this.transform.position, c.transform.position); 
             if (dist < bestDistance) {
                 bestDistance = dist;
                 result = c;
             }
         }
-        return result;
+        return result.gameObject;
         
         //return this.gameObject;
     }
 
     public override Agent findMate()
     {
-        throw new NotImplementedException();
+        HashSet<Agent> foxSet = worldController.GetComponent<AgentSpawner>().GetFoxes();
+        float bestDistance = float.MaxValue;
+        Agent result = null;
+        foreach (Agent f in foxSet) {
+            if (f.Equals(this))
+                continue;
+            float dist = Vector3.Distance(this.transform.position, f.transform.position); 
+            if (dist < bestDistance) {
+                bestDistance = dist;
+                result = f;
+            }
+        }
+        return result;
     }
 
     public override void reproduce() {
