@@ -6,11 +6,20 @@ using UnityEngine.SceneManagement;
 using System.Text;
 using System.IO;
 using System.Linq;
+// using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
     private Dictionary<Species, GameObject> speciesPrefabs = new Dictionary<Species, GameObject>();
-    
+    public GameObject button;
+
+    private void Awake() {
+        if (!File.Exists(Application.dataPath + "/Scripts/AgentSpawnerFile.json")) {
+            button.GetComponent<Button>().interactable = false;
+        }
+    }
+
     public void PlayGame() {
         foreach (var pair in speciesPrefabs)
             AgentSpawner.AddSpecies(pair.Key, pair.Value);
@@ -50,12 +59,11 @@ public class MainMenu : MonoBehaviour
     public void StartFile() {
         speciesPrefabs = new Dictionary<Species, GameObject>();
         GameObject prefab;
-        if (!File.Exists(Application.dataPath + "/Scripts/AgentSpawnerFile.json")) 
-            return;
-        
         GameData savedData;
-        if(!JsonManager.ReadFromJson("AgentSpawnerFile.json", out savedData))
-            return; //TODO Mirar de hacer algo
+        if (!JsonManager.ReadFromJson("AgentSpawnerFile.json", out savedData)) {
+            return;
+        }
+
         string[] agents = savedData.getAgentList().Split('\n');
 
         foreach(string agent in agents) {
