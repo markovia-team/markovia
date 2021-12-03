@@ -82,15 +82,15 @@ public class MainMenu : MonoBehaviour
         string[] agents = savedData.getAgentList().Split('\n');
 
         foreach (string agent in agents) {
-            if (agent.CompareTo("Grass") == 0) {
+            if (string.Compare(agent, "Grass", StringComparison.Ordinal) == 0) {
                 prefab = (GameObject) Resources.Load(agent, typeof(GameObject));
                 speciesPrefabs.Add(Species.Grass, prefab);
             }
-            else if (agent.CompareTo("Fox") == 0) {
+            else if (string.Compare(agent, "Fox", StringComparison.Ordinal) == 0) {
                 prefab = (GameObject) Resources.Load(agent, typeof(GameObject));
                 speciesPrefabs.Add(Species.Fox, prefab);
             }
-            else if (agent.CompareTo("Chicken") == 0) {
+            else if (string.Compare(agent, "Chicken", StringComparison.Ordinal) == 0) {
                 prefab = (GameObject) Resources.Load(agent, typeof(GameObject));
                 speciesPrefabs.Add(Species.Chicken, prefab);
             }
