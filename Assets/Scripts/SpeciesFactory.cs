@@ -39,7 +39,7 @@ public static class SpeciesFactory {
     private static readonly Dictionary<Species, SortedSet<State>> spec_states = new Dictionary<Species, SortedSet<State>>() {    
         //{ Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Idle, State.Wander } },
         { Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Reproduce } },
-        { Species.Grass, new SortedSet<State>() { State.Sleep } },
+        { Species.Grass, new SortedSet<State>() { State.AsexualReproduce, State.Idle } },
         { Species.Fox, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Reproduce } }
     };
 
@@ -52,6 +52,22 @@ public static class SpeciesFactory {
     private static readonly Dictionary<Species, Matrix<double>> default_weights = new Dictionary<Species, Matrix<double>>() {
         {
             Species.Chicken, Matrix<double>.Build.DenseOfArray(new double[,]{
+                {-0.1, 0, 0, 0, 0.03, 0, 0.75, 0, 0},
+                {-0.1, 0, 0, 0.03, 0, 0, 0, 0, 0.75},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0.1},
+                {0, 0, 0, 0, 0, 0, 0, 1, 0}
+                
+            })
+        },
+        {
+            Species.Grass, Matrix<double>.Build.DenseOfArray(new double[,]{
+                {0.17490494, 0.29999582},
+                {0.68446245, 0.03137547}
+            })
+        },
+        {
+            Species.Fox, Matrix<double>.Build.DenseOfArray(new double[,]{
                 {-0.1, 0, 0, 0, 0.03, 0, 0.75, 0, 0},
                 {-0.1, 0, 0, 0.03, 0, 0, 0, 0, 0.75},
                 {0, 0, 0, 0, 0, 1, 0, 0, 0},

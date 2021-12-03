@@ -8,10 +8,11 @@ public enum State {
     LookForFood, 
     LookForWater, 
     Stealth,
-    Idle,
     Sleep,
     Wander,
-    Reproduce
+    Reproduce,
+    AsexualReproduce,
+    Idle
 }
 
 public static class StateExtensions {
@@ -57,7 +58,6 @@ public static class StateExtensions {
                     agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.01f * Time.deltaTime * WorldController.TickSpeed);
                     if (agent.IsHere(water.transform.position))
                     {
-                        agent.drink();
                         agent.stats.UpdateNeed(Need.Thirst, -0.1f * Time.deltaTime * WorldController.TickSpeed);
                     }
                     else
@@ -76,10 +76,7 @@ public static class StateExtensions {
             case State.Idle:
                 agent.BeginSolvingState();
                 while (agent.IsSolving()) {
-                    agent.stats.UpdateNeed(Need.Hunger, 0.005f * Time.deltaTime * WorldController.TickSpeed * 3f);
-                    agent.stats.UpdateNeed(Need.Thirst, 0.005f * Time.deltaTime * WorldController.TickSpeed * 3f);
-                    agent.stats.UpdateNeed(Need.Sleep, 0.005f * Time.deltaTime * WorldController.TickSpeed * 3f);
-                    agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.005f * Time.deltaTime * WorldController.TickSpeed * 3f);
+                    agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.01f * Time.deltaTime * WorldController.TickSpeed * 3f);
                     yield return null;
                 }
                 break;
@@ -127,13 +124,20 @@ public static class StateExtensions {
                     agent.stats.UpdateNeed(Need.Sleep, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
 
                     if (agent.IsHere(mate.transform.position)) {
-                        agent.worldController.GetComponent<AgentSpawner>().Reproduce(agent, mate);
+                        agent.worldController.GetComponent<AgentSpawner>().Reproduce(agent, mate, agent.GetSpecies());
                         agent.stats.SetNeed(Need.ReproductiveUrge, 0f);
                         agent.ResetCoroutines();
                         break;
                     }
                     yield return null;
                 }
+                break;
+            case State.AsexualReproduce:
+                agent.BeginSolvingState();
+                agent.worldController.GetComponent<AgentSpawner>().AsexualReproduce(agent, agent.GetSpecies());
+                agent.stats.SetNeed(Need.ReproductiveUrge, 0f);
+                agent.ResetCoroutines();
+                yield return null;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);

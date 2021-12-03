@@ -74,6 +74,11 @@ public class AgentSpawner : MonoBehaviour
         InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
         return chickenSet;
     }
+    
+    public HashSet<Agent> GetFoxes() {
+        InGameAgents.TryGetValue(Species.Fox, out var chickenSet);
+        return chickenSet;
+    }
 
     IEnumerator Populate()
     {
@@ -95,14 +100,26 @@ public class AgentSpawner : MonoBehaviour
         }
     }
 
-    public void Reproduce(Agent ag1, Agent ag2)
+    public void Reproduce(Agent ag1, Agent ag2, Species species)
     {
-        AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag2.stats, Species.Chicken);   
+        AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag2.stats, species);   
 
-        speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab); 
+        speciesPrefabs.TryGetValue(species, out var selectedPrefab); 
         GameObject reference = Instantiate(selectedPrefab, ag1.transform);
         reference.GetComponent<Agent>().stats = ags; 
-        InGameAgents.TryGetValue(Species.Chicken, out var x);
+        InGameAgents.TryGetValue(species, out var x);
+        x.Add(reference.GetComponent<Agent>());
+    }
+    
+    public void AsexualReproduce(Agent ag1, Species species)
+    {
+        AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag1.stats, species);
+        speciesPrefabs.TryGetValue(species, out var selectedPrefab);
+        Vector3 pos = ag1.transform.position;
+        Vector3 randomVector = new Vector3(pos.x + Random.Range(-3f, 3f), pos.y, pos.z + Random.Range(-3f, 3f)); 
+        GameObject reference = Instantiate(selectedPrefab, randomVector, ag1.transform.rotation);
+        reference.GetComponent<Agent>().stats = ags;
+        InGameAgents.TryGetValue(species, out var x);
         x.Add(reference.GetComponent<Agent>());
     }
 }

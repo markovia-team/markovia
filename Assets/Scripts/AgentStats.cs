@@ -106,6 +106,8 @@ public class AgentStats {
         // Multiply matrix weights by input vector. "Neural" step.
         weights.Multiply(neuralInput, neuralOutput);
         
+        Debug.Log("reproductive: " + GetNeed(Need.ReproductiveUrge));
+        
         var j = 0;
         double maxValue = 0;
         var maxj = -1;
@@ -120,7 +122,8 @@ public class AgentStats {
         
         // Recover state from Set
         // TODO: not efficient, it may be better to use an ArrayList and sort it. Getting the 'nth' element is O(n) in SortedSet
-        return maxj >= 0 ? states.ElementAt(maxj) : State.Wander;
+        Debug.Log(states.ElementAt(maxj));
+        return maxj >= 0 ? states.ElementAt(maxj) : State.Idle;
          
     }
 
