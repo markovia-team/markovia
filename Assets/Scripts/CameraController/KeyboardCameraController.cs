@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class KeyboardCameraController : MonoBehaviour
 {
+    [SerializeField] private float maxZoomDistance = 5f;
+    [SerializeField] private float minZoomDistance = 20f; 
 
     // TODO: Cambiar las cosas por LERP 
     [SerializeField] private Camera cam; 
@@ -47,14 +49,17 @@ public class KeyboardCameraController : MonoBehaviour
         }
         
         // Zoom 
-        // TODO, quizas girar con respecto a un pivote? 
         if (Input.GetKey(KeyCode.Z))
         {
-            transform.Translate(cam.transform.forward,  Space.Self);
+            Physics.Raycast(transform.position, cam.transform.forward, out hit);
+            if (Vector3.Distance(hit.point, transform.position) > maxZoomDistance)
+                transform.Translate(cam.transform.forward,  Space.Self);
         }
         if (Input.GetKey(KeyCode.X))
         {            
-            transform.Translate(-cam.transform.forward,  Space.Self);
+            Physics.Raycast(transform.position, cam.transform.forward, out hit);
+            if (Vector3.Distance(hit.point, transform.position) < minZoomDistance)
+                transform.Translate(-cam.transform.forward,  Space.Self);
         }
         
     }
