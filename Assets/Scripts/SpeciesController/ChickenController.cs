@@ -102,7 +102,7 @@ public class ChickenController : MovableAgent
     }
 
     public override string ToString(){
-        return ((int) Species.Chicken).ToString();
+        return "Chicken".ToString();
     }
 
 }
