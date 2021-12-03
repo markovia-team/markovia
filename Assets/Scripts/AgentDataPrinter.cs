@@ -5,7 +5,6 @@ using UnityEngine;
 using System.IO;
 
 public class AgentDataPrinter : MonoBehaviour {
-
     void Update(){
         if(Input.GetMouseButtonDown(0)){
             RaycastHit hit;
