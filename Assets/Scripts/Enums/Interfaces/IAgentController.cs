@@ -23,6 +23,8 @@ public interface IAgentController
    void IsThere();
    bool IsHere(Vector3 to);
 
+   Species GetSpecies();
+
    GameObject getBestWaterPosition(); 
    GameObject getBestFoodPosition();
    Agent findMate();

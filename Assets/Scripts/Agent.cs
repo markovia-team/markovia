@@ -5,8 +5,8 @@ using UnityEngine;
 public abstract class Agent : MonoBehaviour, IAgentController
 {
     public AgentStats stats;
-    private State currentState = State.Wander;
-    private State nextState = State.Wander;
+    private State currentState = State.Idle;
+    private State nextState = State.Idle;
     private bool finished = true;
     private bool going = false;
     public WorldController worldController;
@@ -41,6 +41,7 @@ public abstract class Agent : MonoBehaviour, IAgentController
     public abstract void reproduce();
     
     public abstract void seeAround();
+    public abstract Species GetSpecies();
     public abstract GameObject getBestWaterPosition();
     public abstract GameObject getBestFoodPosition();
     public abstract Agent findMate();
@@ -105,7 +106,6 @@ public abstract class Agent : MonoBehaviour, IAgentController
                     ResetCoroutines();
                 }
                 currentState = nextState;
-                Debug.Log(currentState);
                 StartCoroutine(currentState.SolveState(this));
             }
             yield return null;

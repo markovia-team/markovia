@@ -52,6 +52,11 @@ public class ChickenController : MovableAgent
         throw new NotImplementedException();
     }
 
+    public override Species GetSpecies()
+    {
+        return Species.Chicken;
+    }
+
     public override GameObject getBestWaterPosition() {
         List<GameObject> waters = worldController.GetWaterReferences();
         // Vector3 bestWater = new Vector3(Single.PositiveInfinity, Single.PositiveInfinity, Single.PositiveInfinity);
