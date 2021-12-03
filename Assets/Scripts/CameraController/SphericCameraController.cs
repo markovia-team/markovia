@@ -8,8 +8,8 @@ public class SphericCameraController : MonoBehaviour
 {
     public GameObject centre;
 
-    private static float minPhi = 0.01f;
-    private static float maxPhi = Mathf.PI / 2 - 0.01f;
+    private static float minPhi = Mathf.PI / 16;
+    private static float maxPhi = Mathf.PI / 2 - 0.1f;
     private static float maxtheta = Mathf.PI * 2 - 0.01f;
     private static float maxRadius = 200f;
     private static float minRadius = 30f; 
@@ -28,11 +28,13 @@ public class SphericCameraController : MonoBehaviour
         cam.transform.LookAt(centre.transform.position);
         if (Input.GetKey(KeyCode.W))
         {
-            phi -= speed * 0.01f; // Mathf.Min(minPhi, phi-speed*0.001f);
+            if (phi <= minPhi) return; 
+            phi -= speed * 0.01f; 
         }
         if (Input.GetKey(KeyCode.S))
         {
-            phi += speed * 0.01f; // Mathf.Max(maxPhi, phi+speed*0.001f);
+            if (phi >= maxPhi) return;
+            phi += speed * 0.01f; 
         }
         if (Input.GetKey(KeyCode.A))
         {
