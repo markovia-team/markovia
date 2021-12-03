@@ -14,7 +14,7 @@ public class GameData{
     public string agentList = string.Empty;
 
     public void addAgent(GameObject agent){
-        string agentData = agent.ToString().Split('(')[0];
+        string agentData = agent.GetComponent<Agent>().ToString();
         if(agentList.CompareTo(string.Empty) != 0)
             agentList += "\n" + agentData;
         else agentList = agentData;
