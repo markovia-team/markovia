@@ -163,7 +163,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 71283270}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 173eaf3040f56ed42a0e7a9d4e845475, type: 3}
   m_Name: 
@@ -178,13 +178,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 71283270}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5a1c01775f851d840af6fcc7c73d0b20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   centre: {fileID: 1569854247}
-  speed: 1
+  speed: 10
   cam: {fileID: 701026692}
 --- !u!1 &276656914
 GameObject:
@@ -1112,6 +1112,7 @@ GameObject:
   - component: {fileID: 1569854249}
   - component: {fileID: 1569854248}
   - component: {fileID: 1569854252}
+  - component: {fileID: 1569854253}
   m_Layer: 0
   m_Name: Terraformer
   m_TagString: Untagged
@@ -1211,6 +1212,21 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &1569854253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1569854247}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35c5287e7ad9df149bedcc069edaa0a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rSize: 100
+  thetaSize: 100
+  scale: 10
 --- !u!1 &1823462004
 GameObject:
   m_ObjectHideFlags: 0
