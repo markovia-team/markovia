@@ -3,13 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 using System.Runtime.Serialization;
 using System.IO;
-using System.Text;
 using SFB;
-
 
 public class AgentSpawner : MonoBehaviour, ISerializable
 {
@@ -103,14 +100,18 @@ public class AgentSpawner : MonoBehaviour, ISerializable
             }
         }
 
-        var path = StandaloneFileBrowser.SaveFilePanel("Save File", "", "", "");
+        var path = StandaloneFileBrowser.SaveFilePanel("Save File", "", "", "json");
         if (string.Compare(path, string.Empty, StringComparison.Ordinal) == 0) {
             popup.GetComponentInChildren<TMPro.TMP_Text>().text = "You must enter a name";
             popup.SetActive(true);
             return;
         }
-        JsonManager.SaveToJson(path, currentData);
-	}
+        popup.GetComponentInChildren<TMPro.TMP_Text>().text = !JsonManager.SaveToJson(path, currentData) ? "File is read-only!" : "File saved successfully";
+        if (!path.EndsWith(".json")) {
+            File.Move(path, path + ".json");
+        }
+        popup.SetActive(true);
+    }
 
     IEnumerator Populate()
     {
