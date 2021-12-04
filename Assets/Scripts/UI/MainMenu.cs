@@ -1,62 +1,33 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using SFB;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Text;
-using System.IO;
-using System.Linq;
-using SFB;
-// using UnityEngine.UIElements;
-using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour
-{
-    private Dictionary<Species, GameObject> speciesPrefabs = new Dictionary<Species, GameObject>();
-    public GameObject button;
-    public GameObject popup;
-
-    private void Awake() {
-        // if (!File.Exists(Application.dataPath + "/Scripts/AgentSpawnerFile.json")) {
-        //     button.GetComponent<Button>().interactable = false;
-        // }
-    }
-
+public class MainMenu : MonoBehaviour {
+    public GameObject mainMenu;
+    public GameObject settingsMenu;
+    
     public void PlayGame() {
-        foreach (var pair in speciesPrefabs)
-            AgentSpawner.AddSpecies(pair.Key, pair.Value);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    public void AddFox() {
-        if (speciesPrefabs.ContainsKey(Species.Fox)) {
-            speciesPrefabs.Remove(Species.Fox);
-        } else {
-            GameObject prefab = (GameObject) Resources.Load("Fox", typeof(GameObject));
-            speciesPrefabs.Add(Species.Fox, prefab);
-            // AgentSpawner.AddSpecies(Species.Fox, prefab);
-        }
+    public void Settings() {
+        mainMenu.SetActive(false);
+        settingsMenu.SetActive(true);
+    }
+
+    public void QuitGame() {
+        Application.Quit();
+    }
+
+    public void GoBack() {
+        settingsMenu.SetActive(false);
+        mainMenu.SetActive(true);
     }
     
-    public void AddChicken() {
-        if (speciesPrefabs.ContainsKey(Species.Chicken)) {
-            speciesPrefabs.Remove(Species.Chicken);
-        } else {
-            GameObject prefab = (GameObject) Resources.Load("Chicken", typeof(GameObject));
-            speciesPrefabs.Add(Species.Chicken, prefab);
-            // AgentSpawner.AddSpecies(Species.Chicken, prefab);
-        }
-    }
-    
-    public void AddGrass() {
-        if (speciesPrefabs.ContainsKey(Species.Grass)) {
-            speciesPrefabs.Remove(Species.Grass);
-        } else {
-            GameObject prefab = (GameObject) Resources.Load("Grass", typeof(GameObject));
-            speciesPrefabs.Add(Species.Grass, prefab);
-            // AgentSpawner.AddSpecies(Species.Grass, prefab);
-        }
-    }
+    private Dictionary<Species, GameObject> speciesPrefabs = new Dictionary<Species, GameObject>();
+    public GameObject popup;
 
     public void StartFile() {
         var path = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false)[0];
