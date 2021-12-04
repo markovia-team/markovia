@@ -5,8 +5,13 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
+using System.Runtime.Serialization;
+using System.IO;
+using System.Text;
+using SFB;
 
-public class AgentSpawner : MonoBehaviour
+
+public class AgentSpawner : MonoBehaviour, ISerializable
 {
     // Source for the serializable dictionary: 
     // https://wiki.unity3d.com/index.php/File:SerializableDictionary.zip
@@ -16,6 +21,7 @@ public class AgentSpawner : MonoBehaviour
     // TODO: en realidad estas posiciones pueden calcularse a partir de OnGameAgents pero mepa que es mejor tenerlas aparte
     private Dictionary<Species, List<Vector3>> NonMovableAgentsPositions = new Dictionary<Species, List<Vector3>>();
     private Dictionary<Species, HashSet<GameObject>> InGameAgents = new Dictionary<Species, HashSet<GameObject>>(); 
+    public GameObject popup;
     
     void Start() {
         foreach (var keyValuePair in speciesPrefabsStatic)
@@ -60,8 +66,6 @@ public class AgentSpawner : MonoBehaviour
                 x.Add(reference);
             }
         }
-
-        //StartCoroutine(Populate()); 
     }
 
     void Update() {}
@@ -74,6 +78,39 @@ public class AgentSpawner : MonoBehaviour
         InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
         return chickenSet;
     }
+
+    public void GetObjectData(SerializationInfo info, StreamingContext context) {
+        int id = 0;
+        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
+            foreach (GameObject obj in entry.Value) {
+                string idStr = id.ToString();
+                info.AddValue("Species" + idStr, entry.Key);
+                id++;
+            }
+        }
+    }
+
+    public void WriteData() {
+		int id = 0, count = 0;
+        GameData currentData = new GameData();
+        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
+            count += entry.Value.Count;
+        }
+
+        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
+            foreach (GameObject obj in entry.Value) {
+                currentData.addAgent(obj);
+            }
+        }
+
+        var path = StandaloneFileBrowser.SaveFilePanel("Save File", "", "", "");
+        if (string.Compare(path, string.Empty, StringComparison.Ordinal) == 0) {
+            popup.GetComponentInChildren<TMPro.TMP_Text>().text = "You must enter a name";
+            popup.SetActive(true);
+            return;
+        }
+        JsonManager.SaveToJson(path, currentData);
+	}
 
     IEnumerator Populate()
     {
