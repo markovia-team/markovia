@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.PlayerLoop;
 
 public class Terraformation : MonoBehaviour
@@ -21,6 +22,9 @@ public class Terraformation : MonoBehaviour
     public float MINTerrainHeight => minTerrainHeight;
 
     private Mesh mesh;
+    
+    // Limit smoke 
+    [SerializeField] private GameObject smoke; 
 
 
     public int xSize = 100;
@@ -41,12 +45,32 @@ public class Terraformation : MonoBehaviour
         DestroyImmediate(GetComponent<MeshCollider>());
         var newCollider = gameObject.AddComponent<MeshCollider>();
         newCollider.sharedMesh = mesh;
-        
+        CreateLimitSmoke(); 
+        GetComponent<NavMeshSurface>().BuildNavMesh();
+
+    }
+
+    private void CreateLimitSmoke()
+    {
+        // int jump = 6;
+        // int offset = 40; 
+        // for (int x = -xSize/2; x <= xSize/2; x+=jump)
+        // {
+        //     Instantiate(smoke, new Vector3(x * scale , 0, -zSize * scale / 2 - offset), smoke.transform.rotation); 
+        //     Instantiate(smoke, new Vector3(x * scale , 0, zSize * scale / 2 + offset), smoke.transform.rotation);
+        // }
+        // for (int z = -zSize/2; z <= zSize/2; z+=jump)
+        // {
+        //     Instantiate(smoke, new Vector3(-xSize * scale / 2 - offset, 0, z*scale), smoke.transform.rotation, transform); 
+        //     Instantiate(smoke, new Vector3(xSize * scale / 2 + offset, 0, z*scale), smoke.transform.rotation, transform);
+        // }
     }
 
     // TODO: implementar con alguna funcion piola 
     public static float PerlinValue(float x, float z, float amplitude, float frequency)
     {
+        x = x + 0.01f;
+        z = z + 0.01f;
         return (Mathf.PerlinNoise(x * frequency, z  * frequency)); 
     }
 
@@ -63,14 +87,26 @@ public class Terraformation : MonoBehaviour
 
         for (int z=-zSize/2, i=0; z <= zSize/2; z++)
         {
-            for (int x = -xSize/2; x <= xSize/2; x++)
+            for (int x = -xSize / 2; x <= xSize / 2; x++)
             {
                 float y = GenerateHeight(x, z) * scale;
                 maxTerrainHeight = (y > maxTerrainHeight ? y : maxTerrainHeight);
-                minTerrainHeight = (y < minTerrainHeight ? y : minTerrainHeight); 
-                
+                minTerrainHeight = (y < minTerrainHeight ? y : minTerrainHeight);
+
+                if (x == -xSize / 2 || x == xSize / 2 || z == zSize / 2 || z == -zSize / 2)
+                {
+                    y = 0;
+                    var mult = 1.35f;
+                    if (x % 4 == 0 || z % 4 == 0)
+                    {
+                        Instantiate( smoke, new Vector3(x*scale*mult, 0, z*scale*mult), smoke.transform.rotation, transform);
+                        Instantiate( smoke, new Vector3(x*scale*mult*mult, 0, z*scale*mult*mult), smoke.transform.rotation, transform);
+                    }
+                } 
+
                 vertices[i++] = new Vector3(x*scale, y, z*scale);
             }
+            
         }
 
         triangles = new int[xSize * zSize * 6];
