@@ -3,7 +3,6 @@ using System.IO;
 
 public static class JsonManager {
     public static bool SaveToJson(string fileName, GameData data) {
-        // No tira error el writeAll pero está bueno chequear que no sea read only de todas formas:
         if (File.Exists(fileName) && ((File.GetAttributes(fileName) & FileAttributes.ReadOnly)) != 0)
             return false;
         
