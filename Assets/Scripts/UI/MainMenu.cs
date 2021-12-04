@@ -5,10 +5,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
+    private Dictionary<Species, GameObject> speciesPrefabs;
     public GameObject mainMenu;
     public GameObject settingsMenu;
+    public GameObject popup;
     
     public void PlayGame() {
+        foreach (var pair in speciesPrefabs)
+            AgentSpawner.AddSpecies(pair.Key, pair.Value);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
@@ -25,9 +29,6 @@ public class MainMenu : MonoBehaviour {
         settingsMenu.SetActive(false);
         mainMenu.SetActive(true);
     }
-    
-    private Dictionary<Species, GameObject> speciesPrefabs = new Dictionary<Species, GameObject>();
-    public GameObject popup;
 
     public void StartFile() {
         var path = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false)[0];
@@ -68,12 +69,8 @@ public class MainMenu : MonoBehaviour {
         }
         PlayGame();
     }
-        
-    public void hidePopup() {
-        popup.SetActive(false);
-    }
 
-    public void showPopup() {
+    private void showPopup() {
         popup.SetActive(true);
     }
 }
