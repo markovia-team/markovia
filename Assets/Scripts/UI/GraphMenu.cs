@@ -1,21 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GraphMenu : MonoBehaviour {
-    public static bool IsPaused = false;
+    private static bool isPaused = false;
+    private static bool wasPaused = false;
     public GameObject graphMenu;
     public GameObject windowGraph;
     public GameObject settingsMenu;
     public GameObject button;
+    public Sprite playAsset;
+    public Sprite pauseAsset;
 
     private void Update() {
         if (!Input.GetKeyDown(KeyCode.Escape)) 
             return;
 
-        if (IsPaused && settingsMenu.activeSelf) {
+        if (isPaused && settingsMenu.activeSelf) {
             HideSettings();
             if (graphMenu.activeSelf || windowGraph.activeSelf) {
                 Pause();
@@ -33,13 +33,15 @@ public class GraphMenu : MonoBehaviour {
         if (windowGraph.activeSelf)
             windowGraph.SetActive(false);
         graphMenu.SetActive(false);
-        Pause();
+        if (!wasPaused)
+            Play();
     }
 
     public void ShowGraph() {
         if (windowGraph.activeSelf)
             windowGraph.SetActive(false);
         graphMenu.SetActive(true);
+        wasPaused = isPaused;
         Pause();
     }
 
@@ -54,13 +56,15 @@ public class GraphMenu : MonoBehaviour {
     }
 
     public void ShowSettings() {
-        Pause();
         settingsMenu.SetActive(true);
+        wasPaused = isPaused;
+        Pause();
     }
 
     public void HideSettings() {
-        Pause();
         settingsMenu.SetActive(false);
+        if (!wasPaused)
+            Play();
     }
 
     public void Forward() {
@@ -68,22 +72,26 @@ public class GraphMenu : MonoBehaviour {
     }
     
     public void Rewind() {
-        WorldController.tickSpeed -= 1f;
+        if (WorldController.tickSpeed > 0)
+            WorldController.tickSpeed -= 1f;
     }
 
-    public Sprite playAsset;
-    public Sprite pauseAsset;
-    public void Pause() {
-        if (IsPaused) {
-            // button.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/Skip");
-            button.GetComponent<Image>().sprite = pauseAsset;
-            Time.timeScale = 1;
-            IsPaused = false;
-        }
-        else {
-            button.GetComponent<Image>().sprite = playAsset;
-            Time.timeScale = 0;
-            IsPaused = true;
-        }
+    public void PlayOrPause() {
+        if (isPaused)
+            Play();
+        else
+            Pause();
+    }
+
+    private void Pause() {
+        button.GetComponent<Image>().sprite = playAsset;
+        Time.timeScale = 0;
+        isPaused = true;
+    }
+
+    private void Play() {
+        button.GetComponent<Image>().sprite = pauseAsset;
+        Time.timeScale = 1;
+        isPaused = false;
     }
 }
