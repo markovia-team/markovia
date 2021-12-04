@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
-public class Terraformation : MonoBehaviour
+public class CircularTerraformation : MonoBehaviour
 {
     private Vector3[] vertices;
     private int[] triangles;
@@ -23,8 +22,8 @@ public class Terraformation : MonoBehaviour
     private Mesh mesh;
 
 
-    public int xSize = 100;
-    public int zSize = 100;
+    public int rSize = 100;
+    public int thetaSize = 100;
 
     public float scale = 10f; 
     
@@ -47,46 +46,54 @@ public class Terraformation : MonoBehaviour
     // TODO: implementar con alguna funcion piola 
     public static float PerlinValue(float x, float z, float amplitude, float frequency)
     {
-        return (Mathf.PerlinNoise(x * frequency, z  * frequency)); 
+        return amplitude*Mathf.PerlinNoise(x * frequency, z  * frequency); 
     }
 
     public static float GenerateHeight(float x, float z)
     {
-        var oct1 = PerlinValue(x, z, 4, 0.25f);
-        var oct2 = PerlinValue(x, z, 2, 0.5f); 
-        var oct3 = PerlinValue(x, z, 1, 1f);
-        return (2 * (oct1 + oct2 + oct3) - 1);
+        var oct1 = PerlinValue(x, z, 1, 1);
+        var oct2 = PerlinValue(x, z, 0.5f, 2); 
+        var oct3 = PerlinValue(x, z, 0.25f, 4);
+       // return Mathf.Pow((oct1 + oct2 + oct3) / (1 + 0.5f + 0.25f), 10f); 
+        // return Mathf.Sin();  //oct1 + oct2 + oct3;
+        return 100f+Mathf.Exp(-0.01f*(Mathf.Pow(x, 2) + Mathf.Pow(z, 2))); 
     }
+    
+    
     private void CreateShape()
     {
-        vertices = new Vector3[(xSize+1)*(zSize+1)];
-
-        for (int z=-zSize/2, i=0; z <= zSize/2; z++)
+        vertices = new Vector3[(rSize+1)*(thetaSize+1)];
+        
+        for (int r= 0, i=0; r<= rSize; r++)
         {
-            for (int x = -xSize/2; x <= xSize/2; x++)
+            for (int theta = 0; theta <= thetaSize; theta++)
             {
-                float y = GenerateHeight(x, z) * scale;
+                var thetaAngle = Mathf.PI * 2f * theta / (1.0f * thetaSize); 
+                var x = r * scale *  Mathf.Sin(thetaAngle);
+                var z = r * scale * Mathf.Cos(thetaAngle); 
+                
+                float y = GenerateHeight(x, z)*scale;
                 maxTerrainHeight = (y > maxTerrainHeight ? y : maxTerrainHeight);
                 minTerrainHeight = (y < minTerrainHeight ? y : minTerrainHeight); 
-                
-                vertices[i++] = new Vector3(x*scale, y, z*scale);
+
+                vertices[i++] = new Vector3(x, y, z);
             }
         }
 
-        triangles = new int[xSize * zSize * 6];
+        triangles = new int[rSize * thetaSize * 6];
         int vert = 0;
         int tris = 0; 
         
-        for (int z=0; z < zSize; z++, vert ++)
+        for (int z=0; z < thetaSize; z++, vert ++)
         {
-            for (int x = 0; x < xSize; x++)
+            for (int x = 0; x < rSize; x++)
             {
                 triangles[tris + 0] = vert + 0; 
-                triangles[tris + 1] = vert + xSize + 1;
+                triangles[tris + 1] = vert + rSize + 1;
                 triangles[tris + 2] = vert + 1;
                 triangles[tris + 3] = vert + 1;
-                triangles[tris + 4] = vert + xSize + 1;
-                triangles[tris + 5] = vert + xSize + 2;
+                triangles[tris + 4] = vert + rSize + 1;
+                triangles[tris + 5] = vert + rSize + 2;
 
                 vert++;
                 tris += 6; 
@@ -109,9 +116,5 @@ public class Terraformation : MonoBehaviour
         GetComponent<Renderer>().material.SetFloat("maxHeight", maxTerrainHeight);
         GetComponent<Renderer>().material.SetColorArray("ascendingColors", colors);
     }
-
-    private void OnMouseDown()
-    {
-        UpdateMesh();
-    }
+    
 }
