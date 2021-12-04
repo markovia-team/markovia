@@ -1823,7 +1823,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphicsDropdown: {fileID: 203560919}
   fullscreen: {fileID: 783203051}
-  ResolutionDropdownGameObject: {fileID: 27521948}
+  resolutionDropdownGameObject: {fileID: 27521948}
 --- !u!1 &675491500
 GameObject:
   m_ObjectHideFlags: 0

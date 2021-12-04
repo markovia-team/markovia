@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class SettingsMenu : MonoBehaviour {
     public GameObject graphicsDropdown;
     public GameObject fullscreen;
-    public GameObject ResolutionDropdownGameObject;
+    public GameObject resolutionDropdownGameObject;
     private TMPro.TMP_Dropdown resolutionDropdown;
     private Resolution[] resolutions;
     private int currentResolution = 0;
@@ -16,7 +16,7 @@ public class SettingsMenu : MonoBehaviour {
         graphicsDropdown.GetComponent<TMPro.TMP_Dropdown>().value = qualityLevel;
         fullscreen.GetComponent<Toggle>().isOn = Screen.fullScreen;
         resolutions = Screen.resolutions;
-        resolutionDropdown = ResolutionDropdownGameObject.GetComponent<TMPro.TMP_Dropdown>();
+        resolutionDropdown = resolutionDropdownGameObject.GetComponent<TMPro.TMP_Dropdown>();
         resolutionDropdown.ClearOptions();
         List<String> options = new List<string>();
         var i = 0;
@@ -43,5 +43,9 @@ public class SettingsMenu : MonoBehaviour {
     public void SetResolution(int resolutionIndex) {
         Resolution resolution = resolutions[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+    }
+    
+    public void QuitGame() {
+        Application.Quit();
     }
 }
