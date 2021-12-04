@@ -223,9 +223,7 @@ public class WindowGraph : MonoBehaviour {
                 ShowTooltip_Static(tooltipText, graphPosition - new Vector2(415, 170));
             };
 
-            barButtonUI.MouseOutOnceFunc += () => {
-                HideTooltip_Static();
-            };
+            barButtonUI.MouseOutOnceFunc += HideTooltip_Static;
             return new List<GameObject>() { barGameObject };
         }
 
@@ -267,9 +265,7 @@ public class WindowGraph : MonoBehaviour {
                 ShowTooltip_Static(tooltipText, graphPosition - new Vector2(440, 180));
             };
             
-            dotButtonUI.MouseOutOnceFunc += () => {
-                HideTooltip_Static();
-            };
+            dotButtonUI.MouseOutOnceFunc += HideTooltip_Static;
 
             gameObjectList.Add(dotGameObject);
             if (lastDotGameObject != null) {
