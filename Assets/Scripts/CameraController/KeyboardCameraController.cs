@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class KeyboardCameraController : MonoBehaviour
 {
-    [SerializeField] private float maxZoomDistance = 5f;
-    [SerializeField] private float minZoomDistance = 20f; 
+    private float maxZoomDistance = 5f;
+    private float minZoomDistance = 60f; 
+    
+    private float maxZAbs = 50f; 
+    private float maxXAbs = 40f; 
+
 
     // TODO: Cambiar las cosas por LERP 
     [SerializeField] private Camera cam; 
@@ -15,19 +19,19 @@ public class KeyboardCameraController : MonoBehaviour
         var onGroundOld = Physics.Raycast(transform.position, Vector3.down, out var hit);
         var oldHeight = hit.point.y;
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) && transform.position.z < maxZAbs)
         {
             transform.Translate(Vector3.forward, Space.Self);
         }
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.S) && transform.position.z > -maxZAbs)
         {
             transform.Translate(Vector3.back, Space.World);
         }
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) && transform.position.x > -maxXAbs)
         {
             transform.Translate(Vector3.left, Space.World);
         }
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) && transform.position.x < maxXAbs)
         {
             transform.Translate(Vector3.right, Space.World);
         }
@@ -35,19 +39,10 @@ public class KeyboardCameraController : MonoBehaviour
         var onGroundNew = Physics.Raycast(transform.position, Vector3.down, out hit);
         var newHeight = hit.point.y;
 
-        transform.Translate(Vector3.up * (newHeight - oldHeight), Space.World);
+        var deltaHeight = newHeight - oldHeight; 
+        transform.Translate(Vector3.up * deltaHeight, Space.World);
         
-        // Rotation 
-        // TODO, quizas girar con respecto a un pivote? 
-        if (Input.GetKey(KeyCode.Q))
-        {
-            transform.Rotate(0f, -1f, 0f, Space.World);
-        }
-        if (Input.GetKey(KeyCode.E))
-        {            
-            transform.Rotate(0f, 1f, 0f, Space.World);
-        }
-        
+       
         // Zoom 
         if (Input.GetKey(KeyCode.Z))
         {
