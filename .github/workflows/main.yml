@@ -49,14 +49,6 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
-      - name: Restore Library cache
-        uses: actions/cache@v2
-        with:
-          path: Library
-          key: Library-test-project-${{ matrix.targetPlatform }}
-          restore-keys: |
-            Library-test-project-
-            Library-
       - uses: game-ci/unity-test-runner@v2.0-alpha-5
         id: testRunner
         with:
@@ -99,14 +91,6 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
-      - name: Restore Library cache
-        uses: actions/cache@v2
-        with:
-          path: Library
-          key: Library-buildAndTest-test-buildAndTest-${{ matrix.targetPlatform }}
-          restore-keys: |
-            Library-test-buildAndTest-
-            Library-
       - uses: game-ci/unity-test-runner@v2
         id: testRunner
       - uses: actions/upload-artifact@v2
@@ -117,6 +101,7 @@ jobs:
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           customParameters: "-myParameter myValue -myBoolean -ThirdParameter andItsValue"
+          allowDirtyBuild: true
       - uses: actions/upload-artifact@v2
         with:
           name: Build (${{ matrix.targetPlatform }})
@@ -147,14 +132,6 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
-      - name: Restore Library cache
-        uses: actions/cache@v2
-        with:
-          path: Library
-          key: Library-build-WebGL
-          restore-keys: |
-            Library-build-
-            Library-
       - uses: game-ci/unity-builder@v2
         with:
           targetPlatform: WebGL
