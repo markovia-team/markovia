@@ -11,8 +11,10 @@ public class MainMenu : MonoBehaviour {
     public GameObject popup;
     
     public void PlayGame() {
-        foreach (var pair in speciesPrefabs)
-            AgentSpawner.AddSpecies(pair.Key, pair.Value);
+        if (speciesPrefabs != null) {
+            foreach (var pair in speciesPrefabs)
+                AgentSpawner.AddSpecies(pair.Key, pair.Value);
+        }
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
