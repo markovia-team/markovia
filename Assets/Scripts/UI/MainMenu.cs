@@ -34,7 +34,7 @@ public class MainMenu : MonoBehaviour {
 
     public void StartFile() {
         var path = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false);
-        if (path == null || string.Compare(path[0], string.Empty, StringComparison.Ordinal) == 0) {
+        if (path == null || path.Length == 0 || string.Compare(path[0], string.Empty, StringComparison.Ordinal) == 0) {
             popup.GetComponentInChildren<TMPro.TMP_Text>().text = "You must choose a json file";
             showPopup();
             return;
