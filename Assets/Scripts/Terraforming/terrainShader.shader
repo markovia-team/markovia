@@ -19,6 +19,7 @@ Shader "Custom/TerrainShader"
         
         float minHeight; 
         float maxHeight;
+        int q_colors; 
 
         float3 floorColor = float3(155/255, 195/255, 87/255);
         float3 ceilColor = float3(92/255, 73/255, 39/255);
@@ -47,8 +48,11 @@ Shader "Custom/TerrainShader"
         
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
+            
             float heightPercent = inverseLerp(minHeight, maxHeight, IN.worldPos.y);
-            o.Albedo = ascendingColors[0] + heightPercent * (ascendingColors[1] - ascendingColors[0]); 
+            int colorLevel = heightPercent * (q_colors - 2);
+            heightPercent = (heightPercent - (colorLevel)*1.0f/(q_colors-1))*(q_colors-1); 
+            o.Albedo = ascendingColors[colorLevel] + heightPercent * (ascendingColors[colorLevel+1] - ascendingColors[colorLevel]); 
         }
         ENDCG
     }
