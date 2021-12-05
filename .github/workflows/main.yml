@@ -101,6 +101,7 @@ jobs:
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           customParameters: "-myParameter myValue -myBoolean -ThirdParameter andItsValue"
+          allowDirtyBuild: true
       - uses: actions/upload-artifact@v2
         with:
           name: Build (${{ matrix.targetPlatform }})
