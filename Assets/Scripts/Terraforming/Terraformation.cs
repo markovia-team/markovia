@@ -12,7 +12,19 @@ public class Terraformation : MonoBehaviour
     private int[] triangles;
     
     // Colouring of mountains
-    private Color[] colors = new [] {new Color(121/255f, 181/255f, 103/255f), new Color(92/255f, 73/255f, 39/255f)};
+    private Color[] colors = 
+    {
+        new Color(121/255f, 181/255f, 103/255f), 
+        // new Color(121/255f, 181/255f, 103/255f), 
+        // new Color(121/255f, 181/255f, 103/255f), 
+        // new Color(121/255f, 181/255f, 103/255f), 
+        
+        // new Color(255/255f, 247/255f, 0/255f),
+        new Color(92/255f, 73/255f, 39/255f),
+        // Color.blue, 
+
+
+    };
     
     // Max and min 
     private float maxTerrainHeight = -Mathf.Infinity;
@@ -45,27 +57,10 @@ public class Terraformation : MonoBehaviour
         DestroyImmediate(GetComponent<MeshCollider>());
         var newCollider = gameObject.AddComponent<MeshCollider>();
         newCollider.sharedMesh = mesh;
-        CreateLimitSmoke(); 
         GetComponent<NavMeshSurface>().BuildNavMesh();
 
     }
-
-    private void CreateLimitSmoke()
-    {
-        // int jump = 6;
-        // int offset = 40; 
-        // for (int x = -xSize/2; x <= xSize/2; x+=jump)
-        // {
-        //     Instantiate(smoke, new Vector3(x * scale , 0, -zSize * scale / 2 - offset), smoke.transform.rotation); 
-        //     Instantiate(smoke, new Vector3(x * scale , 0, zSize * scale / 2 + offset), smoke.transform.rotation);
-        // }
-        // for (int z = -zSize/2; z <= zSize/2; z+=jump)
-        // {
-        //     Instantiate(smoke, new Vector3(-xSize * scale / 2 - offset, 0, z*scale), smoke.transform.rotation, transform); 
-        //     Instantiate(smoke, new Vector3(xSize * scale / 2 + offset, 0, z*scale), smoke.transform.rotation, transform);
-        // }
-    }
-
+    
     // TODO: implementar con alguna funcion piola 
     public static float PerlinValue(float x, float z, float amplitude, float frequency)
     {
@@ -143,6 +138,8 @@ public class Terraformation : MonoBehaviour
     {
         GetComponent<Renderer>().material.SetFloat("minHeight", minTerrainHeight);
         GetComponent<Renderer>().material.SetFloat("maxHeight", maxTerrainHeight);
+        GetComponent<Renderer>().material.SetInt("q_colors", colors.Length);
+
         GetComponent<Renderer>().material.SetColorArray("ascendingColors", colors);
     }
 
