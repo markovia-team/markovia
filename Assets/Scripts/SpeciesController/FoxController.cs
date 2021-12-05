@@ -4,6 +4,7 @@ using System.Numerics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
+using System.Runtime.Serialization;
 
 public class FoxController : MovableAgent {
     private static float foxMaxSize = 1.5f;
@@ -87,5 +88,14 @@ public class FoxController : MovableAgent {
 
     public override void reproduce() {
         throw new NotImplementedException();
+    }
+    
+    public override void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override string ToString(){
+        return "Fox".ToString();
     }
 }

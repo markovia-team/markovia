@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.Serialization;
 
-public abstract class Agent : MonoBehaviour, IAgentController
+public abstract class Agent : MonoBehaviour, IAgentController, ISerializable
 {
     public AgentStats stats;
     private State currentState = State.Wander;
@@ -38,6 +39,8 @@ public abstract class Agent : MonoBehaviour, IAgentController
     public abstract void seeAround();
     public abstract GameObject getBestWaterPosition();
     public abstract GameObject getBestFoodPosition();
+
+    public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
 
     public void FinishedSolvingState() {
         finished = true; 
