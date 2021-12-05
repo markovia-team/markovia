@@ -33,8 +33,8 @@ public class MainMenu : MonoBehaviour {
     }
 
     public void StartFile() {
-        var path = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false)[0];
-        if (string.Compare(path, string.Empty, StringComparison.Ordinal) == 0) {
+        var path = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false);
+        if (path == null || string.Compare(path[0], string.Empty, StringComparison.Ordinal) == 0) {
             popup.GetComponentInChildren<TMPro.TMP_Text>().text = "You must choose a json file";
             showPopup();
             return;
@@ -44,7 +44,7 @@ public class MainMenu : MonoBehaviour {
         GameObject prefab;
         GameData savedData;
         try {
-            if (!JsonManager.ReadFromJson(path, out savedData)) {
+            if (!JsonManager.ReadFromJson(path[0], out savedData)) {
                 return;
             }
         } catch(ArgumentException) {
