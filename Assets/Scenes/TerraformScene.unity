@@ -174,7 +174,7 @@ RectTransform:
   - {fileID: 1754807956}
   - {fileID: 1783294437}
   m_Father: {fileID: 356527575}
-  m_RootOrder: 5
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1742,14 +1742,14 @@ RectTransform:
   - {fileID: 1139810114}
   - {fileID: 1648832609}
   - {fileID: 819580373}
+  - {fileID: 1151391087}
+  - {fileID: 1035663887}
+  - {fileID: 1091244099}
   - {fileID: 55521395}
   - {fileID: 2120800740}
   - {fileID: 1206938651}
   - {fileID: 1338269298}
-  - {fileID: 1035663887}
   - {fileID: 2087245765}
-  - {fileID: 1091244099}
-  - {fileID: 1151391087}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4014,7 +4014,7 @@ RectTransform:
   m_Children:
   - {fileID: 211223642}
   m_Father: {fileID: 356527575}
-  m_RootOrder: 9
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4065,7 +4065,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1379952787}
         m_TargetAssemblyTypeName: AgentSpawner, Assembly-CSharp
         m_MethodName: WriteData
         m_Mode: 1
@@ -4281,7 +4281,7 @@ RectTransform:
   m_LocalScale: {x: 1.1548963, y: 1.1548963, z: 1.1548963}
   m_Children: []
   m_Father: {fileID: 356527575}
-  m_RootOrder: 11
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5071,7 +5071,7 @@ RectTransform:
   m_Children:
   - {fileID: 526503111}
   m_Father: {fileID: 356527575}
-  m_RootOrder: 12
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5766,7 +5766,7 @@ RectTransform:
   - {fileID: 824384002}
   - {fileID: 1558679837}
   m_Father: {fileID: 356527575}
-  m_RootOrder: 7
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6459,7 +6459,7 @@ RectTransform:
   - {fileID: 1309346469}
   - {fileID: 1827210255}
   m_Father: {fileID: 356527575}
-  m_RootOrder: 8
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6725,7 +6725,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speciesPrefabs:
     list: []
-  popup: {fileID: 0}
+  popup: {fileID: 2087245764}
 --- !u!4 &1379952788
 Transform:
   m_ObjectHideFlags: 0
@@ -11345,7 +11345,7 @@ RectTransform:
   - {fileID: 1801052127}
   - {fileID: 779805778}
   m_Father: {fileID: 356527575}
-  m_RootOrder: 10
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -11467,7 +11467,7 @@ RectTransform:
   - {fileID: 502271924}
   - {fileID: 1937337399}
   m_Father: {fileID: 356527575}
-  m_RootOrder: 6
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
