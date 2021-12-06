@@ -112,7 +112,8 @@ public class AgentStats {
         // Debug.Log("w: " + weights);
         weights.Multiply(neuralInput, neuralOutput);
         
-        // Debug.Log("reproductive: " + GetNeed(Need.ReproductiveUrge));
+        // Debug.Log("h: " + GetNeed(Need.Hunger) + "   t: " + GetNeed(Need.Thirst) + "   s: " + GetNeed(Need.Sleep) + "   r: " + GetNeed(Need.ReproductiveUrge) );
+        // Debug.Log(neuralInput);
         
         var j = 0;
         double maxValue = 0;

@@ -29,18 +29,18 @@ public static class StateExtensions {
 
                 do
                 {
-                    agent.stats.UpdateNeed(Need.Thirst, 0.01f * Time.deltaTime * WorldController.TickSpeed);
-                    agent.stats.UpdateNeed(Need.Sleep, 0.01f * Time.deltaTime * WorldController.TickSpeed);
-                    agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.01f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Thirst, 0.005f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Sleep, 0.005f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.005f * Time.deltaTime * WorldController.TickSpeed);
                     if (agent.IsHere(food.transform.position))
                     {
                         // UnityEngine.Object.Destroy(foodPosition);
                         // agent.eat();
-                        agent.stats.UpdateNeed(Need.Hunger, -0.1f * Time.deltaTime * WorldController.TickSpeed);
+                        agent.stats.UpdateNeed(Need.Hunger, -0.2f * Time.deltaTime * WorldController.TickSpeed);
                     }
                     else
                     {
-                        agent.stats.UpdateNeed(Need.Hunger, 0.01f * Time.deltaTime * WorldController.TickSpeed);
+                        agent.stats.UpdateNeed(Need.Hunger, 0.005f * Time.deltaTime * WorldController.TickSpeed);
                     }
                     yield return null;
                 } while (agent.IsSolving() && agent.stats.GetNeed(Need.Hunger) > 0);
@@ -55,16 +55,16 @@ public static class StateExtensions {
 
                 do
                 {
-                    agent.stats.UpdateNeed(Need.Hunger, 0.01f * Time.deltaTime * WorldController.TickSpeed);
-                    agent.stats.UpdateNeed(Need.Sleep, 0.01f * Time.deltaTime * WorldController.TickSpeed);
-                    agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.01f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Hunger, 0.005f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Sleep, 0.005f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.005f * Time.deltaTime * WorldController.TickSpeed);
                     if (agent.IsHere(water.transform.position))
                     {
-                        agent.stats.UpdateNeed(Need.Thirst, -0.1f * Time.deltaTime * WorldController.TickSpeed);
+                        agent.stats.UpdateNeed(Need.Thirst, -0.2f * Time.deltaTime * WorldController.TickSpeed);
                     }
                     else
                     {
-                        agent.stats.UpdateNeed(Need.Thirst, 0.01f * Time.deltaTime * WorldController.TickSpeed);
+                        agent.stats.UpdateNeed(Need.Thirst, 0.005f * Time.deltaTime * WorldController.TickSpeed);
                     }
                     yield return null;
                 } while (agent.IsSolving() && agent.stats.GetNeed(Need.Thirst) > 0);
@@ -90,10 +90,10 @@ public static class StateExtensions {
                 agent.moveTo(to);
 
                 while (agent.IsSolving()) {
-                    agent.stats.UpdateNeed(Need.Hunger, 0.01f * Time.deltaTime * WorldController.TickSpeed * 2f);
-                    agent.stats.UpdateNeed(Need.Thirst, 0.01f * Time.deltaTime * WorldController.TickSpeed * 2f);
-                    agent.stats.UpdateNeed(Need.Sleep, 0.01f * Time.deltaTime * WorldController.TickSpeed * 2f);
-                    agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.01f * Time.deltaTime * WorldController.TickSpeed * 2f);
+                    agent.stats.UpdateNeed(Need.Hunger, 0.005f * Time.deltaTime * WorldController.TickSpeed * 2f);
+                    agent.stats.UpdateNeed(Need.Thirst, 0.005f * Time.deltaTime * WorldController.TickSpeed * 2f);
+                    agent.stats.UpdateNeed(Need.Sleep, 0.005f * Time.deltaTime * WorldController.TickSpeed * 2f);
+                    agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.005f * Time.deltaTime * WorldController.TickSpeed * 2f);
 
                     if (agent.IsHere(to)) { 
                         agent.ResetCoroutines();
@@ -105,9 +105,9 @@ public static class StateExtensions {
                 agent.BeginSolvingState();
 
                 do {
-                    agent.stats.UpdateNeed(Need.Hunger, 0.05f * Time.deltaTime * WorldController.TickSpeed);
-                    agent.stats.UpdateNeed(Need.Thirst, 0.05f * Time.deltaTime * WorldController.TickSpeed);
-                    agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.05f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Hunger, 0.01f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Thirst, 0.01f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.01f * Time.deltaTime * WorldController.TickSpeed);
                     agent.stats.UpdateNeed(Need.Sleep, -0.1f * Time.deltaTime * WorldController.TickSpeed);
                     yield return null;
                 } while (agent.IsSolving() && agent.stats.GetNeed(Need.Sleep) > 0f);
@@ -115,8 +115,6 @@ public static class StateExtensions {
                 break;
             case State.Reproduce:
                 agent.BeginSolvingState();
-                
-                Debug.Log("-- REPRODUCE --");
 
                 Agent mate = agent.findMate();
                 if (mate == null || mate.gameObject == null) {
@@ -127,16 +125,16 @@ public static class StateExtensions {
                 agent.moveTo(mate.gameObject);
 
                 while (agent.IsSolving()) {
-                    agent.stats.UpdateNeed(Need.Hunger, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
-                    agent.stats.UpdateNeed(Need.Thirst, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
-                    agent.stats.UpdateNeed(Need.Sleep, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
+                    agent.stats.UpdateNeed(Need.Hunger, 0.005f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Thirst, 0.005f * Time.deltaTime * WorldController.TickSpeed);
+                    agent.stats.UpdateNeed(Need.Sleep, 0.005f * Time.deltaTime * WorldController.TickSpeed);
 
                     if (mate == null || mate.gameObject.Equals(null)) {
                         break;
                     }
                     
                     if (agent.IsHere(mate.transform.position)) {
-                        agent.worldController.GetComponent<AgentSpawner>().Reproduce(agent, mate, agent.GetSpecies());
+                        // agent.worldController.GetComponent<AgentSpawner>().Reproduce(agent, mate, agent.GetSpecies());
                         agent.stats.SetNeed(Need.ReproductiveUrge, 0f);
                         agent.ResetCoroutines();
                         break;

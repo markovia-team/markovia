@@ -62,6 +62,8 @@ public abstract class Agent : MonoBehaviour, IAgentController
         return going;
     }
     public void IsThere() {
+        stats.SetDistance(Distance.ToFood, Vector3.Distance(transform.position, getBestFoodPosition().transform.position));
+        stats.SetDistance(Distance.ToWater, Vector3.Distance(transform.position, getBestWaterPosition().transform.position));
         going = false;
     }
     public void Going() {
@@ -93,6 +95,7 @@ public abstract class Agent : MonoBehaviour, IAgentController
 
     public void Die() {
         // this.transform.Rotate(0f, 0f, 90f);
+        worldController.GetComponent<AgentSpawner>().Died(this, GetSpecies());
         Destroy(this.gameObject);
         dead = true;
         StopAllCoroutines();
