@@ -78,17 +78,6 @@ public abstract class Agent : MonoBehaviour, IAgentController
     public IEnumerator GetNextState() {
         do {
             nextState = stats.NextState();
-            /*
-            if (thirst > 0.02f) {
-                nextState = State.LookForWater;
-            }
-            else if (hunger > 0.03f) {
-                nextState = State.LookForFood;
-            }
-            else {
-                nextState = State.Wander;
-            }
-            */
             yield return new WaitForSecondsRealtime(1f / WorldController.TickSpeed);
         } while(true);
     }
