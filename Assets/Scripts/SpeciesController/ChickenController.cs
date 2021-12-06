@@ -8,7 +8,7 @@ using Vector3 = UnityEngine.Vector3;
 public class ChickenController : MovableAgent
 {
     private static float chickenMaxSize = 1.75f;
-    private static float chickenMinSize = 0.5f;
+    private static float chickenMinSize = 1f;
     private static float chickenMaxSpeed = 2.75f;
     private static float chickenMinSpeed = 1.5f;
     
@@ -21,8 +21,12 @@ public class ChickenController : MovableAgent
     }
 
     new void Start() {
+        // Debug.Log("Size: " + stats.GetAttribute(Attribute.Size));
+        // Debug.Log("Size: " + getEffectiveSize(stats.GetAttribute(Attribute.Size)));
+        // Debug.Log("localScale: " + transform.localScale);
         base.Start();
-        transform.localScale = getEffectiveSize(stats.GetAttribute(Attribute.Size)) * transform.localScale;
+        transform.localScale = getEffectiveSize(stats.GetAttribute(Attribute.Size)) * transform.localScale;// * transform.localScale;
+        // Debug.Log("localScale: " + transform.localScale);
         agent.speed = getEffectiveSpeed(stats.GetAttribute(Attribute.Speed)) * WorldController.TickSpeed;
     }
 
@@ -44,6 +48,12 @@ public class ChickenController : MovableAgent
         
     }
 
+    public void Die()
+    {
+        base.Die();
+        worldController.GetComponent<AgentSpawner>().ChickenDied(this);
+    }
+    
     public override void sleep() {
         throw new NotImplementedException();
     }
@@ -78,6 +88,8 @@ public class ChickenController : MovableAgent
         float bestDistance = float.MaxValue;
         GameObject result = null;
         foreach (var w in waters) {
+            if (w == null)
+                continue;
             var dist = Vector3.Distance(this.transform.position, w.transform.position); 
             if (dist < bestDistance) {
                 bestDistance = dist;
@@ -94,7 +106,7 @@ public class ChickenController : MovableAgent
         float bestDistance = float.MaxValue;
         Agent result = null;
         foreach (Agent c in chickenSet) {
-            if (c.Equals(this))
+            if (c.Equals(this) || c.Equals(null) || c.gameObject.Equals(null))
                 continue;
             float dist = Vector3.Distance(this.transform.position, c.transform.position); 
             if (dist < bestDistance) {

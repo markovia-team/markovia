@@ -114,8 +114,12 @@ public static class StateExtensions {
                 break;
             case State.Reproduce:
                 agent.BeginSolvingState();
+                
+                // Debug.Log("-- REPRODUCE --");
 
                 Agent mate = agent.findMate();
+                if (mate == null || mate.gameObject == null)
+                    break;
                 agent.moveTo(mate.gameObject);
 
                 while (agent.IsSolving()) {
@@ -123,6 +127,9 @@ public static class StateExtensions {
                     agent.stats.UpdateNeed(Need.Thirst, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
                     agent.stats.UpdateNeed(Need.Sleep, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
 
+                    if (mate.gameObject.Equals(null))
+                        break;
+                    
                     if (agent.IsHere(mate.transform.position)) {
                         agent.worldController.GetComponent<AgentSpawner>().Reproduce(agent, mate, agent.GetSpecies());
                         agent.stats.SetNeed(Need.ReproductiveUrge, 0f);

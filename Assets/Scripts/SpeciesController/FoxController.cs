@@ -83,7 +83,7 @@ public class FoxController : MovableAgent {
         float bestDistance = float.MaxValue;
         Agent result = null;
         foreach (Agent c in chickenSet) {
-            if (c.Equals(this))
+            if (c == null || c.gameObject == null)
                 continue;
             float dist = Vector3.Distance(this.transform.position, c.transform.position); 
             if (dist < bestDistance) {
