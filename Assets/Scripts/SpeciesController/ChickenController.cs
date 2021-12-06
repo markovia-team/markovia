@@ -51,7 +51,6 @@ public class ChickenController : MovableAgent
     public void Die()
     {
         base.Die();
-        worldController.GetComponent<AgentSpawner>().ChickenDied(this);
     }
     
     public override void sleep() {

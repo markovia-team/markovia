@@ -82,6 +82,13 @@ public class AgentSpawner : MonoBehaviour
         InGameAgents.Add(Species.Chicken, chickenSet);
     }
     
+    public void Died(Agent agent, Species species)
+    {
+        InGameAgents.TryGetValue(species, out var set);
+        set.Remove(agent);
+        // InGameAgents.Add(species, set);
+    }
+    
     public HashSet<Agent> GetFoxes() {
         InGameAgents.TryGetValue(Species.Fox, out var chickenSet);
         return chickenSet;
