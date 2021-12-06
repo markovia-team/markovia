@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 public enum State {
@@ -102,8 +104,7 @@ public static class StateExtensions {
             case State.Sleep:
                 agent.BeginSolvingState();
 
-                do
-                {
+                do {
                     agent.stats.UpdateNeed(Need.Hunger, 0.05f * Time.deltaTime * WorldController.TickSpeed);
                     agent.stats.UpdateNeed(Need.Thirst, 0.05f * Time.deltaTime * WorldController.TickSpeed);
                     agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.05f * Time.deltaTime * WorldController.TickSpeed);
@@ -115,11 +116,14 @@ public static class StateExtensions {
             case State.Reproduce:
                 agent.BeginSolvingState();
                 
-                // Debug.Log("-- REPRODUCE --");
+                Debug.Log("-- REPRODUCE --");
 
                 Agent mate = agent.findMate();
-                if (mate == null || mate.gameObject == null)
+                if (mate == null || mate.gameObject == null) {
+                    yield return null;
                     break;
+                }
+
                 agent.moveTo(mate.gameObject);
 
                 while (agent.IsSolving()) {
@@ -127,8 +131,9 @@ public static class StateExtensions {
                     agent.stats.UpdateNeed(Need.Thirst, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
                     agent.stats.UpdateNeed(Need.Sleep, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
 
-                    if (mate.gameObject.Equals(null))
+                    if (mate == null || mate.gameObject.Equals(null)) {
                         break;
+                    }
                     
                     if (agent.IsHere(mate.transform.position)) {
                         agent.worldController.GetComponent<AgentSpawner>().Reproduce(agent, mate, agent.GetSpecies());
@@ -138,6 +143,7 @@ public static class StateExtensions {
                     }
                     yield return null;
                 }
+                yield return null;
                 break;
             case State.AsexualReproduce:
                 agent.BeginSolvingState();
