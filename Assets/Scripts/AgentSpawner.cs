@@ -74,6 +74,13 @@ public class AgentSpawner : MonoBehaviour
         InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
         return chickenSet;
     }
+
+    public void ChickenDied(Agent chicken)
+    {
+        InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
+        Debug.Log(chickenSet.Remove(chicken));
+        InGameAgents.Add(Species.Chicken, chickenSet);
+    }
     
     public HashSet<Agent> GetFoxes() {
         InGameAgents.TryGetValue(Species.Fox, out var chickenSet);
@@ -102,11 +109,13 @@ public class AgentSpawner : MonoBehaviour
 
     public void Reproduce(Agent ag1, Agent ag2, Species species)
     {
-        AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag2.stats, species);   
+        // Debug.Log("-- REPRODUCE --");
+        AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag2.stats, species);
 
         speciesPrefabs.TryGetValue(species, out var selectedPrefab); 
-        GameObject reference = Instantiate(selectedPrefab, ag1.transform);
-        reference.GetComponent<Agent>().stats = ags; 
+        GameObject reference = Instantiate(selectedPrefab, ag1.gameObject.transform);
+        reference.GetComponent<Agent>().stats = ags;
+        reference.GetComponent<Agent>().worldController = ag1.worldController;
         InGameAgents.TryGetValue(species, out var x);
         x.Add(reference.GetComponent<Agent>());
     }
@@ -119,6 +128,7 @@ public class AgentSpawner : MonoBehaviour
         Vector3 randomVector = new Vector3(pos.x + Random.Range(-3f, 3f), pos.y, pos.z + Random.Range(-3f, 3f)); 
         GameObject reference = Instantiate(selectedPrefab, randomVector, ag1.transform.rotation);
         reference.GetComponent<Agent>().stats = ags;
+        reference.GetComponent<Agent>().worldController = ag1.worldController;
         InGameAgents.TryGetValue(species, out var x);
         x.Add(reference.GetComponent<Agent>());
     }
