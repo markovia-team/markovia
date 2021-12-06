@@ -11,14 +11,15 @@ public static class SpeciesFactory {
         { Species.Chicken, new SortedDictionary<Attribute, double>() {
             {Attribute.Speed, 0.5f},
             {Attribute.Size, 0.5f},
-            {Attribute.Color, 0.5f},
+            {Attribute.Color, 0.5f}
         } },
         { Species.Grass, new SortedDictionary<Attribute, double>() {
             {Attribute.Size, 0.5f}
         } },
         { Species.Fox, new SortedDictionary<Attribute, double>() {
             {Attribute.Speed, 0.5f},
-            {Attribute.Size, 0.5f}
+            {Attribute.Size, 0.5f},
+            {Attribute.Color, 0.5f}
         } }
     };
 
@@ -44,9 +45,9 @@ public static class SpeciesFactory {
     };
 
     private static readonly Dictionary<Species, float> spec_mutability = new Dictionary<Species, float>() {
-        { Species.Chicken, 0.4f}, 
-        { Species.Grass, 0.4f}, 
-        { Species.Fox, 0.4f}
+        { Species.Chicken, 0.1f}, 
+        { Species.Grass, 0.1f}, 
+        { Species.Fox, 0.1f}
     };
     
     private static readonly Dictionary<Species, Matrix<double>> default_weights = new Dictionary<Species, Matrix<double>>() {
@@ -55,7 +56,7 @@ public static class SpeciesFactory {
                 {-0.1, 0, 0, 0, 0.03, 0, 0.75, 0, 0},
                 {-0.1, 0, 0, 0.03, 0, 0, 0, 0, 0.75},
                 {0, 0, 0, 0, 0, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0.1},
+                {0, 0, 0.01, 0, 0, 0.1, 0.1, 0.1, 0.1},
                 {0, 0, 0, 0, 0, 0, 0, 1, 0}
                 
             })
@@ -71,7 +72,7 @@ public static class SpeciesFactory {
                 {-0.1, 0, 0, 0, 0.03, 0, 0.75, 0, 0},
                 {-0.1, 0, 0, 0.03, 0, 0, 0, 0, 0.75},
                 {0, 0, 0, 0, 0, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0.1},
+                {0, 0, 0.01, 0, 0, 0.1, 0.1, 0.1, 0.1},
                 {0, 0, 0, 0, 0, 0, 0, 1, 0}
                 
             })
@@ -92,8 +93,8 @@ public static class SpeciesFactory {
         if (baseNeeds != null)
             foreach (Need need in baseNeeds)
                 needsAux.Add(need, 0);
-
-                SortedDictionary<Distance, double> distsAux = new SortedDictionary<Distance, double>();
+        
+        SortedDictionary<Distance, double> distsAux = new SortedDictionary<Distance, double>();
         if (baseDists != null)
             foreach (Distance distance in baseDists)
                 distsAux.Add(distance, 0);
@@ -140,8 +141,23 @@ public static class SpeciesFactory {
             foreach (Distance distance in baseDists)
                 distsAux.Add(distance, 0);
 
+        Matrix<double> ag1w = p1.GetWeights();
+        Matrix<double> ag2w = p2.GetWeights();
+        // Debug.Log("1: " + ag1w);
+        // Debug.Log("2: " + ag2w);
+        Matrix<double> aux_mat = Matrix<double>.Build.Dense(baseStates.Count, needsAux.Count + distsAux.Count + attsAux.Count);
+        for(int i = 0; i < needsAux.Count + distsAux.Count + attsAux.Count; i++) {
+            for (int j = 0; j < baseStates.Count; j++)
+            {
+                var p = Random.Range(0f, 1f);
+                var mean = p * ag1w[j, i] + (1 - p) * ag2w[j, i];
+                var finalAtt = Math.Min(Math.Max(Normal.Sample(mean, 0.01f), 0f), 1f);
+                aux_mat[j, i] = finalAtt;
+            }
+        }
+
         // Mix-and-match reactance matrix
-        return new AgentStats(attsAux, needsAux, distsAux, baseStates, null);//aux_mat);
+        return new AgentStats(attsAux, needsAux, distsAux, baseStates, aux_mat);
         
     }
 }

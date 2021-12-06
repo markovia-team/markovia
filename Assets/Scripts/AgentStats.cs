@@ -94,7 +94,12 @@ public class AgentStats {
         distances.TryGetValue(distance, out var a);
         distances[distance] = value;
     }
-    
+
+    public Matrix<double> GetWeights()
+    {
+        return weights;
+    }
+
     public State NextState() {
 
         // return State.Idle;
@@ -104,9 +109,10 @@ public class AgentStats {
 		foreach (var pair in needs) neuralInput[i++] = pair.Value;
 
         // Multiply matrix weights by input vector. "Neural" step.
+        // Debug.Log("w: " + weights);
         weights.Multiply(neuralInput, neuralOutput);
         
-        Debug.Log("reproductive: " + GetNeed(Need.ReproductiveUrge));
+        // Debug.Log("reproductive: " + GetNeed(Need.ReproductiveUrge));
         
         var j = 0;
         double maxValue = 0;
@@ -122,9 +128,10 @@ public class AgentStats {
         
         // Recover state from Set
         // TODO: not efficient, it may be better to use an ArrayList and sort it. Getting the 'nth' element is O(n) in SortedSet
-        Debug.Log(states.ElementAt(maxj));
+        // Debug.Log("i: " + maxj);
+        // Debug.Log("states: " + states.Count);
+        // Debug.Log(maxj >= 0 ? states.ElementAt(maxj).ToString() : "nada");
         return maxj >= 0 ? states.ElementAt(maxj) : State.Idle;
-         
     }
 
     public double GetNeed(Need need)
