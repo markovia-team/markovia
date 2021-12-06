@@ -113,7 +113,8 @@ public class AgentSpawner : MonoBehaviour
         AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag2.stats, species);
 
         speciesPrefabs.TryGetValue(species, out var selectedPrefab); 
-        GameObject reference = Instantiate(selectedPrefab, ag1.gameObject.transform);
+        // TODO: Change parent parameter
+        GameObject reference = Instantiate(selectedPrefab, ag1.transform.position, ag1.transform.rotation, null);
         reference.GetComponent<Agent>().stats = ags;
         reference.GetComponent<Agent>().worldController = ag1.worldController;
         InGameAgents.TryGetValue(species, out var x);
