@@ -55,6 +55,9 @@ public abstract class Agent : MonoBehaviour, IAgentController
     public void BeginSolvingState() {
         finished = false; 
     }
+    public void FinishSolvingState() {
+        finished = true;
+    }
     public bool IsSolving() {
         return !finished;
     }

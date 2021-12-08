@@ -15,8 +15,12 @@ public class AgentSpawner : MonoBehaviour
 
     // TODO: en realidad estas posiciones pueden calcularse a partir de OnGameAgents pero mepa que es mejor tenerlas aparte
     private Dictionary<Species, List<Vector3>> NonMovableAgentsPositions = new Dictionary<Species, List<Vector3>>();
-    private Dictionary<Species, HashSet<Agent>> InGameAgents = new Dictionary<Species, HashSet<Agent>>(); 
-    
+    private Dictionary<Species, HashSet<Agent>> InGameAgents = new Dictionary<Species, HashSet<Agent>>();
+
+    public Dictionary<Species, HashSet<Agent>> gameAgents {
+        get => InGameAgents;
+    }
+
     void Start() {
         foreach (var keyValuePair in speciesPrefabsStatic)
             speciesPrefabs.Add(keyValuePair.Key, keyValuePair.Value);
@@ -118,10 +122,10 @@ public class AgentSpawner : MonoBehaviour
     {
         // Debug.Log("-- REPRODUCE --");
         AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag2.stats, species);
+        ags.SetNeed(Need.ReproductiveUrge, 0f);
 
         speciesPrefabs.TryGetValue(species, out var selectedPrefab); 
-        // TODO: Change parent parameter
-        GameObject reference = Instantiate(selectedPrefab, ag1.transform.position, ag1.transform.rotation, null);
+        GameObject reference = Instantiate(selectedPrefab, ag1.transform.position, ag1.transform.rotation, transform);
         reference.GetComponent<Agent>().stats = ags;
         reference.GetComponent<Agent>().worldController = ag1.worldController;
         InGameAgents.TryGetValue(species, out var x);

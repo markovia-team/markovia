@@ -92,8 +92,6 @@ public class FoxController : MovableAgent {
             }
         }
         return result.gameObject;
-        
-        //return this.gameObject;
     }
 
     public override Agent findMate()
