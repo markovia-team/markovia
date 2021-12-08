@@ -32,10 +32,12 @@ public class AgentSpawner : MonoBehaviour
         foreach (var s in speciesPrefabs.Keys)
             InGameAgents.Add(s, new HashSet<Agent>());
         
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 15; i++) {
             speciesPrefabs.TryGetValue(Species.Grass, out var selectedPrefab);
-            if (selectedPrefab != null) {
-                GameObject reference = Instantiate(selectedPrefab, this.transform);
+            if (selectedPrefab != null)
+            {
+                Vector3 vect = new Vector3(Random.Range(-5f, 5f), 0.5f, Random.Range(-5f, 5f));
+                GameObject reference = Instantiate(selectedPrefab, vect, new Quaternion(0,0,0,0));
                 reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Grass);
                 reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
                 InGameAgents.TryGetValue(Species.Grass, out var x);
@@ -43,7 +45,7 @@ public class AgentSpawner : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 10; i++) {
             speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab);
             if (selectedPrefab != null) {
                 GameObject reference = Instantiate(selectedPrefab, this.transform);
@@ -54,7 +56,7 @@ public class AgentSpawner : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 2; i++) {
             speciesPrefabs.TryGetValue(Species.Fox, out var selectedPrefab);
             if (selectedPrefab != null) {
                 GameObject reference = Instantiate(selectedPrefab, this.transform);
@@ -74,28 +76,23 @@ public class AgentSpawner : MonoBehaviour
         speciesPrefabsStatic.Add(species, gameObject);
     }
 
-    public HashSet<Agent> GetChickens() {
-        InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
-        return chickenSet;
-    }
-
-    public void ChickenDied(Agent chicken)
+    public HashSet<Agent> GetSpecies(Species species)
     {
-        InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
-        Debug.Log(chickenSet.Remove(chicken));
-        InGameAgents.Add(Species.Chicken, chickenSet);
+        InGameAgents.TryGetValue(species, out var ansSet);
+        return ansSet;
     }
     
+    public HashSet<Agent> GetChickens()
+    {
+        InGameAgents.TryGetValue(Species.Chicken, out var ansSet);
+        return ansSet;
+    }
+
     public void Died(Agent agent, Species species)
     {
         InGameAgents.TryGetValue(species, out var set);
         set.Remove(agent);
         // InGameAgents.Add(species, set);
-    }
-    
-    public HashSet<Agent> GetFoxes() {
-        InGameAgents.TryGetValue(Species.Fox, out var chickenSet);
-        return chickenSet;
     }
 
     IEnumerator Populate()
