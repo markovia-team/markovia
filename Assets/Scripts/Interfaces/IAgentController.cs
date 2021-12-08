@@ -11,18 +11,23 @@ public interface IAgentController
    void eat();
    void sleep();
 
-   void reproduce(); 
+   // void reproduce(); 
    // No seria void
    void seeAround();
 
-   void FinishedSolvingState();
+   void ResetCoroutines();
    void BeginSolvingState();
    bool IsSolving();
    bool IsGoing();
    void Going();
    void IsThere();
    bool IsHere(Vector3 to);
+   float SizeWithAge();
+
+   Species GetSpecies();
+   double GetAge();
 
    GameObject getBestWaterPosition(); 
-   GameObject getBestFoodPosition(); 
+   Agent getBestFoodPosition();
+   Agent findMate();
 }

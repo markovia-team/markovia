@@ -11,6 +11,7 @@ public class FoxController : MovableAgent {
     private static float foxMinSize = 0.5f;
     private static float foxMaxSpeed = 5;
     private static float foxMinSpeed = 2.75f;
+    private Vector3 transformInicial;
     
     
     
@@ -25,14 +26,16 @@ public class FoxController : MovableAgent {
     new void Start()
     {
         base.Start();
-        transform.localScale = getEffectiveSize(stats.GetAttribute(Attribute.Size)) * transform.localScale;
         agent.speed = getEffectiveSpeed(stats.GetAttribute(Attribute.Speed)) * WorldController.TickSpeed;
+        transformInicial = transform.localScale;
     }
 
     new void Update()
     {
         // Need to do a generic Agent Update() before making a fox Update()
         base.Update();
+        // Debug.Log(getEffectiveSize(stats.GetAttribute(Attribute.Size) * SizeWithAge()) * transformInicial);
+        transform.localScale = getEffectiveSize(stats.GetAttribute(Attribute.Size) * SizeWithAge()) * transformInicial;
         agent.speed = getEffectiveSpeed(stats.GetAttribute(Attribute.Speed))*WorldController.TickSpeed;
     }
 
@@ -42,13 +45,11 @@ public class FoxController : MovableAgent {
     }
 
     public override void drink() {
-        Debug.Log("FOX DRINK");
-        thirst = 0; 
+        
     }
 
     public override void eat() {
-        Debug.Log("FOX EAT");
-        hunger = 0;
+        
     }
 
     public override void sleep() {
@@ -58,8 +59,14 @@ public class FoxController : MovableAgent {
     public override void seeAround() {
         throw new NotImplementedException();
     }
+    
+    public override Species GetSpecies()
+    {
+        return Species.Fox;
+    }
 
     public override GameObject getBestWaterPosition() {
+        
         List<GameObject> waters = worldController.GetWaterReferences();
         float bestDistance = float.MaxValue;
         GameObject result = null;
@@ -71,18 +78,45 @@ public class FoxController : MovableAgent {
             }
         }
         return result;
+        
+        //return this.gameObject;
     }
 
-    public override GameObject getBestFoodPosition() {
+    public override Agent getBestFoodPosition() {
         // HashSet<GameObject> waters = worldController.agentSpawner.GetChickens();
-        List<GameObject> waters = worldController.GetFoodReferences();
+        
+        HashSet<Agent> chickenSet = worldController.GetComponent<AgentSpawner>().GetSpecies(Species.Chicken);
+        if (chickenSet == null)
+            return null;
+        // HashSet<Agent> chickenSet = worldController.GetComponent<AgentSpawner>().GetChickens();
         float bestDistance = float.MaxValue;
-        GameObject result = null;
-        foreach (var w in waters) {
-            var dist = Vector3.Distance(this.transform.position, w.transform.position); 
+        Agent result = null;
+        foreach (Agent c in chickenSet) {
+            if (c == null || c.gameObject == null)
+                continue;
+            float dist = Vector3.Distance(this.transform.position, c.transform.position); 
             if (dist < bestDistance) {
                 bestDistance = dist;
-                result = w;
+                result = c;
+            }
+        }
+        return result;
+    }
+
+    public override Agent findMate()
+    {
+        HashSet<Agent> foxSet = worldController.GetComponent<AgentSpawner>().GetSpecies(GetSpecies());
+        float bestDistance = float.MaxValue;
+        Agent result = null;
+        foreach (Agent f in foxSet) {
+            if (f.Equals(this))
+                continue;
+            if (f.GetAge() > 10f) {
+                float dist = Vector3.Distance(this.transform.position, f.transform.position); 
+                if (dist < bestDistance) {
+                    bestDistance = dist;
+                    result = f;
+                }
             }
         }
         return result;
