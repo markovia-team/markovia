@@ -525,7 +525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldController: {fileID: 0}
-  agent: {fileID: 1793766709202349985, guid: cb1ff8a30728090c7a04f600b3254ab5, type: 3}
+  agent: {fileID: 2948050764451175942}
 --- !u!195 &2948050764451175942
 NavMeshAgent:
   m_ObjectHideFlags: 0
