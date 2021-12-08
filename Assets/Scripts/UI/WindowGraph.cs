@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class WindowGraph : MonoBehaviour {
     private static WindowGraph instance;
 
     [SerializeField] private Sprite dotSprite;
+    [SerializeField] private AgentSpawner agentSpawner; 
     private RectTransform graphContainer;
     private RectTransform labelTemplateX;
     private RectTransform labelTemplateY;
@@ -24,7 +26,21 @@ public class WindowGraph : MonoBehaviour {
     private Func<int, string> getAxisLabelX;
     private Func<float, string> getAxisLabelY;
 
+    public Species currentSpeciesSelected;
+    
+    public void SetCurrentSpeciesSelected(Species species)
+    {
+        currentSpeciesSelected = species; 
+        valueList = agentSpawner.FetchDataPoints(species); 
+        InitializeGraph();
+    } 
+    
     private void Awake() {
+        SetCurrentSpeciesSelected(currentSpeciesSelected);
+    }
+
+    public void InitializeGraph()
+    {
         instance = this;
         graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
         labelTemplateX = graphContainer.Find("LabelX").GetComponent<RectTransform>();
@@ -56,12 +72,16 @@ public class WindowGraph : MonoBehaviour {
         };
         
         HideTooltip();
-        List<int> valueList = new List<int> { 5, 98, 56, 45, 30, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33, 50, 30, 60, 50, 40, 20, 5, 20, 10, 50, 30, 20, 11,
-        5, 98, 56, 45, 30, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33, 50, 30, 60, 50, 40, 20, 5, 20, 10, 50, 30, 20, 11 };
         ShowGraph(valueList, barChartVisual, -1, i => "" + (i + 1), f => "" + Mathf.RoundToInt(f));
     }
     
-    private void Update() {
+    private void Start()
+    {
+        SetCurrentSpeciesSelected(currentSpeciesSelected);
+    }
+
+    private void Update()
+    {
         if (Input.GetKeyDown(KeyCode.RightArrow)) {
             ((LineGraphVisual) lineGraphVisual).ClearLastDot(); 
             LoadNextValues();

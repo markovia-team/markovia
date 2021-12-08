@@ -5,11 +5,14 @@ public class GraphMenu : MonoBehaviour {
     private static bool isPaused = false;
     private static bool wasPaused = false;
     public GameObject graphMenu;
-    public GameObject windowGraph;
     public GameObject settingsMenu;
     public GameObject button;
     public Sprite playAsset;
     public Sprite pauseAsset;
+    
+    
+    public GameObject windowGraph;
+    public SerializableDictionary<Species, GameObject> graphs = new SerializableDictionary<Species, GameObject>(); 
 
     private void Update() {
         if (!Input.GetKeyDown(KeyCode.Escape)) 
@@ -48,6 +51,25 @@ public class GraphMenu : MonoBehaviour {
     public void SetGraph() {
         graphMenu.SetActive(false);
         windowGraph.SetActive(true);
+    }
+    
+    public void SetChickenGraph()
+    {
+        graphs.TryGetValue(Species.Chicken, out var x);
+        windowGraph = x; 
+        SetGraph();
+    }
+    
+    public void SetFoxGraph() {
+        graphs.TryGetValue(Species.Fox, out var x);
+        windowGraph = x; 
+        SetGraph();
+    }
+    
+    public void SetGrassGraph() {
+        graphs.TryGetValue(Species.Grass, out var x);
+        windowGraph = x;         
+        SetGraph();
     }
 
     public void UnSetGraph() {
