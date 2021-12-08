@@ -41,7 +41,7 @@ public class AgentSpawner : MonoBehaviour, ISerializable
                 x.Add(reference);
             }
         }
-
+        
         for (int i = 0; i < 1; i++) {
             speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab);
             if (selectedPrefab != null) {
@@ -52,14 +52,15 @@ public class AgentSpawner : MonoBehaviour, ISerializable
                 x.Add(reference);
             }
         }
-
+        
         for (int i = 0; i < 1; i++) {
             speciesPrefabs.TryGetValue(Species.Fox, out var selectedPrefab);
             if (selectedPrefab != null) {
-                GameObject reference = Instantiate(selectedPrefab, this.transform);
+                GameObject reference = Instantiate(selectedPrefab, Vector3.zero, selectedPrefab.transform.rotation, this.transform);
                 reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Fox);
                 reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
                 InGameAgents.TryGetValue(Species.Fox, out var x);
+                reference.GetComponent<MovableAgent>().agent.Warp(Vector3.zero); 
                 x.Add(reference);
             }
         }
