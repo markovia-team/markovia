@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Runtime.Serialization;
 
-public abstract class Agent : MonoBehaviour, IAgentController
+public abstract class Agent : MonoBehaviour, IAgentController, ISerializable
 {
     public AgentStats stats;
     private State currentState = State.Idle;
@@ -59,6 +60,7 @@ public abstract class Agent : MonoBehaviour, IAgentController
         return age;
     }
 
+    public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
     public abstract GameObject getBestWaterPosition();
     public abstract Agent getBestFoodPosition();
     public abstract Agent findMate();
