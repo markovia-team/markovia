@@ -23,17 +23,26 @@ public static class StateExtensions {
             case State.LookForFood:
                 agent.BeginSolvingState();
                 GameObject food = agent.getBestFoodPosition();
+
+                if (food == null) {
+                    agent.ResetCoroutines();
+                    break;
+                }
+
                 agent.moveTo(food);
 
                 do {
                     agent.stats.UpdateNeed(Need.Thirst, 0.01f * Time.deltaTime * WorldController.TickSpeed);
                     agent.stats.UpdateNeed(Need.Sleep, 0.01f * Time.deltaTime * WorldController.TickSpeed);
                     agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.01f * Time.deltaTime * WorldController.TickSpeed);
+                    
+                    if (food == null) {
+                        break;
+                    }
+                    
                     if (agent.IsHere(food.transform.position)) {
                         agent.stats.UpdateNeed(Need.Hunger, -0.1f * Time.deltaTime * WorldController.TickSpeed);
-                    }
-                    else
-                    {
+                    } else {
                         agent.stats.UpdateNeed(Need.Hunger, 0.01f * Time.deltaTime * WorldController.TickSpeed);
                     }
                     yield return null;
@@ -50,12 +59,11 @@ public static class StateExtensions {
                     agent.stats.UpdateNeed(Need.Hunger, 0.01f * Time.deltaTime * WorldController.TickSpeed);
                     agent.stats.UpdateNeed(Need.Sleep, 0.01f * Time.deltaTime * WorldController.TickSpeed);
                     agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.01f * Time.deltaTime * WorldController.TickSpeed);
-                    if (agent.IsHere(water.transform.position))
-                    {
+                    
+                    if (agent.IsHere(water.transform.position)) {
                         agent.stats.UpdateNeed(Need.Thirst, -0.1f * Time.deltaTime * WorldController.TickSpeed);
                     }
-                    else
-                    {
+                    else {
                         agent.stats.UpdateNeed(Need.Thirst, 0.01f * Time.deltaTime * WorldController.TickSpeed);
                     }
                     yield return null;
@@ -115,7 +123,6 @@ public static class StateExtensions {
 
                 Agent mate = agent.findMate();
                 if (mate == null || mate.gameObject == null) {
-                    yield return null;
                     agent.ResetCoroutines();
                     break;
                 }
@@ -126,17 +133,22 @@ public static class StateExtensions {
                     agent.stats.UpdateNeed(Need.Thirst, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
                     agent.stats.UpdateNeed(Need.Sleep, 0.05f * Time.deltaTime * WorldController.TickSpeed * 2f);
 
-                    if (mate == null || mate.gameObject.Equals(null)) {
+                    if (mate == null || mate.gameObject == null) {
                         break;
                     }
 
                     if (agent.IsHere(mate.transform.position)) {
                         Debug.Log("-- ME VOY --" + agent.name);
                         agent.stats.SetNeed(Need.ReproductiveUrge, 0f);
-                        agent.worldController.GetComponent<AgentSpawner>().Reproduce(agent, mate, agent.GetSpecies());
                         mate.stats.SetNeed(Need.ReproductiveUrge, 0f);
-                        // Horrible pero sino crashea:
-                        yield return new WaitForSeconds(10f);
+                        agent.worldController.GetComponent<AgentSpawner>().gameAgents.TryGetValue(agent.GetSpecies(), out var set);
+                        if (set.Count > 30) {
+                            Debug.Log("-- LÍMITE --" + agent.name);
+                            break;
+                        }
+                        agent.FinishSolvingState();
+                        agent.StopAllCoroutines();
+                        agent.worldController.GetComponent<AgentSpawner>().Reproduce(agent, mate, agent.GetSpecies());
                         Debug.Log("-- SE REPRODUJO --" + agent.name);
                         break;
                     }
