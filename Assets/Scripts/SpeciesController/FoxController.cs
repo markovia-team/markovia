@@ -10,6 +10,7 @@ public class FoxController : MovableAgent {
     private static float foxMinSize = 0.5f;
     private static float foxMaxSpeed = 5;
     private static float foxMinSpeed = 2.75f;
+    private Vector3 transformInicial;
     
     private float getEffectiveSize(double normalized) {
         return (float) ((foxMaxSize - foxMinSize) * normalized + foxMinSize); 
@@ -22,14 +23,16 @@ public class FoxController : MovableAgent {
     new void Start()
     {
         base.Start();
-        transform.localScale = getEffectiveSize(stats.GetAttribute(Attribute.Size)) * transform.localScale;
         agent.speed = getEffectiveSpeed(stats.GetAttribute(Attribute.Speed)) * WorldController.TickSpeed;
+        transformInicial = transform.localScale;
     }
 
     new void Update()
     {
         // Need to do a generic Agent Update() before making a fox Update()
         base.Update();
+        // Debug.Log(getEffectiveSize(stats.GetAttribute(Attribute.Size) * SizeWithAge()) * transformInicial);
+        transform.localScale = getEffectiveSize(stats.GetAttribute(Attribute.Size) * SizeWithAge()) * transformInicial;
         agent.speed = getEffectiveSpeed(stats.GetAttribute(Attribute.Speed))*WorldController.TickSpeed;
     }
 
@@ -76,10 +79,13 @@ public class FoxController : MovableAgent {
         //return this.gameObject;
     }
 
-    public override GameObject getBestFoodPosition() {
+    public override Agent getBestFoodPosition() {
         // HashSet<GameObject> waters = worldController.agentSpawner.GetChickens();
         
-        HashSet<Agent> chickenSet = worldController.GetComponent<AgentSpawner>().GetChickens();
+        HashSet<Agent> chickenSet = worldController.GetComponent<AgentSpawner>().GetSpecies(Species.Chicken);
+        if (chickenSet == null)
+            return null;
+        // HashSet<Agent> chickenSet = worldController.GetComponent<AgentSpawner>().GetChickens();
         float bestDistance = float.MaxValue;
         Agent result = null;
         foreach (Agent c in chickenSet) {
@@ -91,21 +97,23 @@ public class FoxController : MovableAgent {
                 result = c;
             }
         }
-        return result.gameObject;
+        return result;
     }
 
     public override Agent findMate()
     {
-        HashSet<Agent> foxSet = worldController.GetComponent<AgentSpawner>().GetFoxes();
+        HashSet<Agent> foxSet = worldController.GetComponent<AgentSpawner>().GetSpecies(GetSpecies());
         float bestDistance = float.MaxValue;
         Agent result = null;
         foreach (Agent f in foxSet) {
             if (f.Equals(this))
                 continue;
-            float dist = Vector3.Distance(this.transform.position, f.transform.position); 
-            if (dist < bestDistance) {
-                bestDistance = dist;
-                result = f;
+            if (f.GetAge() > 10f) {
+                float dist = Vector3.Distance(this.transform.position, f.transform.position); 
+                if (dist < bestDistance) {
+                    bestDistance = dist;
+                    result = f;
+                }
             }
         }
         return result;

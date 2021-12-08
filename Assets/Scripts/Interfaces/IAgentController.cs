@@ -11,7 +11,7 @@ public interface IAgentController
    void eat();
    void sleep();
 
-   void reproduce(); 
+   // void reproduce(); 
    // No seria void
    void seeAround();
 
@@ -22,10 +22,12 @@ public interface IAgentController
    void Going();
    void IsThere();
    bool IsHere(Vector3 to);
+   float SizeWithAge();
 
    Species GetSpecies();
+   double GetAge();
 
    GameObject getBestWaterPosition(); 
-   GameObject getBestFoodPosition();
+   Agent getBestFoodPosition();
    Agent findMate();
 }
