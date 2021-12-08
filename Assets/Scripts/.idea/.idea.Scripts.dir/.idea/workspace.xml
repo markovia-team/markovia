@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4b1411f9-c241-4c33-87f0-bcadacbbc3f0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/BunnyAgent.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Agent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Agent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IAgentController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/IAgentController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AgentStats.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AgentStats.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Enums/State.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Enums/State.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Interfaces/IAgentController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Interfaces/IAgentController.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MainMenu.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,11 +26,9 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/BunnyAgent.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Enums/Attribute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Enums/State.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Enums/Need.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/IAgentController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Enums/Attribute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Agent.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1yKgAExywsean7PuW3FJDxAc0yD" />
@@ -55,6 +56,7 @@
       <updated>1632005553850</updated>
       <workItem from="1632005561055" duration="1745000" />
       <workItem from="1632007528534" duration="13000" />
+      <workItem from="1634840485391" duration="221000" />
     </task>
     <servers />
   </component>
@@ -62,7 +64,7 @@
     <option name="version" value="3" />
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
-  <component name="UnityProjectConfiguration" hasMinimizedUI="null" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
