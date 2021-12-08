@@ -6724,7 +6724,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speciesPrefabs:
-    list: []
+    list:
+    - Key: 0
+      Value: {fileID: 5097315404668106417, guid: 8e891ee63f30e845d9b494fe1dc22ad7, type: 3}
+    - Key: 1
+      Value: {fileID: 7500134229268107359, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
   popup: {fileID: 2087245764}
 --- !u!4 &1379952788
 Transform:
