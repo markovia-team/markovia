@@ -9,7 +9,7 @@ public abstract class MovableAgent : Agent
     public UnityEngine.AI.NavMeshAgent agent;
     
     // new void Start() {
-    //     agent = GetComponent<NavMeshAgent>();
+    //     base.Start();
     // }
 
     public void Update() {
