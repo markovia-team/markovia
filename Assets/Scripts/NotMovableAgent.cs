@@ -3,6 +3,9 @@ using UnityEngine;
 
 public abstract class NotMovableAgent : Agent
 {
+    public void Update() {
+        base.Update();
+    }
     public override void moveTo(Vector3 to) {
         throw new NotImplementedException();
     }
