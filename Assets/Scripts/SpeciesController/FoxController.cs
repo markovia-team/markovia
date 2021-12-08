@@ -12,6 +12,8 @@ public class FoxController : MovableAgent {
     private static float foxMaxSpeed = 5;
     private static float foxMinSpeed = 2.75f;
     
+    
+    
     private float getEffectiveSize(double normalized) {
         return (float) ((foxMaxSize - foxMinSize) * normalized + foxMinSize); 
     }

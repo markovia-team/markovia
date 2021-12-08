@@ -6724,7 +6724,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speciesPrefabs:
-    list: []
+    list:
+    - Key: 0
+      Value: {fileID: 5097315404668106417, guid: 8e891ee63f30e845d9b494fe1dc22ad7, type: 3}
+    - Key: 1
+      Value: {fileID: 7500134229268107359, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
   popup: {fileID: 2087245764}
 --- !u!4 &1379952788
 Transform:
@@ -11579,60 +11583,3 @@ PrefabInstance:
       objectReference: {fileID: 356527574}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8400df6cad1e2a4ab1f81549f7809a1, type: 3}
---- !u!1001 &7265640497504293280
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 7160165905965927141, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
-      propertyPath: m_RootOrder
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 7160165905965927141, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7160165905965927141, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7160165905965927141, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7160165905965927141, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7160165905965927141, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7160165905965927141, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7160165905965927141, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7160165905965927141, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7160165905965927141, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7160165905965927141, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7500134229268107359, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
-      propertyPath: m_Name
-      value: FoxGon
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9d08eb30e43bcf546961c21bfcb36577, type: 3}
