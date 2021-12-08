@@ -19,6 +19,11 @@ public class GrassController : NotMovableAgent
         throw new System.NotImplementedException();
     }
 
+    public override void reproduce()
+    {
+        throw new NotImplementedException();
+    }
+
     public override void seeAround() {
         throw new System.NotImplementedException();
     }
@@ -28,7 +33,7 @@ public class GrassController : NotMovableAgent
         throw new NotImplementedException();
     }
 
-    public override GameObject getBestFoodPosition()
+    public override Agent getBestFoodPosition()
     {
         throw new NotImplementedException();
     }
@@ -47,6 +52,7 @@ public class GrassController : NotMovableAgent
         return this;
     }
 
+    /*
     public override void reproduce()
     {
         float distSon = (float)(new Exponential(getLambdaRate()).Sample());
@@ -55,4 +61,5 @@ public class GrassController : NotMovableAgent
         Vector3 sonPos = new Vector3(transform.position.x+distSon*((float)Math.Cos(angSon)), transform.position.y, transform.position.z+distSon*((float)Math.Sin(angSon)));
         // Instantiate(this.gameObject, sonPos, this.transform.rotation); 
     }
+    */
 }

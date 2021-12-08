@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class Agent : MonoBehaviour, IAgentController
@@ -11,6 +12,7 @@ public abstract class Agent : MonoBehaviour, IAgentController
     private bool going = false;
     public WorldController worldController;
     private bool dead = false;
+    private float age = 0;
     // public AgentSpawner agentSpawner;
     
     public void Start()
@@ -21,16 +23,21 @@ public abstract class Agent : MonoBehaviour, IAgentController
     // No borrar, no compila. Odio Unity (odiamos*) :D
     public void Update()
     {
+        age += Time.deltaTime * WorldController.TickSpeed;
         int i = 0;
         // Debug.Log("Sleep: " + stats.GetNeed(Need.Sleep));
-        if (!dead) {
-            foreach (double value in stats.Needs.Values)
-                if (value == 1f) {
+        if (!dead)
+        {
+            var needs = stats.Needs.ToDictionary(entry => entry.Key, entry => entry.Value);
+            needs.Remove(Need.ReproductiveUrge);
+            foreach (double value in needs.Values)
+                if (value == 1f || age >= 100) {
                     // Debug.Log(i++);
                     Die();
                 }
         }
     }
+    
     
     public abstract void moveTo(Vector3 to);
     public abstract void moveTo(GameObject to);
@@ -41,9 +48,19 @@ public abstract class Agent : MonoBehaviour, IAgentController
     public abstract void reproduce();
     
     public abstract void seeAround();
+    public float SizeWithAge()
+    {
+        return 0.2f + 0.04f * age - 0.0007083f * age * (age - 20) + 0.00000885417f * age * (age - 20) * (age - 60)- 0.0000000885417f * age * (age - 20) * (age - 60) * (age - 80);
+    }
+
     public abstract Species GetSpecies();
+    public double GetAge()
+    {
+        return age;
+    }
+
     public abstract GameObject getBestWaterPosition();
-    public abstract GameObject getBestFoodPosition();
+    public abstract Agent getBestFoodPosition();
     public abstract Agent findMate();
 
     public void ResetCoroutines() {
@@ -65,8 +82,16 @@ public abstract class Agent : MonoBehaviour, IAgentController
         return going;
     }
     public void IsThere() {
-        stats.SetDistance(Distance.ToFood, Vector3.Distance(transform.position, getBestFoodPosition().transform.position));
-        stats.SetDistance(Distance.ToWater, Vector3.Distance(transform.position, getBestWaterPosition().transform.position));
+        Agent bestFood = getBestFoodPosition();
+        GameObject bestWater = getBestWaterPosition();
+        if (bestFood == null)
+            stats.SetDistance(Distance.ToFood, 0);
+        else
+            stats.SetDistance(Distance.ToFood, Vector3.Distance(transform.position, bestFood.transform.position));
+        if (bestWater == null)
+            stats.SetDistance(Distance.ToWater, 0);
+        else
+            stats.SetDistance(Distance.ToWater, Vector3.Distance(transform.position, bestWater.transform.position));
         going = false;
     }
     public void Going() {
@@ -88,9 +113,9 @@ public abstract class Agent : MonoBehaviour, IAgentController
     public void Die() {
         // this.transform.Rotate(0f, 0f, 90f);
         worldController.GetComponent<AgentSpawner>().Died(this, GetSpecies());
-        Destroy(this.gameObject);
-        dead = true;
         StopAllCoroutines();
+        Destroy(this.gameObject);
+        // dead = true;
         // Destroy(this.gameObject);
     }
     
