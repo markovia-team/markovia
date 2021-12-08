@@ -117,6 +117,7 @@ jobs:
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           customParameters: "-myParameter myValue -myBoolean -ThirdParameter andItsValue"
+          allowDirtyBuild: true
       - uses: actions/upload-artifact@v2
         with:
           name: Build (${{ matrix.targetPlatform }})
@@ -167,6 +168,7 @@ jobs:
   deployPages:
     needs: buildWebGL
     name: Deploy to Github Pages 🚀
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

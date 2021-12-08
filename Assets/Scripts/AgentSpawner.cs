@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
+using System.Runtime.Serialization;
+using System.IO;
+using SFB;
 
-public class AgentSpawner : MonoBehaviour
+public class AgentSpawner : MonoBehaviour, ISerializable
 {
     // Source for the serializable dictionary: 
     // https://wiki.unity3d.com/index.php/File:SerializableDictionary.zip
@@ -16,11 +18,12 @@ public class AgentSpawner : MonoBehaviour
     // TODO: en realidad estas posiciones pueden calcularse a partir de OnGameAgents pero mepa que es mejor tenerlas aparte
     private Dictionary<Species, List<Vector3>> NonMovableAgentsPositions = new Dictionary<Species, List<Vector3>>();
     private Dictionary<Species, HashSet<Agent>> InGameAgents = new Dictionary<Species, HashSet<Agent>>();
-
     public Dictionary<Species, HashSet<Agent>> gameAgents {
         get => InGameAgents;
     }
 
+    public GameObject popup;
+    
     void Start() {
         foreach (var keyValuePair in speciesPrefabsStatic)
             speciesPrefabs.Add(keyValuePair.Key, keyValuePair.Value);
@@ -37,7 +40,7 @@ public class AgentSpawner : MonoBehaviour
             if (selectedPrefab != null)
             {
                 Vector3 vect = new Vector3(Random.Range(-5f, 5f), 0.5f, Random.Range(-5f, 5f));
-                GameObject reference = Instantiate(selectedPrefab, vect, new Quaternion(0,0,0,0));
+                GameObject reference = Instantiate(selectedPrefab, vect, new Quaternion(0,0,0,0), this.transform);
                 reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Grass);
                 reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
                 InGameAgents.TryGetValue(Species.Grass, out var x);
@@ -66,8 +69,6 @@ public class AgentSpawner : MonoBehaviour
                 x.Add(reference.GetComponent<Agent>());
             }
         }
-
-        //StartCoroutine(Populate()); 
     }
 
     void Update() {}
@@ -95,24 +96,41 @@ public class AgentSpawner : MonoBehaviour
         // InGameAgents.Add(species, set);
     }
 
-    IEnumerator Populate()
-    {
-        while (true)
-        {
-            InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
-            Agent chicken1 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
-            Agent chicken2 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
-            
-            AgentStats ags = SpeciesFactory.NewAgentStats(chicken1.stats, chicken2.stats, Species.Chicken);
-
-            
-            speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab); 
-            GameObject reference = Instantiate(selectedPrefab, this.transform);
-            reference.GetComponent<Agent>().stats = ags; 
-            InGameAgents.TryGetValue(Species.Chicken, out var x);
-            x.Add(reference.GetComponent<Agent>());
-            yield return new WaitForSeconds(5f/WorldController.TickSpeed); 
+    public void GetObjectData(SerializationInfo info, StreamingContext context) {
+        int id = 0;
+        foreach (KeyValuePair<Species, HashSet<Agent>> entry in InGameAgents) {
+            foreach (Agent obj in entry.Value) {
+                string idStr = id.ToString();
+                info.AddValue("Species" + idStr, entry.Key);
+                id++;
+            }
         }
+    }
+
+    public void WriteData() {
+		int id = 0, count = 0;
+        GameData currentData = new GameData();
+        foreach (KeyValuePair<Species, HashSet<Agent>> entry in InGameAgents) {
+            count += entry.Value.Count;
+        }
+
+        foreach (KeyValuePair<Species, HashSet<Agent>> entry in InGameAgents) {
+            foreach (Agent obj in entry.Value) {
+                currentData.addAgent(obj.gameObject);
+            }
+        }
+
+        var path = StandaloneFileBrowser.SaveFilePanel("Save File", "", "", "json");
+        if (string.Compare(path, string.Empty, StringComparison.Ordinal) == 0) {
+            popup.GetComponentInChildren<TMPro.TMP_Text>().text = "You must enter a name";
+            popup.SetActive(true);
+            return;
+        }
+        popup.GetComponentInChildren<TMPro.TMP_Text>().text = !JsonManager.SaveToJson(path, currentData) ? "File is read-only!" : "File saved successfully";
+        if (!path.EndsWith(".json")) {
+            File.Move(path, path + ".json");
+        }
+        popup.SetActive(true);
     }
 
     public void Reproduce(Agent ag1, Agent ag2, Species species)
@@ -135,7 +153,7 @@ public class AgentSpawner : MonoBehaviour
         speciesPrefabs.TryGetValue(species, out var selectedPrefab);
         Vector3 pos = ag1.transform.position;
         Vector3 randomVector = new Vector3(pos.x + Random.Range(-3f, 3f), pos.y, pos.z + Random.Range(-3f, 3f)); 
-        GameObject reference = Instantiate(selectedPrefab, randomVector, ag1.transform.rotation);
+        GameObject reference = Instantiate(selectedPrefab, randomVector, ag1.transform.rotation, transform);
         reference.GetComponent<Agent>().stats = ags;
         reference.GetComponent<Agent>().worldController = ag1.worldController;
         InGameAgents.TryGetValue(species, out var x);

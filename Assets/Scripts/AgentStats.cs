@@ -16,7 +16,6 @@ public class AgentStats {
     private SortedSet<State> states;
     public Matrix<double> weights;
 
-    // C#: te odio. Te destesto. Me pareces un lenguaje detestable. Sos una chota. Como me vas a hacer hacer esto para un puto getter
     public SortedDictionary<Attribute, double> Atts => atts;
     public SortedDictionary<Need, double> Needs => needs;
 
