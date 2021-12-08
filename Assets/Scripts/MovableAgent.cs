@@ -4,6 +4,10 @@ using UnityEngine;
 public abstract class MovableAgent : Agent
 {
     public UnityEngine.AI.NavMeshAgent agent;
+    
+    // new void Start() {
+    //     base.Start();
+    // }
 
     public void Update() {
         base.Update();
