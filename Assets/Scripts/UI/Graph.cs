@@ -9,7 +9,6 @@ public abstract class Graph : MonoBehaviour {
 
     [SerializeField] private Sprite dotSprite;
     [SerializeField] protected AgentSpawner agentSpawner;
-    [SerializeField] private Button backButton; 
     
     private RectTransform graphContainer;
     private RectTransform labelTemplateX;
