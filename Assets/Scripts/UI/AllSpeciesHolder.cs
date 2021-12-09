@@ -6,7 +6,7 @@ public class AllSpeciesHolder : MonoBehaviour {
     [SerializeField] private SerializableDictionary<Species, Texture> speciesIcon = new SerializableDictionary<Species, Texture>();
     [SerializeField] private Canvas canvas;
     [SerializeField] private WorldController controller;
-
+    
     void Awake() {
         var i = 0;
         foreach (var x in speciesIcon) {
