@@ -82,7 +82,7 @@ public static class StateExtensions {
             case State.Idle:
                 agent.BeginSolvingState();
                 do {
-                    agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.03f * Time.deltaTime * WorldController.TickSpeed * 3f);
+                    agent.stats.UpdateNeed(Need.ReproductiveUrge, 0.015f * Time.deltaTime * WorldController.TickSpeed * 3f);
                     yield return null;
                 } while (agent.IsSolving());
                 agent.ResetCoroutines();
