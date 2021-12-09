@@ -403,7 +403,6 @@ GameObject:
   - component: {fileID: 1379952788}
   - component: {fileID: 1379952787}
   - component: {fileID: 1379952789}
-  - component: {fileID: 1379952790}
   m_Layer: 0
   m_Name: WorldController
   m_TagString: Untagged
@@ -428,7 +427,7 @@ MonoBehaviour:
     - Key: 0
       Value: {fileID: 5097315404668106417, guid: 4635d2148b6e5e8479547735c7f09080, type: 3}
     - Key: 1
-      Value: {fileID: 4020983980232809014, guid: 9fedecbd1aa68924b816f15cb97e611a, type: 3}
+      Value: {fileID: 2605610960023590739, guid: d2d1f08e8ebb9cf4bb05adef46da4ef6, type: 3}
     - Key: 2
       Value: {fileID: 768580019626220130, guid: cbb5d90efd455724cbdee75c780de8e6, type: 3}
   popup: {fileID: 0}
@@ -463,25 +462,7 @@ MonoBehaviour:
     - Key: 0
       Value: {fileID: 7977809594815001110, guid: 430137c47ecc2bb40a4a5da505994bee, type: 3}
   organicPrefabs:
-    list:
-    - Key: 0
-      Value: {fileID: 7977809594815001110, guid: 306a04fbfcf6cd447910b1cc5252f26a, type: 3}
---- !u!114 &1379952790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1379952786}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff913f6f7129ef0db98dfe9ca6af520d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speciesPrefabs:
-    list:
-    - Key: 0
-      Value: {fileID: 0}
+    list: []
 --- !u!1 &1453721365
 GameObject:
   m_ObjectHideFlags: 0

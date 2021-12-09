@@ -1,11 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Runtime.Serialization;
 
-public abstract class Agent : MonoBehaviour, IAgentController, ISerializable
-{
+public abstract class Agent : MonoBehaviour, IAgentController, ISerializable {
     public AgentStats stats;
     private State currentState = State.Idle;
     private State nextState = State.Idle;
@@ -14,32 +12,24 @@ public abstract class Agent : MonoBehaviour, IAgentController, ISerializable
     public WorldController worldController;
     private bool dead = false;
     private float age = 0;
-    // public AgentSpawner agentSpawner;
-    
-    public void Start()
-    {
+
+    public void Start() {
         ResetCoroutines();
     }
-    
-    // No borrar, no compila. Odio Unity (odiamos*) :D
-    public void Update()
-    {
+
+    public void Update() {
         age += Time.deltaTime * WorldController.TickSpeed;
         int i = 0;
-        // Debug.Log("Sleep: " + stats.GetNeed(Need.Sleep));
-        if (!dead)
-        {
+        if (!dead) {
             var needs = stats.Needs.ToDictionary(entry => entry.Key, entry => entry.Value);
             needs.Remove(Need.ReproductiveUrge);
             foreach (double value in needs.Values)
                 if (value == 1f || age >= 100) {
-                    // Debug.Log(i++);
                     Die();
                 }
         }
     }
-    
-    
+
     public abstract void moveTo(Vector3 to);
     public abstract void moveTo(GameObject to);
     public abstract void runTo(Vector3 to);
@@ -47,16 +37,16 @@ public abstract class Agent : MonoBehaviour, IAgentController, ISerializable
     public abstract void eat();
     public abstract void sleep();
     public abstract void reproduce();
-    
+
     public abstract void seeAround();
-    public float SizeWithAge()
-    {
-        return 0.2f + 0.04f * age - 0.0007083f * age * (age - 20) + 0.00000885417f * age * (age - 20) * (age - 60)- 0.0000000885417f * age * (age - 20) * (age - 60) * (age - 80);
+
+    public float SizeWithAge() {
+        return 0.2f + 0.04f * age - 0.0007083f * age * (age - 20) + 0.00000885417f * age * (age - 20) * (age - 60) - 0.0000000885417f * age * (age - 20) * (age - 60) * (age - 80);
     }
 
     public abstract Species GetSpecies();
-    public double GetAge()
-    {
+
+    public double GetAge() {
         return age;
     }
 
@@ -66,23 +56,28 @@ public abstract class Agent : MonoBehaviour, IAgentController, ISerializable
     public abstract Agent findMate();
 
     public void ResetCoroutines() {
-        finished = true; 
+        finished = true;
         StopAllCoroutines();
         StartCoroutine(GetNextState());
         StartCoroutine(SolveState());
     }
+
     public void BeginSolvingState() {
-        finished = false; 
+        finished = false;
     }
+
     public void FinishSolvingState() {
         finished = true;
     }
+
     public bool IsSolving() {
         return !finished;
     }
+
     public bool IsGoing() {
         return going;
     }
+
     public void IsThere() {
         Agent bestFood = getBestFoodPosition();
         GameObject bestWater = getBestWaterPosition();
@@ -96,40 +91,40 @@ public abstract class Agent : MonoBehaviour, IAgentController, ISerializable
             stats.SetDistance(Distance.ToWater, Vector3.Distance(transform.position, bestWater.transform.position));
         going = false;
     }
+
     public void Going() {
         going = true;
     }
+
     public bool IsHere(Vector3 to) {
         var distance = transform.position - to;
         return Mathf.Abs(distance.x) < 0.8f && Mathf.Abs(distance.z) < 0.8f;
-        // return Vector3.Distance(transform.position, to) < 1.5f;
     }
 
     public IEnumerator GetNextState() {
         do {
             nextState = stats.NextState();
             yield return new WaitForSecondsRealtime(1f / WorldController.TickSpeed);
-        } while(true);
+        } while (true);
     }
 
     public void Die() {
-        // this.transform.Rotate(0f, 0f, 90f);
         worldController.GetComponent<AgentSpawner>().Died(this, GetSpecies());
         StopAllCoroutines();
-        Destroy(this.gameObject);
-        // dead = true;
-        // Destroy(this.gameObject);
+        Destroy(gameObject);
     }
-    
+
     public IEnumerator SolveState() {
         while (true) {
             if (!nextState.Equals(currentState) || finished) {
                 if (!finished) {
                     ResetCoroutines();
                 }
+
                 currentState = nextState;
                 StartCoroutine(currentState.SolveState(this));
             }
+
             yield return null;
         }
     }
