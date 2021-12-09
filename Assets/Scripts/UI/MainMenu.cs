@@ -52,6 +52,8 @@ public class MainMenu : MonoBehaviour {
             showPopup();
             return;
         }
+
+        JsonManager.initializationData = savedData;
         
         string[] agents = savedData.getAgentList().Split('\n');
 
