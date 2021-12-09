@@ -1,5 +1,4 @@
-﻿public enum Distance
-{
+﻿public enum Distance {
     ToWater,
     ToFood
 }

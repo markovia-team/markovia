@@ -11,8 +11,6 @@ public interface IAgentController
    void eat();
    void sleep();
 
-   // void reproduce(); 
-   // No seria void
    void seeAround();
 
    void ResetCoroutines();
