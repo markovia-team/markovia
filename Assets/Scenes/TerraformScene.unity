@@ -4059,7 +4059,7 @@ RectTransform:
   m_GameObject: {fileID: 778599647}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.6708837, y: 2.6708837, z: 2.6708837}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1742511435}
   - {fileID: 1639149710}
@@ -4074,7 +4074,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1647.5204, y: 619.7859}
+  m_AnchoredPosition: {x: -546.6, y: 256}
   m_SizeDelta: {x: 323.1444, y: 133.8191}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &778599649
@@ -7096,7 +7096,7 @@ MonoBehaviour:
       Value: {fileID: 2605610960023590739, guid: d2d1f08e8ebb9cf4bb05adef46da4ef6, type: 3}
     - Key: 2
       Value: {fileID: 768580019626220130, guid: cbb5d90efd455724cbdee75c780de8e6, type: 3}
-  popup: {fileID: 0}
+  popup: {fileID: 1396553837}
 --- !u!4 &1379952788
 Transform:
   m_ObjectHideFlags: 0
@@ -10337,7 +10337,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 946451338}
         m_TargetAssemblyTypeName: AgentDataPrinter, Assembly-CSharp
         m_MethodName: hideData
         m_Mode: 1
