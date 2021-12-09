@@ -22,9 +22,12 @@ public abstract class Agent : MonoBehaviour, IAgentController, ISerializable {
         int i = 0;
         if (!dead) {
             var needs = stats.Needs.ToDictionary(entry => entry.Key, entry => entry.Value);
+			
             needs.Remove(Need.ReproductiveUrge);
             foreach (double value in needs.Values)
                 if (value == 1f || age >= 100) {
+					if(age >= 100)
+						Debug.Log("Viejo");
                     Die();
                 }
         }
@@ -99,7 +102,7 @@ public abstract class Agent : MonoBehaviour, IAgentController, ISerializable {
 
     public bool IsHere(Vector3 to) {
         var distance = transform.position - to;
-        return Mathf.Abs(distance.x) < 0.8f && Mathf.Abs(distance.z) < 0.8f;
+        return Mathf.Abs(distance.x) < 0.8f && Mathf.Abs(distance.z) < 1.8f;
     }
 
     public IEnumerator GetNextState() {
