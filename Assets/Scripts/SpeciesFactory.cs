@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
-using UnityEngine;
 using MathNet.Numerics.Distributions;
 using Random = UnityEngine.Random;
 
 public static class SpeciesFactory {
-
     private static readonly Dictionary<Species, SortedDictionary<Attribute, double>> spec_atts = new Dictionary<Species, SortedDictionary<Attribute, double>>() {
         { Species.Chicken, new SortedDictionary<Attribute, double>() {
             {Attribute.Speed, 0.5f},
@@ -38,7 +36,6 @@ public static class SpeciesFactory {
     };
 
     private static readonly Dictionary<Species, SortedSet<State>> spec_states = new Dictionary<Species, SortedSet<State>>() {    
-        //{ Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Idle, State.Wander } },
         { Species.Chicken, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Reproduce } },
         { Species.Grass, new SortedSet<State>() { State.AsexualReproduce, State.Idle } },
         { Species.Fox, new SortedSet<State>() { State.LookForFood, State.LookForWater, State.Sleep, State.Wander, State.Reproduce } }
@@ -82,9 +79,6 @@ public static class SpeciesFactory {
         spec_atts.TryGetValue(species, out var baseAtts);
         spec_distances.TryGetValue(species, out var baseDists);
         spec_states.TryGetValue(species, out var baseStates);
-
-        // Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count);
-        // Matrix<double> weights = Matrix<double>.Build.Random(baseStates.Count, baseAtts.Count + baseNeeds.Count + baseDists.Count, new ContinuousUniform(0f,1f));
         default_weights.TryGetValue(species, out var weights);
         
         SortedDictionary<Need, double> needsAux = new SortedDictionary<Need, double>();
@@ -106,18 +100,14 @@ public static class SpeciesFactory {
     }
 
     public static AgentStats NewAgentStats(AgentStats p1, AgentStats p2, Species species) {
-        
-        // Get a reference to species' States
         spec_states.TryGetValue(species, out var baseStates);
 
-        // Fill up needs in zero 
         spec_needs.TryGetValue(species, out var baseNeeds);
         SortedDictionary<Need, double> needsAux = new SortedDictionary<Need, double>();
         if (baseNeeds != null)
             foreach (Need need in baseNeeds)
                 needsAux.Add(need, 0);
         
-        // Fill attributes from parents. TODO: ameliorate random distribution. Species should contain a MUTABILITY constant value in a separate dictionary 
         SortedDictionary<Attribute, double> attsAux = new SortedDictionary<Attribute, double>();
         foreach (KeyValuePair<Attribute, double> kvp in p1.Atts) {
             spec_mutability.TryGetValue(species, out var mutability);
@@ -141,8 +131,6 @@ public static class SpeciesFactory {
 
         Matrix<double> ag1w = p1.GetWeights();
         Matrix<double> ag2w = p2.GetWeights();
-        // Debug.Log("1: " + ag1w);
-        // Debug.Log("2: " + ag2w);
         Matrix<double> aux_mat = Matrix<double>.Build.Dense(baseStates.Count, needsAux.Count + distsAux.Count + attsAux.Count);
         for(int i = 0; i < needsAux.Count + distsAux.Count + attsAux.Count; i++) {
             for (int j = 0; j < baseStates.Count; j++)
@@ -154,8 +142,6 @@ public static class SpeciesFactory {
             }
         }
 
-        // Mix-and-match reactance matrix
         return new AgentStats(attsAux, needsAux, distsAux, baseStates, aux_mat);
-        
     }
 }
