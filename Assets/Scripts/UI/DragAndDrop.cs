@@ -6,21 +6,19 @@ using UnityEngine.EventSystems;
 public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler {
     public Canvas canvas;
     public AgentSpawner agentSpawner;
+    public Species species;
+    
     private RectTransform rectTransform;
     private Vector2 originPos;
-
-    public Species species;
 
     private void Awake() {
         rectTransform = GetComponent<RectTransform>();
         originPos = rectTransform.anchoredPosition;
     }
 
-    public void OnPointerDown(PointerEventData eventData) {
-    }
+    public void OnPointerDown(PointerEventData eventData) {}
 
-    public void OnBeginDrag(PointerEventData eventData) {
-    }
+    public void OnBeginDrag(PointerEventData eventData) {}
 
     public void OnEndDrag(PointerEventData eventData) {
         rectTransform.anchoredPosition = originPos;

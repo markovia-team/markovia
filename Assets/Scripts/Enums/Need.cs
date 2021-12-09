@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public enum Need
-{
+public enum Need {
     Sleep,
     Hunger, 
     ReproductiveUrge,

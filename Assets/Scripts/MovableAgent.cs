@@ -1,16 +1,14 @@
 using System.Collections;
 using UnityEngine;
 
-public abstract class MovableAgent : Agent
-{
+public abstract class MovableAgent : Agent {
     public UnityEngine.AI.NavMeshAgent agent;
 
     public void Update() {
         base.Update();
     }
 
-    public override void moveTo(Vector3 to)
-    {
+    public override void moveTo(Vector3 to) {
         Going();
         agent.SetDestination(to);
         StartCoroutine(WaitTillThereCoroutine(to));
@@ -23,8 +21,8 @@ public abstract class MovableAgent : Agent
 
     public override void runTo(Vector3 to) {
         Going();
-        agent.speed *= 1.5f; 
-        moveTo(to); 
+        agent.speed *= 1.5f;
+        moveTo(to);
         agent.speed /= 1.5f;
     }
 
@@ -33,28 +31,18 @@ public abstract class MovableAgent : Agent
             agent.SetDestination(to.transform.position);
             yield return null;
         }
-        
+
         if (!to.Equals(null))
             IsThere();
         yield return null;
     }
 
-    public IEnumerator WaitTillThereCoroutine(Vector3 to)
-    {
+    public IEnumerator WaitTillThereCoroutine(Vector3 to) {
         while (Vector3.Distance(transform.position, to) > 0.5f && IsSolving()) {
             yield return null;
         }
+
         IsThere();
         yield return null;
     }
-    
-    // public override void moveToClick() {
-    //     if (Input.GetMouseButtonDown(0)) {
-    //         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-    //         RaycastHit hit;
-        
-    //         if (Physics.Raycast(ray, out hit))
-    //             agent.SetDestination(hit.point); 
-    //     }
-    // }
 }
