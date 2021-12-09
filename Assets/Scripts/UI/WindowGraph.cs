@@ -8,8 +8,12 @@ using UnityEngine.UI;
 public class WindowGraph : MonoBehaviour {
     private static WindowGraph instance;
 
+    public int pitoChico; 
+
     [SerializeField] private Sprite dotSprite;
-    [SerializeField] private AgentSpawner agentSpawner; 
+    [SerializeField] protected AgentSpawner agentSpawner;
+    [SerializeField] private Button backButton; 
+    
     private RectTransform graphContainer;
     private RectTransform labelTemplateX;
     private RectTransform labelTemplateY;
@@ -20,7 +24,7 @@ public class WindowGraph : MonoBehaviour {
     private IGraphVisual lineGraphVisual;
     private GameObject tooltipGameObject;
 
-    private List<int> valueList;
+    protected List<int> valueList;
     private IGraphVisual graphVisual;
     private int maxVisibleValueAmount;
     private Func<int, string> getAxisLabelX;
@@ -29,13 +33,23 @@ public class WindowGraph : MonoBehaviour {
     public Species currentSpeciesSelected;
     
     public void SetCurrentSpeciesSelected(Species species) {
-        currentSpeciesSelected = species; 
+        currentSpeciesSelected = species;
         valueList = agentSpawner.FetchDataPoints(species); 
         InitializeGraph();
     } 
     
     private void Awake() {
+        GameObject worldController = GameObject.Find("WorldController");
+        agentSpawner = worldController.GetComponent<AgentSpawner>(); 
         SetCurrentSpeciesSelected(currentSpeciesSelected);
+        backButton = transform.Find("BackButton").GetComponent<Button>();
+        backButton.onClick.AddListener(()=>Destroy(gameObject));
+    }
+
+    void Destroy()
+    {
+        Debug.Log("BUTTON CLICKED!");
+        Destroy(gameObject);
     }
 
     public void InitializeGraph() {

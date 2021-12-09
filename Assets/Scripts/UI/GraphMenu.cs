@@ -12,7 +12,11 @@ public class GraphMenu : MonoBehaviour {
     
     public GameObject windowGraph;
     public SerializableDictionary<Species, GameObject> graphs = new SerializableDictionary<Species, GameObject>(); 
+    public SerializableDictionary<Species, GameObject> sizeGraphs = new SerializableDictionary<Species, GameObject>(); 
+    public SerializableDictionary<Species, GameObject> speedGraphs = new SerializableDictionary<Species, GameObject>();
 
+    public GameObject menuGraph; 
+    
     private void Update() {
         if (!Input.GetKeyDown(KeyCode.Escape)) 
             return;
@@ -48,7 +52,15 @@ public class GraphMenu : MonoBehaviour {
     }
 
     public void SetGraph() {
+        Debug.Log("HOLA");
         graphMenu.SetActive(false);
+        // windowGraph.SetActive(true);
+        Instantiate(windowGraph, this.transform.position, windowGraph.transform.rotation, this.transform).SetActive(true); 
+    }
+    
+    public void SetMenu() {
+        graphMenu.SetActive(false);
+        windowGraph = menuGraph; 
         windowGraph.SetActive(true);
     }
     
@@ -69,9 +81,23 @@ public class GraphMenu : MonoBehaviour {
         windowGraph = x;         
         SetGraph();
     }
+    
+    public void SetChickenSizeGraph() {
+        sizeGraphs.TryGetValue(Species.Chicken, out var x);
+        windowGraph = x;         
+        SetGraph();
+    }
+    
+    public void SetChickenAvgSpeedGraph() {
+        speedGraphs.TryGetValue(Species.Chicken, out var x);
+        windowGraph = x;         
+        SetGraph();
+    }
 
     public void UnSetGraph() {
-        windowGraph.SetActive(false);
+        // windowGraph.SetActive(false);
+        Destroy(windowGraph);
+        windowGraph = null; 
         graphMenu.SetActive(true);
     }
 
