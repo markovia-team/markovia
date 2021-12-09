@@ -41,7 +41,7 @@ public class Terraformation : MonoBehaviour {
         newCollider.sharedMesh = mesh;
         GetComponent<NavMeshSurface>().BuildNavMesh();
         wc.SetWaters();
-        
+        wc.GetComponent<AgentSpawner>().SetSpecies();
     }
 
     private void OnMouseDown() {
