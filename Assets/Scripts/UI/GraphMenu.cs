@@ -65,19 +65,19 @@ public class GraphMenu : MonoBehaviour {
     
     public void SetChickenGraph() {
         graphs.TryGetValue(Species.Chicken, out var x);
-        windowGraph = x; 
+        windowGraph = x;
         SetGraph();
     }
     
     public void SetFoxGraph() {
         graphs.TryGetValue(Species.Fox, out var x);
-        windowGraph = x; 
+        windowGraph = x;
         SetGraph();
     }
     
     public void SetGrassGraph() {
         graphs.TryGetValue(Species.Grass, out var x);
-        windowGraph = x;         
+        windowGraph = x;
         SetGraph();
     }
     

@@ -27,9 +27,8 @@ public abstract class Graph : MonoBehaviour {
     private Func<float, string> getAxisLabelY;
 
     public Species currentSpeciesSelected;
+    public abstract void SetCurrentSpeciesSelected(Species species);
 
-    public abstract void SetCurrentSpeciesSelected(Species species); 
-    
     private void Awake() {
         GameObject worldController = GameObject.Find("WorldController"); 
         agentSpawner = worldController.GetComponent<AgentSpawner>(); 
@@ -81,7 +80,7 @@ public abstract class Graph : MonoBehaviour {
     }
     
     private void Update() {
-        SetCurrentSpeciesSelected(Species.Chicken);
+        SetCurrentSpeciesSelected(currentSpeciesSelected);
         if (Input.GetKeyDown(KeyCode.RightArrow)) {
             ((LineGraphVisual) lineGraphVisual).ClearLastDot(); 
             LoadNextValues();
@@ -150,7 +149,7 @@ public abstract class Graph : MonoBehaviour {
 
         Debug.Log(initialValue + " " + pageIndex);
         if (initialValue < 0) {
-            pageIndex++;
+            pageIndex = 0;
             initialValue = 0;
         }
 
@@ -160,8 +159,10 @@ public abstract class Graph : MonoBehaviour {
         }
         
         if (initialValue + maxVisibleValueAmount >= valueList.Count) {
-            initialValue--;
-            pageIndex--;
+            if (initialValue > 0 && pageIndex > 0) {
+                initialValue--;
+                pageIndex--;
+            }
         }
 
         Debug.Log(maxVisibleValueAmount);

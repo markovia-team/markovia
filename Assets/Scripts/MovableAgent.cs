@@ -27,7 +27,7 @@ public abstract class MovableAgent : Agent {
     }
 
     public IEnumerator FollowObject(GameObject to) {
-        while (!to.Equals(null) && Vector3.Distance(transform.position, to.transform.position) > 0.5f && IsSolving()) {
+        while (to != null && Vector3.Distance(transform.position, to.transform.position) > 0.5f && IsSolving()) {
             agent.SetDestination(to.transform.position);
             yield return null;
         }
