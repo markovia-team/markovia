@@ -10,7 +10,6 @@ public class AgentDataPrinter : MonoBehaviour {
     public GameObject hunger;
     public GameObject rep;
     public GameObject thirst;
-    public GameObject currentState;
     public GameObject age;
     public static bool displayingData = false;
     private int timer = -1;
@@ -24,12 +23,8 @@ public class AgentDataPrinter : MonoBehaviour {
                 var selection = hit.transform;
                 if (selection.gameObject.CompareTag("Printable") && selection != null){
                     Agent agent = selection.gameObject.GetComponent<Agent>();
-                    agentSpecies.GetComponent<Text>().text = agent.ToString();
-                    age.GetComponent<Text>().text = agent.GetAge().ToString();
-
-
                     timer = 0;
-                    displayData();
+                    displayData(agent);
                 }
             }
         }
@@ -55,8 +50,13 @@ public class AgentDataPrinter : MonoBehaviour {
         displayingData = false;
     }
 
-    public void displayData(){
-        agentSpecies.GetComponent<Text>().text = "hola";
+    public void displayData(Agent agent){
+        agentSpecies.GetComponent<Text>().text = agent.ToString();
+        age.GetComponent<Text>().text = "Age->" + agent.GetAge().ToString();
+        sleep.GetComponent<Text>().text = "Sleep->" + agent.stats.GetNeed(Need.Sleep).ToString();
+        hunger.GetComponent<Text>().text = "Hunger->" + agent.stats.GetNeed(Need.Hunger).ToString();
+        rep.GetComponent<Text>().text = "Rep. Urge->" + agent.stats.GetNeed(Need.ReproductiveUrge).ToString();
+        thirst.GetComponent<Text>().text = "Thirst->" + agent.stats.GetNeed(Need.Thirst).ToString();
         agentData.SetActive(true);
         Time.timeScale = 0;
         displayingData = true;
