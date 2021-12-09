@@ -111,6 +111,7 @@ public static class SpeciesFactory {
         SortedDictionary<Attribute, double> attsAux = new SortedDictionary<Attribute, double>();
         foreach (KeyValuePair<Attribute, double> kvp in p1.Atts) {
             spec_mutability.TryGetValue(species, out var mutability);
+            if (species.Equals(Species.Chicken) && kvp.Key.Equals(Attribute.Speed)) mutability = 0.7f; 
             if (Random.Range(0f, 1f) < mutability) {
                 var t = Random.Range(0f, 1f); 
                 attsAux.Add(kvp.Key, t);
