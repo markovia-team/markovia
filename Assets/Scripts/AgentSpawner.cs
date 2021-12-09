@@ -16,7 +16,18 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
     public SerializableDictionary<Species, GameObject> speciesPrefabs = new SerializableDictionary<Species, GameObject>();
     public Dictionary<Species, HashSet<Agent>> gameAgents => InGameAgents;
     public GameObject popup;
+    
+    private Dictionary<Species, List<int>> valueLists = new Dictionary<Species, List<int>>()
+    {
+        {Species.Chicken, new List<int>()}, 
+        {Species.Fox, new List<int>()}, 
+        {Species.Grass, new List<int>()}
+    };
 
+    private List<int> averageChickenSpeed = new List<int>();
+
+    void Awake() {}
+    
     void Start() {
         foreach (var keyValuePair in speciesPrefabsStatic)
             speciesPrefabs.Add(keyValuePair.Key, keyValuePair.Value);
@@ -63,6 +74,9 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
         //         x.Add(reference.GetComponent<Agent>());
         //     }
         // }
+        
+        StartCoroutine(AddDataPoint());
+        // StartCoroutine(Populate()); 
     }
 
     void Update() {}
@@ -138,6 +152,80 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
         popup.SetActive(true);
     }
 
+    // IEnumerator Populate() {
+    //     while (true) {
+    //         InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
+    //         GameObject chicken1 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
+    //         GameObject chicken2 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
+    //         
+    //         AgentStats ags = SpeciesFactory.NewAgentStats(chicken1.GetComponent<Agent>().stats, chicken2.GetComponent<Agent>().stats, Species.Chicken);
+    //         
+    //         speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab); 
+    //         GameObject reference = Instantiate(selectedPrefab, this.transform);
+    //         reference.GetComponent<Agent>().stats = ags;
+    //         reference.GetComponent<MovableAgent>().agent.Warp(new Vector3(0, 24, 0)); 
+    //         InGameAgents.TryGetValue(Species.Chicken, out var x);
+    //         x.Add(reference);
+    //         
+    //         Debug.Log("CHICK00EN SPEED    "+ags.GetAttribute(Attribute.Speed));
+    //         yield return new WaitForSeconds(1f);
+    //     }
+    // }
+
+    public IEnumerator AddDataPoint() {
+        while (true) {
+            foreach (var x in valueLists) {
+                InGameAgents.TryGetValue(x.Key, out var set);
+                valueLists.TryGetValue(x.Key, out var list);
+                if (set == null) {
+                    list.Add(0);
+                    continue;
+                }
+                list.Add(set.Count);
+                if (x.Key.Equals(Species.Chicken)) {
+                    double speedSum = 0;
+                    foreach (var k in set) {
+                        speedSum += k.GetComponent<Agent>().stats.GetAttribute(Attribute.Speed); 
+                    }
+
+                    int i = (int) (speedSum * 100.0 / (1.0 * set.Count)); 
+                    averageChickenSpeed.Add(i);
+                }
+            }
+            yield return new WaitForSeconds(3f); 
+        }
+    }
+
+    public List<int> FetchDataPoints(Species species) {
+        valueLists.TryGetValue(species, out var list);
+        return list; 
+    }
+    
+    public List<int> FetchAverageChickenSpeedList() {
+        Debug.Log(averageChickenSpeed);
+        return averageChickenSpeed; 
+    }
+    
+    
+    public List<int> FetchChickenSizeDataPoints()
+    {
+        var sizes = new List<int>();
+        for (int i=0; i<10; i++) sizes.Add(0);
+        InGameAgents.TryGetValue(Species.Chicken, out var chickSet);
+        foreach (var c in chickSet)
+        {
+            int i = (int) (c.GetComponent<Agent>().stats.GetAttribute(Attribute.Size) / 0.1); 
+            if ( i < 10) sizes[i] ++; 
+        }
+
+        string s = "CHICK00";
+        for (int i = 0; i < 10; i++)
+            s = s + "\n CLASS" + i + ":    " + sizes[i];
+        Debug.Log(s);
+            
+        return sizes; 
+    }
+    
     public void Reproduce(Agent ag1, Agent ag2, Species species) {
         AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag2.stats, species);
         ags.SetNeed(Need.ReproductiveUrge, 0f);
