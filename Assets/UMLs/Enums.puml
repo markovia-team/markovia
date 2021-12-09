@@ -2,12 +2,19 @@
 enum Attribute {
 Speed
 Size
+Color
 }
 
 enum Need {
 Sleep
 Hunger
 ReproductiveUrge
+Thirst
+}
+
+enum Distance {
+ToWater
+ToFood
 }
 
 enum Species {
@@ -16,12 +23,19 @@ Fox
 Grass
 }
 
+enum Inorganic {
+Water
+}
+
 enum State {
 LookForFood
 LookForWater
 Stealth
-Idle
+Sleep
 Wander
+Reproduce
+AsexualReproduce
+Idle
 }
 
 class StateExtensions {
@@ -31,5 +45,4 @@ class StateExtensions {
 note right of StateExtensions
 Es static
 end note
-
 @enduml
