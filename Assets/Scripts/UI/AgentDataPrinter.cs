@@ -23,8 +23,8 @@ public class AgentDataPrinter : MonoBehaviour {
             if (Physics.Raycast(ray, out hit)) {
                 var selection = hit.transform;
                 if (selection.gameObject.CompareTag("Printable") && selection != null){
-                    GameObject agent = selection.gameObject.GetComponent<Agent>();
-                    agentSpecies.GetComponent<Text>.text = agent.ToString();
+                    Agent agent = selection.gameObject.GetComponent<Agent>();
+                    agentSpecies.GetComponent<Text>().text = agent.ToString();
                     age.GetComponent<Text>().text = agent.GetAge().ToString();
 
 
