@@ -6,7 +6,9 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Runtime.Serialization;
 using System.IO;
+using System.Windows.Forms;
 using SFB;
+using UnityEngine.PlayerLoop;
 
 public class AgentSpawner : MonoBehaviour, ISerializable
 {
@@ -27,6 +29,8 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         {Species.Fox, new List<int>()}, 
         {Species.Grass, new List<int>()}
     };
+
+    private List<int> averageChickenSpeed = new List<int>();
 
     void Awake() {
         foreach (var list in valueLists) {
@@ -145,6 +149,8 @@ public class AgentSpawner : MonoBehaviour, ISerializable
             reference.GetComponent<MovableAgent>().agent.Warp(new Vector3(0, 24, 0)); 
             InGameAgents.TryGetValue(Species.Chicken, out var x);
             x.Add(reference);
+            
+            Debug.Log("CHICK00EN SPEED    "+ags.GetAttribute(Attribute.Speed));
             yield return new WaitForSeconds(1f);
         }
     }
@@ -154,8 +160,22 @@ public class AgentSpawner : MonoBehaviour, ISerializable
             foreach (var x in valueLists) {
                 InGameAgents.TryGetValue(x.Key, out var set);
                 valueLists.TryGetValue(x.Key, out var list);
-                if (set == null) list.Add(0);
-                else list.Add(set.Count);
+                if (set == null) {
+                    list.Add(0);
+                    continue;
+                }
+                list.Add(set.Count);
+                if (x.Key.Equals(Species.Chicken))
+                {
+                    double speedSum = 0;
+                    foreach (var k in set)
+                    {
+                        speedSum += k.GetComponent<Agent>().stats.GetAttribute(Attribute.Speed); 
+                    }
+
+                    int i = (int) (speedSum * 100.0 / (1.0 * set.Count)); 
+                    averageChickenSpeed.Add(i);
+                }
             }
             yield return new WaitForSeconds(3f); 
         }
@@ -164,5 +184,31 @@ public class AgentSpawner : MonoBehaviour, ISerializable
     public List<int> FetchDataPoints(Species species) {
         valueLists.TryGetValue(species, out var list);
         return list; 
+    }
+    
+    public List<int> FetchAverageChickenSpeedList() {
+        Debug.Log(averageChickenSpeed);
+        return averageChickenSpeed; 
+    }
+    
+    
+    // Returns a list of ten ints, each item represents the frequency class 0.1i<=x<0.1(i+1)
+    public List<int> FetchChickenSizeDataPoints()
+    {
+        var sizes = new List<int>();
+        for (int i=0; i<10; i++) sizes.Add(0);
+        InGameAgents.TryGetValue(Species.Chicken, out var chickSet);
+        foreach (var c in chickSet)
+        {
+            int i = (int) (c.GetComponent<Agent>().stats.GetAttribute(Attribute.Size) / 0.1); 
+            if ( i < 10) sizes[i] ++; 
+        }
+
+        string s = "CHICK00";
+        for (int i = 0; i < 10; i++)
+            s = s + "\n CLASS" + i + ":    " + sizes[i];
+        Debug.Log(s);
+            
+        return sizes; 
     }
 }
