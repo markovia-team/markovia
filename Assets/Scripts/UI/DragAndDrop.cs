@@ -7,6 +7,7 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     public Canvas canvas;
     public AgentSpawner agentSpawner;
     public Species species;
+    
     private RectTransform rectTransform;
     private Vector2 originPos;
 
