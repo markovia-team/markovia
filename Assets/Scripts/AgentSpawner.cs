@@ -8,18 +8,13 @@ using System.Runtime.Serialization;
 using System.IO;
 using SFB;
 
-public class AgentSpawner : MonoBehaviour, ISerializable
-{
-    // Source for the serializable dictionary: 
-    // https://wiki.unity3d.com/index.php/File:SerializableDictionary.zip
-    public SerializableDictionary<Species, GameObject> speciesPrefabs = new SerializableDictionary<Species, GameObject>();
+public class AgentSpawner : MonoBehaviour, ISerializable {
     private static Dictionary<Species, GameObject> speciesPrefabsStatic = new Dictionary<Species, GameObject>();
-
-    // TODO: en realidad estas posiciones pueden calcularse a partir de OnGameAgents pero mepa que es mejor tenerlas aparte
     private Dictionary<Species, List<Vector3>> NonMovableAgentsPositions = new Dictionary<Species, List<Vector3>>();
-    private Dictionary<Species, HashSet<GameObject>> InGameAgents = new Dictionary<Species, HashSet<GameObject>>(); 
+    private Dictionary<Species, HashSet<Agent>> InGameAgents = new Dictionary<Species, HashSet<Agent>>();
+    public SerializableDictionary<Species, GameObject> speciesPrefabs = new SerializableDictionary<Species, GameObject>();
+    public Dictionary<Species, HashSet<Agent>> gameAgents => InGameAgents;
     public GameObject popup;
-    
     
     private Dictionary<Species, List<int>> valueLists = new Dictionary<Species, List<int>>()
     {
@@ -35,49 +30,52 @@ public class AgentSpawner : MonoBehaviour, ISerializable
     void Start() {
         foreach (var keyValuePair in speciesPrefabsStatic)
             speciesPrefabs.Add(keyValuePair.Key, keyValuePair.Value);
-        
+
         foreach (var s in speciesPrefabs)
-            if (s.Value.GetComponent<NotMovableAgent>() != null )
+            if (s.Value.GetComponent<NotMovableAgent>() != null)
                 NonMovableAgentsPositions.Add(s.Key, new List<Vector3>());
-        
+
         foreach (var s in speciesPrefabs.Keys)
-            InGameAgents.Add(s, new HashSet<GameObject>());
-        
-        for (int i = 0; i < 1; i++) {
+            InGameAgents.Add(s, new HashSet<Agent>());
+
+        for (int i = 0; i < 15; i++) {
             speciesPrefabs.TryGetValue(Species.Grass, out var selectedPrefab);
             if (selectedPrefab != null) {
-                GameObject reference = Instantiate(selectedPrefab, this.transform);
+                Vector3 vect = new Vector3(Random.Range(-5f, 5f), 0.5f, Random.Range(-5f, 5f));
+                GameObject reference = Instantiate(selectedPrefab, vect, new Quaternion(0, 0, 0, 0), transform);
                 reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Grass);
                 reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
                 InGameAgents.TryGetValue(Species.Grass, out var x);
-                x.Add(reference);
+                x.Add(reference.GetComponent<Agent>());
             }
         }
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab);
             if (selectedPrefab != null) {
                 GameObject reference = Instantiate(selectedPrefab, this.transform);
                 reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Chicken);
                 reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
                 InGameAgents.TryGetValue(Species.Chicken, out var x);
-                x.Add(reference);
+                x.Add(reference.GetComponent<Agent>());
             }
         }
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 2; i++) {
             speciesPrefabs.TryGetValue(Species.Fox, out var selectedPrefab);
             if (selectedPrefab != null) {
-                GameObject reference = Instantiate(selectedPrefab, this.transform);
+                GameObject reference = Instantiate(selectedPrefab, Vector3.zero, selectedPrefab.transform.rotation,
+                    this.transform);
                 reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Fox);
                 reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
                 InGameAgents.TryGetValue(Species.Fox, out var x);
-                x.Add(reference);
+                reference.GetComponent<MovableAgent>().agent.Warp(Vector3.zero);
+                x.Add(reference.GetComponent<Agent>());
             }
         }
 
         StartCoroutine(AddDataPoint());
-        StartCoroutine(Populate()); 
+        // StartCoroutine(Populate()); 
     }
 
     void Update() {}
@@ -86,15 +84,25 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         speciesPrefabsStatic.Add(species, gameObject);
     }
 
-    public HashSet<GameObject> GetChickens() {
-        InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
-        return chickenSet;
+    public HashSet<Agent> GetSpecies(Species species) {
+        InGameAgents.TryGetValue(species, out var ansSet);
+        return ansSet;
+    }
+
+    public HashSet<Agent> GetChickens() {
+        InGameAgents.TryGetValue(Species.Chicken, out var ansSet);
+        return ansSet;
+    }
+
+    public void Died(Agent agent, Species species) {
+        InGameAgents.TryGetValue(species, out var set);
+        set.Remove(agent);
     }
 
     public void GetObjectData(SerializationInfo info, StreamingContext context) {
         int id = 0;
-        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
-            foreach (GameObject obj in entry.Value) {
+        foreach (KeyValuePair<Species, HashSet<Agent>> entry in InGameAgents) {
+            foreach (Agent obj in entry.Value) {
                 string idStr = id.ToString();
                 info.AddValue("Species" + idStr, entry.Key);
                 id++;
@@ -103,15 +111,15 @@ public class AgentSpawner : MonoBehaviour, ISerializable
     }
 
     public void WriteData() {
-		int id = 0, count = 0;
+        int id = 0, count = 0;
         GameData currentData = new GameData();
-        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
+        foreach (KeyValuePair<Species, HashSet<Agent>> entry in InGameAgents) {
             count += entry.Value.Count;
         }
 
-        foreach (KeyValuePair<Species, HashSet<GameObject>> entry in InGameAgents) {
-            foreach (GameObject obj in entry.Value) {
-                currentData.addAgent(obj);
+        foreach (KeyValuePair<Species, HashSet<Agent>> entry in InGameAgents) {
+            foreach (Agent obj in entry.Value) {
+                currentData.addAgent(obj.gameObject);
             }
         }
 
@@ -121,32 +129,34 @@ public class AgentSpawner : MonoBehaviour, ISerializable
             popup.SetActive(true);
             return;
         }
+
         popup.GetComponentInChildren<TMPro.TMP_Text>().text = !JsonManager.SaveToJson(path, currentData) ? "File is read-only!" : "File saved successfully";
         if (!path.EndsWith(".json")) {
             File.Move(path, path + ".json");
         }
+
         popup.SetActive(true);
     }
 
-    IEnumerator Populate() {
-        while (true) {
-            InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
-            GameObject chicken1 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
-            GameObject chicken2 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
-            
-            AgentStats ags = SpeciesFactory.NewAgentStats(chicken1.GetComponent<Agent>().stats, chicken2.GetComponent<Agent>().stats, Species.Chicken);
-            
-            speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab); 
-            GameObject reference = Instantiate(selectedPrefab, this.transform);
-            reference.GetComponent<Agent>().stats = ags;
-            reference.GetComponent<MovableAgent>().agent.Warp(new Vector3(0, 24, 0)); 
-            InGameAgents.TryGetValue(Species.Chicken, out var x);
-            x.Add(reference);
-            
-            Debug.Log("CHICK00EN SPEED    "+ags.GetAttribute(Attribute.Speed));
-            yield return new WaitForSeconds(1f);
-        }
-    }
+    // IEnumerator Populate() {
+    //     while (true) {
+    //         InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
+    //         GameObject chicken1 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
+    //         GameObject chicken2 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
+    //         
+    //         AgentStats ags = SpeciesFactory.NewAgentStats(chicken1.GetComponent<Agent>().stats, chicken2.GetComponent<Agent>().stats, Species.Chicken);
+    //         
+    //         speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab); 
+    //         GameObject reference = Instantiate(selectedPrefab, this.transform);
+    //         reference.GetComponent<Agent>().stats = ags;
+    //         reference.GetComponent<MovableAgent>().agent.Warp(new Vector3(0, 24, 0)); 
+    //         InGameAgents.TryGetValue(Species.Chicken, out var x);
+    //         x.Add(reference);
+    //         
+    //         Debug.Log("CHICK00EN SPEED    "+ags.GetAttribute(Attribute.Speed));
+    //         yield return new WaitForSeconds(1f);
+    //     }
+    // }
 
     public IEnumerator AddDataPoint() {
         while (true) {
@@ -158,11 +168,9 @@ public class AgentSpawner : MonoBehaviour, ISerializable
                     continue;
                 }
                 list.Add(set.Count);
-                if (x.Key.Equals(Species.Chicken))
-                {
+                if (x.Key.Equals(Species.Chicken)) {
                     double speedSum = 0;
-                    foreach (var k in set)
-                    {
+                    foreach (var k in set) {
                         speedSum += k.GetComponent<Agent>().stats.GetAttribute(Attribute.Speed); 
                     }
 
@@ -185,7 +193,6 @@ public class AgentSpawner : MonoBehaviour, ISerializable
     }
     
     
-    // Returns a list of ten ints, each item represents the frequency class 0.1i<=x<0.1(i+1)
     public List<int> FetchChickenSizeDataPoints()
     {
         var sizes = new List<int>();
@@ -203,5 +210,28 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         Debug.Log(s);
             
         return sizes; 
+    }
+    
+    public void Reproduce(Agent ag1, Agent ag2, Species species) {
+        AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag2.stats, species);
+        ags.SetNeed(Need.ReproductiveUrge, 0f);
+        speciesPrefabs.TryGetValue(species, out var selectedPrefab);
+        GameObject reference = Instantiate(selectedPrefab, ag1.transform.position, ag1.transform.rotation, transform);
+        reference.GetComponent<Agent>().stats = ags;
+        reference.GetComponent<Agent>().worldController = ag1.worldController;
+        InGameAgents.TryGetValue(species, out var x);
+        x.Add(reference.GetComponent<Agent>());
+    }
+
+    public void AsexualReproduce(Agent ag1, Species species) {
+        AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag1.stats, species);
+        speciesPrefabs.TryGetValue(species, out var selectedPrefab);
+        Vector3 pos = ag1.transform.position;
+        Vector3 randomVector = new Vector3(pos.x + Random.Range(-3f, 3f), pos.y, pos.z + Random.Range(-3f, 3f));
+        GameObject reference = Instantiate(selectedPrefab, randomVector, ag1.transform.rotation, transform);
+        reference.GetComponent<Agent>().stats = ags;
+        reference.GetComponent<Agent>().worldController = ag1.worldController;
+        InGameAgents.TryGetValue(species, out var x);
+        x.Add(reference.GetComponent<Agent>());
     }
 }

@@ -2,26 +2,17 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class Terraformation : MonoBehaviour {
-    // Limit smoke 
     [SerializeField] private GameObject smoke;
 
     public int xSize = 100;
     public int zSize = 100;
     public float scale = 10f;
 
-    // Colouring of mountains
     private readonly Color[] colors = {
         new Color(121 / 255f, 181 / 255f, 103 / 255f),
-        // new Color(121/255f, 181/255f, 103/255f), 
-        // new Color(121/255f, 181/255f, 103/255f), 
-        // new Color(121/255f, 181/255f, 103/255f), 
-
-        // new Color(255/255f, 247/255f, 0/255f),
         new Color(92 / 255f, 73 / 255f, 39 / 255f)
-        // Color.blue, 
     };
 
-    // Max and min 
     private Mesh mesh;
     private int[] triangles;
     private Vector3[] vertices;
@@ -29,7 +20,6 @@ public class Terraformation : MonoBehaviour {
     public float MAXTerrainHeight { get; private set; } = -Mathf.Infinity;
     public float MINTerrainHeight { get; private set; } = Mathf.Infinity;
 
-    // Start is called before the first frame update
     private void Start() {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
@@ -48,7 +38,6 @@ public class Terraformation : MonoBehaviour {
         UpdateMesh();
     }
 
-    // TODO: implementar con alguna funcion piola 
     public static float PerlinValue(float x, float z, float amplitude, float frequency) {
         x += 0.01f;
         z += 0.01f;
@@ -107,7 +96,6 @@ public class Terraformation : MonoBehaviour {
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
-        // mesh.colors = colors; 
     }
 
     private void UpdateMeshHeights() {

@@ -1,19 +1,20 @@
 using System;
 using UnityEngine;
 
-public abstract class NotMovableAgent : Agent
-{
+public abstract class NotMovableAgent : Agent {
+    public void Update() {
+        base.Update();
+    }
+
     public override void moveTo(Vector3 to) {
         throw new NotImplementedException();
     }
 
-    public override void moveTo(GameObject to)
-    {
+    public override void moveTo(GameObject to) {
         throw new NotImplementedException();
     }
 
     public override void runTo(Vector3 to) {
         throw new NotImplementedException();
     }
-
 }
