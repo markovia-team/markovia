@@ -28,8 +28,7 @@ public class WindowGraph : MonoBehaviour {
 
     public Species currentSpeciesSelected;
     
-    public void SetCurrentSpeciesSelected(Species species)
-    {
+    public void SetCurrentSpeciesSelected(Species species) {
         currentSpeciesSelected = species; 
         valueList = agentSpawner.FetchDataPoints(species); 
         InitializeGraph();
@@ -39,8 +38,7 @@ public class WindowGraph : MonoBehaviour {
         SetCurrentSpeciesSelected(currentSpeciesSelected);
     }
 
-    public void InitializeGraph()
-    {
+    public void InitializeGraph() {
         instance = this;
         graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
         labelTemplateX = graphContainer.Find("LabelX").GetComponent<RectTransform>();
@@ -75,13 +73,7 @@ public class WindowGraph : MonoBehaviour {
         ShowGraph(valueList, barChartVisual, -1, i => "" + (i + 1), f => "" + Mathf.RoundToInt(f));
     }
     
-    private void Start()
-    {
-        SetCurrentSpeciesSelected(currentSpeciesSelected);
-    }
-
-    private void Update()
-    {
+    private void Update() {
         if (Input.GetKeyDown(KeyCode.RightArrow)) {
             ((LineGraphVisual) lineGraphVisual).ClearLastDot(); 
             LoadNextValues();
@@ -148,20 +140,23 @@ public class WindowGraph : MonoBehaviour {
         this.getAxisLabelX = getAxisLabelX;
         this.getAxisLabelY = getAxisLabelY;
 
+        Debug.Log(initialValue + " " + pageIndex);
         if (initialValue < 0) {
             pageIndex++;
             initialValue = 0;
         }
-        if (initialValue + 15 > valueList.Count) {
+
+        maxVisibleValueAmount = 15;
+        if (maxVisibleValueAmount > valueList.Count) {
+            maxVisibleValueAmount = valueList.Count - 1;
+        }
+        
+        if (initialValue + maxVisibleValueAmount >= valueList.Count) {
             initialValue--;
             pageIndex--;
         }
 
-        maxVisibleValueAmount = 15;
-        if (maxVisibleValueAmount > valueList.Count) {
-            maxVisibleValueAmount = valueList.Count;
-        }
-
+        Debug.Log(maxVisibleValueAmount);
         this.maxVisibleValueAmount = maxVisibleValueAmount;
 
         getAxisLabelX ??= delegate(int i) { return i.ToString(); };
@@ -181,7 +176,8 @@ public class WindowGraph : MonoBehaviour {
         float xSize = graphWidth / (maxVisibleValueAmount + 1);
 
         int xIndex = 0;
-        for (int i = initialValue; i < Mathf.Min(initialValue + 15, valueList.Count); i++) {
+        Debug.Log(initialValue + " " + pageIndex);
+        for (int i = initialValue; i < Mathf.Min(initialValue + 15, valueList.Count - 1); i++) {
             float xPosition = xSize + xIndex * xSize;
             float yPosition = (valueList[i] / yMaximum) * graphHeight;
 
