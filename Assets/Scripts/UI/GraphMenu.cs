@@ -28,7 +28,7 @@ public class GraphMenu : MonoBehaviour {
             }
         }
         else {
-            if (graphMenu.activeSelf || windowGraph.activeSelf) 
+            if (windowGraph != null || graphMenu.activeSelf || windowGraph.activeSelf) 
                 HideGraph();
             else
                 ShowSettings();
