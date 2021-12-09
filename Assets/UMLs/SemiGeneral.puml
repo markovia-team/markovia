@@ -2,44 +2,56 @@
 IAgentController <|.. Agent
 Agent -> AgentStats
 MonoBehaviour <|-- Agent
+MonoBehaviour <|-- AgentSpawner
 
 interface IAgentController {
 +void moveTo(Vector3 to)
-+void runTo(Vector3 to)
-+void drink()
-+void eat()
-+void sleep()
-+void reproduce() 
-+void seeAround() 
++void moveTo(GameObject to)
++void ResetCoroutines()
++void BeginSolvingState()
++bool IsSolving()
++bool IsThere()
++bool IsHere(Vector3 to)
++float SizeWithAge()
++Species GetSpecies()
++double GetAge()
++GameObject getBestWaterPosition()
++Agent getBestFoodPosition()
++Agent findMate
 }
 
 abstract class Agent {
++WorldController worldController
 +AgentStats stats
 -State currentState
 -State nextState
 -bool finished
+-float age
 +void Start()
-+{abstract} void moveTo(Vector3 to)
-+{abstract} void runTo(Vector3 to)
-+{abstract} void drink()
-+{abstract} void eat()
-+{abstract} void sleep()
-+{abstract} void reproduce() 
-+{abstract} void seeAround() 
-#void FinishedSolvingState()
-#void BeginSolvingState()
-#IEnumerator GetNextState()
-#IEnumerator SolveState()
++void Update()
++void ResetCoroutines()
++void FinishSolvingState()
++void BeginSolvingState()
++void IsSolving()
++bool IsThere()
++bool IsHere(Vector3 to)
++void Die()
++IEnumerator GetNextState()
++IEnumerator SolveState()
++float GetSizeWithAge()
++void GetAge()
 }
 
 class AgentStats {
 -SortedDictionary<Attribute, double> atts
 -SortedDictionary<Need, double> needs
+-SortedDictionary<Distance, double> distances
 -SortedSet<State> states
 -Matrix<double> weights
 -int qAtts
 -int qNeeds
 -int qStates
+-int qDists
 -Vector<double> neuralInput
 -Vector<double> neuralOutput
 -{static}MatrixBuilder<double> m
@@ -50,23 +62,41 @@ class AgentStats {
 }
 
 class AgentSpawner {
+-static Dictionary<Species, GameObject> speciesPrefabsStatic
+-Dictionary<Species, List<Vector3>> NonMovableAgentsPositions
+-Dictionary<Species, HashSet<Agent>> InGameAgents
 +SerializableDictionary<Species, GameObject> speciesPrefabs
--Dictionary<Species, List<Vector3>> NonMovableAgentsPositions 
++Dictionary<Species, HashSet<Agent>> gameAgents
++GameObject popup;
+-Dictionary<Species, List<int>> valueLists
+
 ~void Start()
-~IEnumerator Populate()
++void AddSpecies(Species species, GameObject gameObject)
++HashSet<Agent> GetSpecies(Species species)
++void Died(Agent agent, Species species)
++void Reproduce(Agent ag1, Agent ag2, Species species)
++void AsexualReproduce(Agent ag1, Species species)
++void GetObjectData(SerializationInfo info, StreamingContext context)
++void WriteData()
++IEnumerator AddDataPoint()
++List<int> FetchDataPoints(Species species)
++List<int> FetchAverageChickenSpeedList()
++List<int> FetchChickenSizeDataPoints()
 }
 
 class SpeciesFactory {
 -{static} Dictionary<Species, SortedDictionary<Attribute, double>> spec_atts
+-{static} Dictionary<Species, SortedSet<Distance>> spec_distances
 -{static} Dictionary<Species, SortedSet<Need>> spec_needs
 -{static} Dictionary<Species, SortedSet<State>> spec_states
+-{static} Dictionary<Species, float> spec_mutability
 -{static} Dictionary<Species, Matrix<double>> default_weights
 +{static} AgentStats NewAgentStats(Species species)
-+{static} AgentStats NewAgentStats(AgentStats p1, AgentStats p2)
++{static} AgentStats NewAgentStats(AgentStats p1, AgentStats p2, Species species)
 }
+
 
 note right of SpeciesFactory
 Es static
 end note
-
 @enduml
