@@ -23,8 +23,9 @@ public class Terraformation : MonoBehaviour {
 
     // Max and min 
     private Mesh mesh;
-    private int[] triangles;
-    private Vector3[] vertices;
+    //TODO mirar que hacer con esto de que estan public
+    public int[] triangles;
+    public Vector3[] vertices;
 
     public float MAXTerrainHeight { get; private set; } = -Mathf.Infinity;
     public float MINTerrainHeight { get; private set; } = Mathf.Infinity;
@@ -33,6 +34,12 @@ public class Terraformation : MonoBehaviour {
     private void Start() {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
+
+        CreateShape();
+        if(JsonManager.initializationData!=null){
+            JsonManager.initializationData.getVertices(this.vertices);
+            JsonManager.initializationData.getTriangles(this.triangles);
+        }
 
         CreateShape();
         transform.position = Vector3.zero;
@@ -46,6 +53,14 @@ public class Terraformation : MonoBehaviour {
 
     private void OnMouseDown() {
         UpdateMesh();
+    }
+
+    public int[] GetTriangles(){
+        return this.triangles;
+    }
+
+    public Vector3[] GetVertices(){
+        return this.vertices;
     }
 
     // TODO: implementar con alguna funcion piola 
