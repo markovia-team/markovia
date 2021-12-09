@@ -5,10 +5,10 @@ using Vector3 = UnityEngine.Vector3;
 using System.Runtime.Serialization;
 
 public class FoxController : MovableAgent {
-    private static float foxMaxSize = 1.5f;
-    private static float foxMinSize = 0.5f;
+    private static float foxMaxSize = 2f;
+    private static float foxMinSize = 0.8f;
     private static float foxMaxSpeed = 5;
-    private static float foxMinSpeed = 2.75f;
+    private static float foxMinSpeed = 2.5f;
     private Vector3 transformInicial;
 
     private float getEffectiveSize(double normalized) {

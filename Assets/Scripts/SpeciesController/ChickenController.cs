@@ -6,9 +6,9 @@ using System.Runtime.Serialization;
 
 public class ChickenController : MovableAgent {
     private static float chickenMaxSize = 1.25f;
-    private static float chickenMinSize = 0.75f;
-    private static float chickenMaxSpeed = 2.75f;
-    private static float chickenMinSpeed = 1.5f;
+    private static float chickenMinSize = 0.5f;
+    private static float chickenMaxSpeed = 5f;
+    private static float chickenMinSpeed = 0.5f;
     private Vector3 transformInicial;
 
     private float getEffectiveSize(double normalized) {
