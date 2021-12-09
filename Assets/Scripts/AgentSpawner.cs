@@ -6,9 +6,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Runtime.Serialization;
 using System.IO;
-using System.Windows.Forms;
 using SFB;
-using UnityEngine.PlayerLoop;
 
 public class AgentSpawner : MonoBehaviour, ISerializable
 {
@@ -32,12 +30,7 @@ public class AgentSpawner : MonoBehaviour, ISerializable
 
     private List<int> averageChickenSpeed = new List<int>();
 
-    void Awake() {
-        foreach (var list in valueLists) {
-            // for (int i = 0; i < 15; i++)
-            list.Value.Add(0);
-        }
-    }
+    void Awake() {}
     
     void Start() {
         foreach (var keyValuePair in speciesPrefabsStatic)

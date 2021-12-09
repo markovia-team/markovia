@@ -52,10 +52,9 @@ public class GraphMenu : MonoBehaviour {
     }
 
     public void SetGraph() {
-        Debug.Log("HOLA");
         graphMenu.SetActive(false);
-        // windowGraph.SetActive(true);
-        Instantiate(windowGraph, this.transform.position, windowGraph.transform.rotation, this.transform).SetActive(true); 
+        windowGraph = Instantiate(windowGraph, transform.position, windowGraph.transform.rotation, transform);
+        windowGraph.SetActive(true); 
     }
     
     public void SetMenu() {
@@ -95,10 +94,8 @@ public class GraphMenu : MonoBehaviour {
     }
 
     public void UnSetGraph() {
-        // windowGraph.SetActive(false);
-        Destroy(windowGraph);
-        windowGraph = null; 
-        graphMenu.SetActive(true);
+        windowGraph.SetActive(false);
+        graphMenu.SetActive(true); 
     }
 
     public void ShowSettings() {
