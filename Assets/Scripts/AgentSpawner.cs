@@ -120,6 +120,12 @@ public class AgentSpawner : MonoBehaviour, ISerializable
             }
         }
 
+        Terraformation terrain;
+        if(GameObject.Find("Terraformer") != null && (terrain = (Terraformation) GameObject.Find("Terraformer").GetComponent<Terraformation>()) != null){
+            currentData.addVertices(terrain.GetVertices());
+            currentData.addTriangles(terrain.GetTriangles());
+        }
+
         var path = StandaloneFileBrowser.SaveFilePanel("Save File", "", "", "json");
         if (string.Compare(path, string.Empty, StringComparison.Ordinal) == 0) {
             popup.GetComponentInChildren<TMPro.TMP_Text>().text = "You must enter a name";
