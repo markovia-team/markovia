@@ -4,6 +4,7 @@ using UnityEngine.AI;
 public class Terraformation : MonoBehaviour {
     [SerializeField] private GameObject smoke;
 
+    [SerializeField] private WorldController wc; 
     public int xSize = 100;
     public int zSize = 100;
     public float scale = 10f;
@@ -32,6 +33,8 @@ public class Terraformation : MonoBehaviour {
         var newCollider = gameObject.AddComponent<MeshCollider>();
         newCollider.sharedMesh = mesh;
         GetComponent<NavMeshSurface>().BuildNavMesh();
+        wc.SetWaters();
+        
     }
 
     private void OnMouseDown() {
