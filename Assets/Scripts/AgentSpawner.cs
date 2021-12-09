@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 using System.Runtime.Serialization;
 using System.IO;
 using SFB;
+using UnityEngine.AI;
 
 public class AgentSpawner : MonoBehaviour, ISerializable {
     private static Dictionary<Species, GameObject> speciesPrefabsStatic = new Dictionary<Species, GameObject>();
@@ -152,11 +153,17 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
         AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag1.stats, species);
         speciesPrefabs.TryGetValue(species, out var selectedPrefab);
         Vector3 pos = ag1.transform.position;
-        Vector3 randomVector = new Vector3(pos.x + Random.Range(-3f, 3f), pos.y, pos.z + Random.Range(-3f, 3f));
-        GameObject reference = Instantiate(selectedPrefab, randomVector, ag1.transform.rotation, transform);
-        reference.GetComponent<Agent>().stats = ags;
-        reference.GetComponent<Agent>().worldController = ag1.worldController;
-        InGameAgents.TryGetValue(species, out var x);
-        x.Add(reference.GetComponent<Agent>());
+        
+        Vector3 randomVector = new Vector3(pos.x + Random.Range(-3f, 3f), 40, pos.z + Random.Range(-3f, 3f));
+
+        var raycasthit = Physics.Raycast(randomVector, Vector3.down, out var hit);
+        if (raycasthit)
+        {
+            GameObject reference = Instantiate(selectedPrefab, hit.point, ag1.transform.rotation, transform);
+            reference.GetComponent<Agent>().stats = ags;
+            reference.GetComponent<Agent>().worldController = ag1.worldController;
+            InGameAgents.TryGetValue(species, out var x);
+            x.Add(reference.GetComponent<Agent>());
+        }
     }
 }
