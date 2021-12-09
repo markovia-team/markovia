@@ -84,11 +84,11 @@ public abstract class Agent : MonoBehaviour, IAgentController, ISerializable {
         if (bestFood == null)
             stats.SetDistance(Distance.ToFood, 0);
         else
-            stats.SetDistance(Distance.ToFood, Vector3.Distance(transform.position, bestFood.transform.position));
+            stats.SetDistance(Distance.ToFood, Vector3.Distance(transform.position, bestFood.transform.position)/20);
         if (bestWater == null)
             stats.SetDistance(Distance.ToWater, 0);
         else
-            stats.SetDistance(Distance.ToWater, Vector3.Distance(transform.position, bestWater.transform.position));
+            stats.SetDistance(Distance.ToWater, Vector3.Distance(transform.position, bestWater.transform.position)/20);
         going = false;
     }
 
