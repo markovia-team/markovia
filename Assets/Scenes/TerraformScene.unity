@@ -7888,7 +7888,7 @@ GameObject:
   - component: {fileID: 1576047020}
   m_Layer: 5
   m_Name: Button
-  m_TagString: Printable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7957,9 +7957,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 356527576}
-        m_TargetAssemblyTypeName: AgentDataPrinter, Assembly-CSharp
-        m_MethodName: displayData
+      - m_Target: {fileID: 356527571}
+        m_TargetAssemblyTypeName: GraphMenu, Assembly-CSharp
+        m_MethodName: ShowGraph
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
