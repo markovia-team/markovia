@@ -10,7 +10,6 @@ public class GraphMenu : MonoBehaviour {
     public Sprite playAsset;
     public Sprite pauseAsset;
     
-    
     public GameObject windowGraph;
     public SerializableDictionary<Species, GameObject> graphs = new SerializableDictionary<Species, GameObject>(); 
 
@@ -53,8 +52,7 @@ public class GraphMenu : MonoBehaviour {
         windowGraph.SetActive(true);
     }
     
-    public void SetChickenGraph()
-    {
+    public void SetChickenGraph() {
         graphs.TryGetValue(Species.Chicken, out var x);
         windowGraph = x; 
         SetGraph();

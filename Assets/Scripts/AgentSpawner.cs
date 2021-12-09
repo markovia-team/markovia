@@ -6,9 +6,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Runtime.Serialization;
 using System.IO;
-using System.Windows.Forms.VisualStyles;
 using SFB;
-using UnityEditor.Rendering;
 
 public class AgentSpawner : MonoBehaviour, ISerializable
 {
@@ -23,7 +21,6 @@ public class AgentSpawner : MonoBehaviour, ISerializable
     public GameObject popup;
     
     
-    
     private Dictionary<Species, List<int>> valueLists = new Dictionary<Species, List<int>>()
     {
         {Species.Chicken, new List<int>()}, 
@@ -31,12 +28,10 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         {Species.Grass, new List<int>()}
     };
 
-    void Awake()
-    {
-        foreach (var list in valueLists)
-        {
-            for (int i=0; i<15; i++)
-                list.Value.Add(0);
+    void Awake() {
+        foreach (var list in valueLists) {
+            // for (int i = 0; i < 15; i++)
+            list.Value.Add(0);
         }
     }
     
@@ -136,16 +131,13 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         popup.SetActive(true);
     }
 
-    IEnumerator Populate()
-    {
-        while (true)
-        {
+    IEnumerator Populate() {
+        while (true) {
             InGameAgents.TryGetValue(Species.Chicken, out var chickenSet);
             GameObject chicken1 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
             GameObject chicken2 = chickenSet.ElementAt(Random.Range(0, chickenSet.Count));
             
             AgentStats ags = SpeciesFactory.NewAgentStats(chicken1.GetComponent<Agent>().stats, chicken2.GetComponent<Agent>().stats, Species.Chicken);
-
             
             speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab); 
             GameObject reference = Instantiate(selectedPrefab, this.transform);
@@ -153,16 +145,13 @@ public class AgentSpawner : MonoBehaviour, ISerializable
             reference.GetComponent<MovableAgent>().agent.Warp(new Vector3(0, 24, 0)); 
             InGameAgents.TryGetValue(Species.Chicken, out var x);
             x.Add(reference);
-            yield return new WaitForSeconds(1f);  //5f/WorldController.TickSpeed); 
+            yield return new WaitForSeconds(1f);
         }
     }
 
-    public IEnumerator AddDataPoint()
-    {
-        while (true)
-        {
-            foreach (var x in valueLists)
-            {
+    public IEnumerator AddDataPoint() {
+        while (true) {
+            foreach (var x in valueLists) {
                 InGameAgents.TryGetValue(x.Key, out var set);
                 valueLists.TryGetValue(x.Key, out var list);
                 if (set == null) list.Add(0);
@@ -172,8 +161,7 @@ public class AgentSpawner : MonoBehaviour, ISerializable
         }
     }
 
-    public List<int> FetchDataPoints(Species species)
-    {
+    public List<int> FetchDataPoints(Species species) {
         valueLists.TryGetValue(species, out var list);
         return list; 
     }
