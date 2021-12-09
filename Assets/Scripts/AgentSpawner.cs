@@ -27,47 +27,60 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
         foreach (var s in speciesPrefabs.Keys)
             InGameAgents.Add(s, new HashSet<Agent>());
 
-        for (int i = 0; i < 15; i++) {
-            speciesPrefabs.TryGetValue(Species.Grass, out var selectedPrefab);
-            if (selectedPrefab != null) {
-                Vector3 vect = new Vector3(Random.Range(-5f, 5f), 0.5f, Random.Range(-5f, 5f));
-                GameObject reference = Instantiate(selectedPrefab, vect, new Quaternion(0, 0, 0, 0), transform);
-                reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Grass);
-                reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
-                InGameAgents.TryGetValue(Species.Grass, out var x);
-                x.Add(reference.GetComponent<Agent>());
-            }
-        }
-
-        for (int i = 0; i < 10; i++) {
-            speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab);
-            if (selectedPrefab != null) {
-                GameObject reference = Instantiate(selectedPrefab, this.transform);
-                reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Chicken);
-                reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
-                InGameAgents.TryGetValue(Species.Chicken, out var x);
-                x.Add(reference.GetComponent<Agent>());
-            }
-        }
-
-        for (int i = 0; i < 2; i++) {
-            speciesPrefabs.TryGetValue(Species.Fox, out var selectedPrefab);
-            if (selectedPrefab != null) {
-                GameObject reference = Instantiate(selectedPrefab, Vector3.zero, selectedPrefab.transform.rotation,
-                    this.transform);
-                reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Fox);
-                reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
-                InGameAgents.TryGetValue(Species.Fox, out var x);
-                reference.GetComponent<MovableAgent>().agent.Warp(Vector3.zero);
-                x.Add(reference.GetComponent<Agent>());
-            }
-        }
+        // for (int i = 0; i < 15; i++) {
+        //     speciesPrefabs.TryGetValue(Species.Grass, out var selectedPrefab);
+        //     if (selectedPrefab != null) {
+        //         Vector3 vect = new Vector3(Random.Range(-5f, 5f), 0.5f, Random.Range(-5f, 5f));
+        //         GameObject reference = Instantiate(selectedPrefab, vect, new Quaternion(0, 0, 0, 0), transform);
+        //         reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Grass);
+        //         reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
+        //         InGameAgents.TryGetValue(Species.Grass, out var x);
+        //         x.Add(reference.GetComponent<Agent>());
+        //     }
+        // }
+        //
+        // for (int i = 0; i < 10; i++) {
+        //     speciesPrefabs.TryGetValue(Species.Chicken, out var selectedPrefab);
+        //     if (selectedPrefab != null) {
+        //         GameObject reference = Instantiate(selectedPrefab, this.transform);
+        //         reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Chicken);
+        //         reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
+        //         InGameAgents.TryGetValue(Species.Chicken, out var x);
+        //         x.Add(reference.GetComponent<Agent>());
+        //     }
+        // }
+        //
+        // for (int i = 0; i < 2; i++) {
+        //     speciesPrefabs.TryGetValue(Species.Fox, out var selectedPrefab);
+        //     if (selectedPrefab != null) {
+        //         GameObject reference = Instantiate(selectedPrefab, Vector3.zero, selectedPrefab.transform.rotation,
+        //             this.transform);
+        //         reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Fox);
+        //         reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
+        //         InGameAgents.TryGetValue(Species.Fox, out var x);
+        //         reference.GetComponent<MovableAgent>().agent.Warp(Vector3.zero);
+        //         x.Add(reference.GetComponent<Agent>());
+        //     }
+        // }
     }
 
     void Update() {}
 
     public static void AddSpecies(Species species, GameObject gameObject) {
         speciesPrefabsStatic.Add(species, gameObject);
+    }
+    
+    public void AddSpecies(Species species, Vector3 position) {
+        speciesPrefabs.TryGetValue(species, out var selectedPrefab);
+        if (selectedPrefab != null) {
+            // GameObject reference = Instantiate(selectedPrefab, position, selectedPrefab.transform.rotation, transform);
+            GameObject reference = Instantiate(selectedPrefab, position, Quaternion.identity, transform);
+            Debug.Log(reference.name + " " + species);
+            reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(species);
+            reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
+            InGameAgents.TryGetValue(species, out var x);
+            x.Add(reference.GetComponent<Agent>());
+        }
     }
 
     public HashSet<Agent> GetSpecies(Species species) {
