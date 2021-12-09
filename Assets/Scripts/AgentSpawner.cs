@@ -200,6 +200,7 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
     }
 
     public List<int> FetchDataPoints(Species species) {
+        Debug.Log(species);
         valueLists.TryGetValue(species, out var list);
         return list;
     }
@@ -208,7 +209,6 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
         Debug.Log(averageChickenSpeed);
         return averageChickenSpeed;
     }
-
 
     public List<int> FetchChickenSizeDataPoints() {
         var sizes = new List<int>();
