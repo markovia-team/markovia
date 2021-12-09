@@ -21,8 +21,7 @@ public class WorldController : MonoBehaviour {
         return x; 
     }
 
-    public void SetWaters()
-    {
+    public void SetWaters() {
         inorganicPrefabs.TryGetValue(Inorganic.Water, out var selectedPrefab);
         for (int i = 0; i < 25; i++) {
             Vector3 randomVector = new Vector3(Random.Range(-90f, 90f), 40, Random.Range(-90f, 90f)); 
