@@ -4,15 +4,15 @@ using System.Runtime.Serialization;
 
 public class GrassController : NotMovableAgent {
     public override void drink() {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public override void eat() {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public override void sleep() {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public override void reproduce() {
@@ -20,7 +20,7 @@ public class GrassController : NotMovableAgent {
     }
 
     public override void seeAround() {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public override GameObject getBestWaterPosition() {

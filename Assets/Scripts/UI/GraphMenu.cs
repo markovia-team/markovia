@@ -7,15 +7,14 @@ public class GraphMenu : MonoBehaviour {
     public GameObject graphMenu;
     public GameObject settingsMenu;
     public GameObject button;
+    public GameObject windowGraph;
+    public GameObject menuGraph; 
+    public GameObject agentData; 
     public Sprite playAsset;
     public Sprite pauseAsset;
-    
-    public GameObject windowGraph;
     public SerializableDictionary<Species, GameObject> graphs = new SerializableDictionary<Species, GameObject>(); 
     public SerializableDictionary<Species, GameObject> sizeGraphs = new SerializableDictionary<Species, GameObject>(); 
     public SerializableDictionary<Species, GameObject> speedGraphs = new SerializableDictionary<Species, GameObject>();
-
-    public GameObject menuGraph; 
     
     private void Update() {
         if (!Input.GetKeyDown(KeyCode.Escape)) 
@@ -23,13 +22,13 @@ public class GraphMenu : MonoBehaviour {
 
         if (isPaused && settingsMenu.activeSelf) {
             HideSettings();
-            if (graphMenu.activeSelf || windowGraph.activeSelf) {
+            if (windowGraph != null && (graphMenu.activeSelf || windowGraph.activeSelf))
                 Pause();
-            }
-        }
-        else {
-            if (windowGraph != null || graphMenu.activeSelf || windowGraph.activeSelf) 
+        } else {
+            if (windowGraph != null && (graphMenu.activeSelf || windowGraph.activeSelf)) 
                 HideGraph();
+            else if (agentData.activeSelf)
+                agentData.SetActive(false);
             else
                 ShowSettings();
         }
@@ -43,15 +42,7 @@ public class GraphMenu : MonoBehaviour {
             Play();
     }
 
-    public void ShowGraph() {
-        if (windowGraph.activeSelf)
-            windowGraph.SetActive(false);
-        graphMenu.SetActive(true);
-        wasPaused = isPaused;
-        Pause();
-    }
-
-    public void SetGraph() {
+    private void SetGraph() {
         graphMenu.SetActive(false);
         windowGraph = Instantiate(windowGraph, transform.position, windowGraph.transform.rotation, transform);
         windowGraph.SetActive(true); 
