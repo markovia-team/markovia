@@ -22,12 +22,12 @@ public abstract class Agent : MonoBehaviour, IAgentController, ISerializable {
         int i = 0;
         if (!dead) {
             var needs = stats.Needs.ToDictionary(entry => entry.Key, entry => entry.Value);
-			
+
             needs.Remove(Need.ReproductiveUrge);
             foreach (double value in needs.Values)
                 if (value == 1f || age >= 100) {
-					if(age >= 100)
-						Debug.Log("Viejo");
+                    if (age >= 100)
+                        Debug.Log("Viejo");
                     Die();
                 }
         }
@@ -44,7 +44,8 @@ public abstract class Agent : MonoBehaviour, IAgentController, ISerializable {
     public abstract void seeAround();
 
     public float SizeWithAge() {
-        return 0.2f + 0.04f * age - 0.0007083f * age * (age - 20) + 0.00000885417f * age * (age - 20) * (age - 60) - 0.0000000885417f * age * (age - 20) * (age - 60) * (age - 80);
+        return 0.2f + 0.04f * age - 0.0007083f * age * (age - 20) + 0.00000885417f * age * (age - 20) * (age - 60) -
+               0.0000000885417f * age * (age - 20) * (age - 60) * (age - 80);
     }
 
     public abstract Species GetSpecies();
@@ -88,11 +89,12 @@ public abstract class Agent : MonoBehaviour, IAgentController, ISerializable {
         if (bestFood == null)
             stats.SetDistance(Distance.ToFood, 0);
         else
-            stats.SetDistance(Distance.ToFood, Vector3.Distance(transform.position, bestFood.transform.position)/20);
+            stats.SetDistance(Distance.ToFood, Vector3.Distance(transform.position, bestFood.transform.position) / 20);
         if (bestWater == null)
             stats.SetDistance(Distance.ToWater, 0);
         else
-            stats.SetDistance(Distance.ToWater, Vector3.Distance(transform.position, bestWater.transform.position)/20);
+            stats.SetDistance(Distance.ToWater,
+                Vector3.Distance(transform.position, bestWater.transform.position) / 20);
         going = false;
     }
 

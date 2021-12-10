@@ -6,17 +6,16 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
     private Dictionary<Species, GameObject> speciesPrefabs;
+    private int grassQty = 0, chickenQty = 0, foxQty = 0;
     public GameObject mainMenu;
     public GameObject settingsMenu;
     public GameObject popup;
-    private int grassQty = 0, chickenQty = 0, foxQty = 0;
 
     public void PlayGame() {
         if (speciesPrefabs != null) {
             foreach (var pair in speciesPrefabs)
                 AgentSpawner.AddSpecies(pair.Key, pair.Value);
         }
-
         AgentSpawner.AddSpeciesQuantity(grassQty, chickenQty, foxQty);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
@@ -39,7 +38,7 @@ public class MainMenu : MonoBehaviour {
         var path = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false);
         if (path == null || path.Length == 0 || string.Compare(path[0], string.Empty, StringComparison.Ordinal) == 0) {
             popup.GetComponentInChildren<TMPro.TMP_Text>().text = "You must choose a json file";
-            showPopup();
+            ShowPopup();
             return;
         }
 
@@ -53,14 +52,13 @@ public class MainMenu : MonoBehaviour {
         }
         catch (ArgumentException) {
             popup.GetComponentInChildren<TMPro.TMP_Text>().text = "Invalid json";
-            showPopup();
+            ShowPopup();
             return;
         }
 
         JsonManager.initializationData = savedData;
 
         string[] agents = savedData.getAgentList().Split('\n');
-
         foreach (string agent in agents) {
             if (string.Compare(agent, "Grass", StringComparison.Ordinal) == 0) {
                 if (grassQty == 0) {
@@ -88,7 +86,7 @@ public class MainMenu : MonoBehaviour {
         PlayGame();
     }
 
-    private void showPopup() {
+    private void ShowPopup() {
         popup.SetActive(true);
     }
 }

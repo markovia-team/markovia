@@ -36,9 +36,11 @@ public class FoxController : MovableAgent {
     }
 
     public override void drink() {
+        throw new NotImplementedException();
     }
 
     public override void eat() {
+        throw new NotImplementedException();
     }
 
     public override void sleep() {
