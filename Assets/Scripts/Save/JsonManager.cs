@@ -30,17 +30,4 @@ public static class JsonManager {
         dataBuff = JsonUtility.FromJson<GameData>(textJson);
         return true;
     }
-
-    public static void WriteData() {
-		int id = 0, count = 0;
-        GameData currentData = new GameData();
-
-        var path = StandaloneFileBrowser.SaveFilePanel("Save File", "", "", "json");
-        if (string.Compare(path, string.Empty, StringComparison.Ordinal) == 0) {
-            return;
-        }
-        if (!path.EndsWith(".json")) {
-            File.Move(path, path + ".json");
-        }
-    }
 }

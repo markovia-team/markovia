@@ -58,7 +58,7 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
                 speciesPrefabsStatic.TryGetValue(Species.Grass, out var selectedPrefab);
                 if (selectedPrefab != null) {
                     Vector3 randomVector = new Vector3(Random.Range(-90f, 90f), 40, Random.Range(-90f, 90f)); 
-                    var raycasthit = Physics.Raycast(randomVector, Vector3.down, out var hit);
+                    Physics.Raycast(randomVector, Vector3.down, out var hit);
                     Quaternion rot = Quaternion.LookRotation(hit.normal, Vector3.forward);
                     GameObject reference = Instantiate(selectedPrefab, hit.point + hit.normal * 0.05f, rot, this.transform);
                     reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Grass);
@@ -72,8 +72,7 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
                 speciesPrefabsStatic.TryGetValue(Species.Chicken, out var selectedPrefab);
                 if (selectedPrefab != null) {
                     Vector3 randomVector = new Vector3(Random.Range(-90f, 90f), 40, Random.Range(-90f, 90f)); 
-                    var raycasthit = Physics.Raycast(randomVector, Vector3.down, out var hit);
-                    // Quaternion rot = Quaternion.LookRotation(hit.normal, Vector3.forward);
+                    Physics.Raycast(randomVector, Vector3.down, out var hit);
                     Debug.Log(hit.point.ToString());
                     GameObject reference = Instantiate(selectedPrefab, hit.point + hit.normal * 0.05f, selectedPrefab.transform.rotation, this.transform);
                     reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Chicken);
@@ -173,7 +172,7 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
         popup.SetActive(true);
     }
 
-    public IEnumerator AddDataPoint() {
+    private IEnumerator AddDataPoint() {
         while (true) {
             foreach (var x in valueLists) {
                 InGameAgents.TryGetValue(x.Key, out var set);
@@ -200,29 +199,23 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
     }
 
     public List<int> FetchDataPoints(Species species) {
-        Debug.Log(species);
         valueLists.TryGetValue(species, out var list);
         return list;
     }
 
     public List<int> FetchAverageChickenSpeedList() {
-        Debug.Log(averageChickenSpeed);
         return averageChickenSpeed;
     }
 
     public List<int> FetchChickenSizeDataPoints() {
         var sizes = new List<int>();
-        for (int i = 0; i < 10; i++) sizes.Add(0);
+        for (int i = 0; i < 10; i++) 
+            sizes.Add(0);
         InGameAgents.TryGetValue(Species.Chicken, out var chickSet);
         foreach (var c in chickSet) {
             int i = (int) (c.GetComponent<Agent>().stats.GetAttribute(Attribute.Size) / 0.1);
             if (i < 10) sizes[i]++;
         }
-
-        string s = "CHICK00";
-        for (int i = 0; i < 10; i++)
-            s = s + "\n CLASS" + i + ":    " + sizes[i];
-        Debug.Log(s);
 
         return sizes;
     }

@@ -26,7 +26,7 @@ public abstract class MovableAgent : Agent {
         agent.speed /= 1.5f;
     }
 
-    public IEnumerator FollowObject(GameObject to) {
+    private IEnumerator FollowObject(GameObject to) {
         while (to != null && Vector3.Distance(transform.position, to.transform.position) > 0.5f && IsSolving()) {
             agent.SetDestination(to.transform.position);
             yield return null;
@@ -37,7 +37,7 @@ public abstract class MovableAgent : Agent {
         yield return null;
     }
 
-    public IEnumerator WaitTillThereCoroutine(Vector3 to) {
+    private IEnumerator WaitTillThereCoroutine(Vector3 to) {
         while (Vector3.Distance(transform.position, to) > 0.5f && IsSolving()) {
             yield return null;
         }

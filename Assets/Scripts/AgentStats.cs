@@ -4,22 +4,19 @@ using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 
 public class AgentStats {
+    public Matrix<double> weights;
+    public SortedDictionary<Attribute, double> Atts => atts;
+    public SortedDictionary<Need, double> Needs => needs;
     private SortedDictionary<Attribute, double> atts;
     private SortedDictionary<Need, double> needs;
 	private SortedDictionary<Distance, double> distances;
     private SortedSet<State> states;
-    
-    public Matrix<double> weights;
-    public SortedDictionary<Attribute, double> Atts => atts;
-    public SortedDictionary<Need, double> Needs => needs;
-
     private int qAtts;
     private int qNeeds;
 	private int qDistances;
     private int qStates;
     private Vector<double> neuralInput;
     private Vector<double> neuralOutput;
-    
     private MatrixBuilder<double> m = Matrix<double>.Build;
     private VectorBuilder<double> v = Vector<double>.Build;
 
