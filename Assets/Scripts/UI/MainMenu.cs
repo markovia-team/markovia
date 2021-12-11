@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using SFB;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Application = UnityEngine.Application;
 
 public class MainMenu : MonoBehaviour {
     private Dictionary<Species, GameObject> speciesPrefabs;
@@ -33,20 +35,13 @@ public class MainMenu : MonoBehaviour {
         settingsMenu.SetActive(false);
         mainMenu.SetActive(true);
     }
-
-    public void StartFile() {
-        var path = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false);
-        if (path == null || path.Length == 0 || string.Compare(path[0], string.Empty, StringComparison.Ordinal) == 0) {
-            popup.GetComponentInChildren<TMPro.TMP_Text>().text = "You must choose a json file";
-            ShowPopup();
-            return;
-        }
-
+    
+    private void StartFromFile(string path) {
         speciesPrefabs = new Dictionary<Species, GameObject>();
         GameObject prefab;
         GameData savedData;
         try {
-            if (!JsonManager.ReadFromJson(path[0], out savedData)) {
+            if (!JsonManager.ReadFromJson(path, out savedData)) {
                 return;
             }
         }
@@ -86,7 +81,37 @@ public class MainMenu : MonoBehaviour {
         PlayGame();
     }
 
+    public async void LoadServerFile(int index) {
+        await FTPManager.GetFile(fileList[index]);
+        var path = Application.dataPath + "/Save/tempLoad.json";
+        StartFromFile(path);
+    }
+    
+    public void LoadLocalFile() {
+        var path = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false);
+        if (path == null || path.Length == 0 || string.Compare(path[0], string.Empty, StringComparison.Ordinal) == 0) {
+            popup.GetComponentInChildren<TMPro.TMP_Text>().text = "You must choose a json file";
+            ShowPopup();
+        }
+        StartFromFile(path[0]);
+    }
+
     private void ShowPopup() {
         popup.SetActive(true);
     }
+
+    private TMP_Dropdown fileDropdown;
+    public GameObject loadingText;
+    public GameObject fileDropdownGameObject;
+    private List<string> fileList = new List<string>();
+
+    public async void Awake() {
+        await FTPManager.GetFilesName(fileList);
+        loadingText.GetComponent<TMP_Text>().text = "";
+        fileDropdown = fileDropdownGameObject.GetComponent<TMP_Dropdown>();
+        fileDropdown.ClearOptions();
+        fileDropdown.AddOptions(fileList);
+        fileDropdown.RefreshShownValue();
+    }
+
 }

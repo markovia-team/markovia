@@ -22,12 +22,9 @@ public abstract class Agent : MonoBehaviour, IAgentController, ISerializable {
         int i = 0;
         if (!dead) {
             var needs = stats.Needs.ToDictionary(entry => entry.Key, entry => entry.Value);
-
             needs.Remove(Need.ReproductiveUrge);
             foreach (double value in needs.Values)
                 if (value == 1f || age >= 100) {
-                    if (age >= 100)
-                        Debug.Log("Viejo");
                     Die();
                 }
         }
