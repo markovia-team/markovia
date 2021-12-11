@@ -5,6 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Runtime.Serialization;
 using System.IO;
+using System.Linq;
 using SFB;
 
 public class AgentSpawner : MonoBehaviour, ISerializable {
@@ -16,6 +17,7 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
 
     public Dictionary<Species, HashSet<Agent>> gameAgents => InGameAgents;
     public GameObject popup;
+    public GameObject cloud;
 
     private Dictionary<Species, List<int>> valueLists = new Dictionary<Species, List<int>>() {
         {Species.Chicken, new List<int>()},
@@ -135,13 +137,8 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
         }
     }
 
-    public void WriteData() {
-        int id = 0, count = 0;
+    private GameData GetData() {
         GameData currentData = new GameData();
-        foreach (KeyValuePair<Species, HashSet<Agent>> entry in InGameAgents) {
-            count += entry.Value.Count;
-        }
-
         foreach (KeyValuePair<Species, HashSet<Agent>> entry in InGameAgents) {
             foreach (Agent obj in entry.Value) {
                 currentData.addAgent(obj.gameObject);
@@ -149,11 +146,18 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
         }
 
         Terraformation terrain;
-        if (GameObject.Find("Terraformer") != null &&
-            (terrain = (Terraformation) GameObject.Find("Terraformer").GetComponent<Terraformation>()) != null) {
+        if (GameObject.Find("Terraformer") != null && 
+            (terrain = GameObject.Find("Terraformer").GetComponent<Terraformation>()) != null) {
             currentData.addVertices(terrain.GetVertices());
             currentData.addTriangles(terrain.GetTriangles());
         }
+
+        return currentData;
+    }
+
+    private string filePath;
+    public void WriteData() {
+        GameData currentData = GetData();
 
         var path = StandaloneFileBrowser.SaveFilePanel("Save File", "", "", "json");
         if (string.Compare(path, string.Empty, StringComparison.Ordinal) == 0) {
@@ -162,14 +166,26 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
             return;
         }
 
-        popup.GetComponentInChildren<TMPro.TMP_Text>().text = !JsonManager.SaveToJson(path, currentData)
-            ? "File is read-only!"
-            : "File saved successfully";
+        popup.GetComponentInChildren<TMPro.TMP_Text>().text = "File is read-only!";
+        bool saveToJson = JsonManager.SaveToJson(path, currentData);
         if (!path.EndsWith(".json")) {
-            File.Move(path, path + ".json");
+            var newPath = path + ".json";
+            File.Move(path, newPath);
+            path = newPath;
         }
-
-        popup.SetActive(true);
+        
+        filePath = path;
+        if (saveToJson)
+            cloud.SetActive(true);
+        else
+            popup.SetActive(true);
+    }
+    
+    public async void SaveInServer() {
+        if (filePath != null) {
+            cloud.GetComponentInChildren<TMPro.TMP_Text>().text = "File saved successfully! Do you want to save it in the cloud?";
+            await FTPManager.PostFile(filePath);
+        }
     }
 
     private IEnumerator AddDataPoint() {
