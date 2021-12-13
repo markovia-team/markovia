@@ -159,7 +159,8 @@ public static class StateExtensions {
 
                     yield return null;
                 }
-                agent.ResetCoroutines();
+                agent.FinishSolvingState();
+                // agent.ResetCoroutines();
                 
                 break;
             case State.AsexualReproduce:
