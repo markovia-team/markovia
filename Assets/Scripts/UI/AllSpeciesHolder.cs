@@ -10,7 +10,7 @@ public class AllSpeciesHolder : MonoBehaviour {
     void Awake() {
         var i = 0;
         foreach (var x in speciesIcon) {
-            var go = Instantiate(speciesHolderPrefab, transform.position+new Vector3( (i % 2) * 120 * canvas.scaleFactor, (i/2)*120*canvas.scaleFactor),
+            var go = Instantiate(speciesHolderPrefab, transform.position + new Vector3(i * 90 * canvas.scaleFactor, (i/3) * 120 * canvas.scaleFactor),
                 speciesHolderPrefab.transform.rotation, transform).transform.GetChild(0);
             var dad = go.GetComponent<DragAndDrop>();
             dad.agentSpawner = controller.GetComponent<AgentSpawner>();
