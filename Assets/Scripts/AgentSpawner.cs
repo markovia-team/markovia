@@ -243,6 +243,7 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
         GameObject reference = Instantiate(selectedPrefab, ag1.transform.position, ag1.transform.rotation, transform);
         reference.GetComponent<Agent>().stats = ags;
         reference.GetComponent<Agent>().worldController = ag1.worldController;
+        // reference.GetComponent<Agent>().StopAllCoroutines();
         InGameAgents.TryGetValue(species, out var x);
         x.Add(reference.GetComponent<Agent>());
     }

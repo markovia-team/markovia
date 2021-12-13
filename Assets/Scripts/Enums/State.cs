@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -139,7 +140,7 @@ public static class StateExtensions {
                 }
 
                 agent.moveTo(mate.gameObject);
-                do {
+                while (agent.IsSolving() && agent.stats.GetNeed(Need.ReproductiveUrge) > 0) {
                     agent.stats.UpdateNeed(Need.Hunger, 0.005f * Time.deltaTime * WorldController.TickSpeed);
                     agent.stats.UpdateNeed(Need.Thirst, 0.005f * Time.deltaTime * WorldController.TickSpeed);
                     agent.stats.UpdateNeed(Need.Sleep, 0.005f * Time.deltaTime * WorldController.TickSpeed);
@@ -147,24 +148,19 @@ public static class StateExtensions {
                     if (mate == null || mate.gameObject == null) {
                         break;
                     }
-                    
+
                     if (agent.IsHere(mate.transform.position)) {
                         agent.FinishSolvingState();
-                        mate.FinishSolvingState();
-                        mate.StopAllCoroutines();
                         agent.stats.SetNeed(Need.ReproductiveUrge, 0f);
                         mate.stats.SetNeed(Need.ReproductiveUrge, 0f);
-                        agent.worldController.GetComponent<AgentSpawner>().gameAgents.TryGetValue(agent.GetSpecies(), out var set);
-                        if (set.Count > 30) {
-                            break;
-                        }
                         agent.worldController.GetComponent<AgentSpawner>().Reproduce(agent, mate, agent.GetSpecies());
-                        mate.ResetCoroutines();
                         break;
                     }
+
                     yield return null;
-                } while (agent.IsSolving() && agent.stats.GetNeed(Need.ReproductiveUrge) > 0);
-                agent.ResetCoroutines();
+                }
+                agent.FinishSolvingState();
+                // agent.ResetCoroutines();
                 
                 break;
             case State.AsexualReproduce:
