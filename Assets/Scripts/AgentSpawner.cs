@@ -236,7 +236,25 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
         return sizes;
     }
 
+    public bool reproduced = false;
+    public bool Reproduced() {
+        return reproduced;
+    }
+
     public void Reproduce(Agent ag1, Agent ag2, Species species) {
+        AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag2.stats, species);
+        ags.SetNeed(Need.ReproductiveUrge, 0f);
+        speciesPrefabs.TryGetValue(species, out var selectedPrefab);
+        GameObject reference = Instantiate(selectedPrefab, ag1.transform.position, ag1.transform.rotation, transform);
+        reference.GetComponent<Agent>().stats = ags;
+        reference.GetComponent<Agent>().worldController = ag1.worldController;
+        reference.GetComponent<Agent>().StopAllCoroutines();
+        InGameAgents.TryGetValue(species, out var x);
+        x.Add(reference.GetComponent<Agent>());
+        reproduced = true;
+    }
+
+    public IEnumerator ReproduceCoroutine(Agent ag1, Agent ag2, Species species) {
         AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag2.stats, species);
         ags.SetNeed(Need.ReproductiveUrge, 0f);
         speciesPrefabs.TryGetValue(species, out var selectedPrefab);
@@ -245,8 +263,9 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
         reference.GetComponent<Agent>().worldController = ag1.worldController;
         InGameAgents.TryGetValue(species, out var x);
         x.Add(reference.GetComponent<Agent>());
+        yield break;
     }
-
+    
     public void AsexualReproduce(Agent ag1, Species species) {
         AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag1.stats, species);
         speciesPrefabs.TryGetValue(species, out var selectedPrefab);
