@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using SFB;
 using TMPro;
 using UnityEngine;
@@ -106,7 +107,12 @@ public class MainMenu : MonoBehaviour {
     private List<string> fileList = new List<string>();
 
     public async void Awake() {
-        await FTPManager.GetFilesName(fileList);
+        try {
+            await FTPManager.GetFilesName(fileList);
+        } catch (Exception exception) {
+            popup.GetComponentInChildren<TMPro.TMP_Text>().text = "Couldn't connect to server! Check your connection.";
+            ShowPopup();
+        }
         loadingText.GetComponent<TMP_Text>().text = "";
         fileDropdown = fileDropdownGameObject.GetComponent<TMP_Dropdown>();
         fileDropdown.ClearOptions();
