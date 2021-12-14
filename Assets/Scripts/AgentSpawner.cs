@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Linq;
+using MathNet.Numerics.LinearAlgebra;
 using SFB;
 
 public class AgentSpawner : MonoBehaviour, ISerializable
@@ -19,6 +20,9 @@ public class AgentSpawner : MonoBehaviour, ISerializable
 
     public SerializableDictionary<Species, GameObject> speciesPrefabs = new SerializableDictionary<Species, GameObject>();
     public SerializableDictionary<Species, GameObject> speciesPrefabsDesert = new SerializableDictionary<Species, GameObject>();
+
+    public GameObject treePrefab;
+    public GameObject treePrefabDesert; 
     
     public Dictionary<Species, HashSet<Agent>> gameAgents => InGameAgents;
     public GameObject popup;
@@ -35,14 +39,17 @@ public class AgentSpawner : MonoBehaviour, ISerializable
     private static bool readFromFile = false;
     private static int grassQuantity, chickenQuantity, foxQuantity;
 
-    void Start()
+    void Awake()
     {
-
-        isDesert = true; 
+        isDesert = false; 
         if (isDesert)
         {
-            speciesPrefabs = speciesPrefabsDesert; 
+            speciesPrefabs = speciesPrefabsDesert;
+            treePrefab = treePrefabDesert; 
         }
+    }
+    void Start()
+    {
 
         foreach (var s in speciesPrefabs)
             if (s.Value.GetComponent<NotMovableAgent>() != null)
@@ -270,11 +277,18 @@ public class AgentSpawner : MonoBehaviour, ISerializable
 
         var raycasthit = Physics.Raycast(randomVector, Vector3.down, out var hit);
         if (raycasthit) {
-            GameObject reference = Instantiate(selectedPrefab, hit.point, ag1.transform.rotation, transform);
+            GameObject reference = Instantiate(ag1.gameObject, hit.point, ag1.transform.rotation, transform);
             reference.GetComponent<Agent>().stats = ags;
             reference.GetComponent<Agent>().worldController = ag1.worldController;
             InGameAgents.TryGetValue(species, out var x);
             x.Add(reference.GetComponent<Agent>());
         }
+    }
+
+    public void AddTree(Vector3 pos)
+    {
+        GameObject reference = Instantiate(treePrefab, pos, Quaternion.identity, transform);
+            reference.GetComponent<Agent>().stats = SpeciesFactory.NewAgentStats(Species.Grass);
+            reference.GetComponent<Agent>().worldController = GetComponent<WorldController>();
     }
 }
