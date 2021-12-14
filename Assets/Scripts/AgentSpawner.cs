@@ -8,13 +8,18 @@ using System.IO;
 using System.Linq;
 using SFB;
 
-public class AgentSpawner : MonoBehaviour, ISerializable {
+public class AgentSpawner : MonoBehaviour, ISerializable
+{
+
+    public static Boolean isDesert = false; 
+    
     private static Dictionary<Species, GameObject> speciesPrefabsStatic = new Dictionary<Species, GameObject>();
     private Dictionary<Species, List<Vector3>> NonMovableAgentsPositions = new Dictionary<Species, List<Vector3>>();
     private Dictionary<Species, HashSet<Agent>> InGameAgents = new Dictionary<Species, HashSet<Agent>>();
 
     public SerializableDictionary<Species, GameObject> speciesPrefabs = new SerializableDictionary<Species, GameObject>();
-
+    public SerializableDictionary<Species, GameObject> speciesPrefabsDesert = new SerializableDictionary<Species, GameObject>();
+    
     public Dictionary<Species, HashSet<Agent>> gameAgents => InGameAgents;
     public GameObject popup;
     public GameObject cloud;
@@ -30,7 +35,15 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
     private static bool readFromFile = false;
     private static int grassQuantity, chickenQuantity, foxQuantity;
 
-    void Start() {
+    void Start()
+    {
+
+        isDesert = true; 
+        if (isDesert)
+        {
+            speciesPrefabs = speciesPrefabsDesert; 
+        }
+
         foreach (var s in speciesPrefabs)
             if (s.Value.GetComponent<NotMovableAgent>() != null)
                 NonMovableAgentsPositions.Add(s.Key, new List<Vector3>());
