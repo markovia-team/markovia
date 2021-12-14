@@ -9,9 +9,15 @@ public class Terraformation : MonoBehaviour {
     public int zSize = 100;
     public float scale = 10f;
 
-    private readonly Color[] colors = {
+    private  Color[] colors = {
         new Color(121 / 255f, 181 / 255f, 103 / 255f),
         new Color(92 / 255f, 73 / 255f, 39 / 255f)
+    };
+
+    private  Color[] desertColors =
+    {
+        new Color(252 / 255f, 210 / 255f, 127 / 255f),
+        new Color(249 / 255f, 203 / 255f, 112 / 255f)
     };
 
     private Mesh mesh;
@@ -22,7 +28,10 @@ public class Terraformation : MonoBehaviour {
     public float MAXTerrainHeight { get; private set; } = -Mathf.Infinity;
     public float MINTerrainHeight { get; private set; } = Mathf.Infinity;
 
-    private void Start() {
+    private void Start()
+    {
+
+        if (AgentSpawner.isDesert) colors = desertColors;
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
