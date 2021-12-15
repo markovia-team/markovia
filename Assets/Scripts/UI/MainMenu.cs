@@ -20,6 +20,18 @@ public class MainMenu : MonoBehaviour {
                 AgentSpawner.AddSpecies(pair.Key, pair.Value);
         }
         AgentSpawner.AddSpeciesQuantity(grassQty, chickenQty, foxQty);
+    }
+
+    public void DesertBiome() {
+        AgentSpawner.isDesert = true;
+        LoadScene();
+    }
+    public void PlainsBiome() {
+        AgentSpawner.isDesert = false;
+        LoadScene();
+    }
+
+    private void LoadScene() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
@@ -107,17 +119,22 @@ public class MainMenu : MonoBehaviour {
     private List<string> fileList = new List<string>();
 
     public async void Awake() {
+        popup.SetActive(false);
         try {
             await FTPManager.GetFilesName(fileList);
         } catch (Exception exception) {
-            popup.GetComponentInChildren<TMPro.TMP_Text>().text = "Couldn't connect to server! Check your connection.";
-            ShowPopup();
+            if (popup != null) {
+                popup.GetComponentInChildren<TMPro.TMP_Text>().text = "Couldn't connect to server! Check your connection.";
+                ShowPopup();
+            }
         }
+
+        if (loadingText == null || fileDropdown == null) 
+            return;
         loadingText.GetComponent<TMP_Text>().text = "";
         fileDropdown = fileDropdownGameObject.GetComponent<TMP_Dropdown>();
         fileDropdown.ClearOptions();
         fileDropdown.AddOptions(fileList);
         fileDropdown.RefreshShownValue();
     }
-
 }

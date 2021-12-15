@@ -7,7 +7,6 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
     public AgentSpawner agentSpawner;
     public WorldController wc; 
     public Species species;
-    public Inorganic inorganic; 
     private RectTransform rectTransform;
     private Vector2 originPos;
 
@@ -29,11 +28,11 @@ public class DragAndDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler
         Ray ray = Camera.main.ScreenPointToRay(eventData.position);
         if (Physics.Raycast(ray, out var hit)) {
             if (isTree)
-                agentSpawner.AddTree(hit.point);
+                agentSpawner.AddTree(hit);
             else if (isSpecies)
-                agentSpawner.AddSpecies(species, hit.point);
+                agentSpawner.AddSpecies(species, hit);
             else 
-                wc.NewWater( new Vector3(hit.point.x, 40, hit.point.z));
+                wc.NewWater(hit);
         }
     }
 
