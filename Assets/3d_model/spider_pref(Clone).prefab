@@ -804,7 +804,7 @@ GameObject:
   - component: {fileID: 4704296583881330621}
   m_Layer: 0
   m_Name: spider_pref(Clone)
-  m_TagString: Untagged
+  m_TagString: Printable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
