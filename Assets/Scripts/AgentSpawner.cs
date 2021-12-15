@@ -270,7 +270,11 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
         x.Add(reference.GetComponent<Agent>());
     }
 
+    private int trees = 0;
     public void AsexualReproduce(Agent ag1, Species species) {
+        if (ag1.gameObject.CompareTag("Tree") && trees > 15)
+            return;
+        
         AgentStats ags = SpeciesFactory.NewAgentStats(ag1.stats, ag1.stats, species);
         speciesPrefabs.TryGetValue(species, out var selectedPrefab);
         Vector3 pos = ag1.transform.position;
@@ -290,9 +294,11 @@ public class AgentSpawner : MonoBehaviour, ISerializable {
             GameObject reference = Instantiate(ag1.gameObject, closestHitPosition, ag1.transform.rotation, transform);
             reference.GetComponent<Agent>().stats = ags;
             reference.GetComponent<Agent>().worldController = ag1.worldController;
-            if (ag1.gameObject.CompareTag("Tree")) 
+            if (ag1.gameObject.CompareTag("Tree")) {
+                trees++;
                 return;
-            
+            }
+
             InGameAgents.TryGetValue(species, out var x);
             x.Add(reference.GetComponent<Agent>());
         }
