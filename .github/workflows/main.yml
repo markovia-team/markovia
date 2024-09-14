@@ -64,7 +64,7 @@ jobs:
           checkName: ${{ matrix.testMode }} test results
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Test results (${{ matrix.testMode }})
           path: ${{ steps.testRunner.outputs.artifactsPath }}
@@ -109,7 +109,7 @@ jobs:
             Library-
       - uses: game-ci/unity-test-runner@v2
         id: testRunner
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Test results (all modes)
           path: ${{ steps.testRunner.outputs.artifactsPath }}
@@ -118,7 +118,7 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildName: markovia
           allowDirtyBuild: true
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Build (${{ matrix.targetPlatform }})
           path: build/${{ matrix.targetPlatform }}
@@ -160,7 +160,7 @@ jobs:
         with:
           targetPlatform: WebGL
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: build-WebGL
           path: build/WebGL
@@ -174,7 +174,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: build-WebGL
           path: build
